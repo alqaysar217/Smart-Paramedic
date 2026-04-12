@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,7 +16,7 @@
   --secondary-foreground: 0 0% 9%;
   --muted: 0 0% 96.1%;
   --muted-foreground: 0 0% 45.1%;
-  --accent: 120 100% 35%; /* Success Green #00B300 */
+  --accent: 142.1 76.2% 36.3%; /* Success Green */
   --accent-foreground: 0 0% 98%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
@@ -38,7 +39,7 @@
   --secondary-foreground: 0 0% 98%;
   --muted: 0 0% 14.9%;
   --muted-foreground: 0 0% 63.9%;
-  --accent: 120 100% 35%;
+  --accent: 142.1 76.2% 36.3%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
@@ -53,7 +54,12 @@
   }
   body {
     @apply bg-background text-foreground font-body;
+    direction: rtl;
   }
+}
+
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
 }
 
 .glass-card {
@@ -76,7 +82,7 @@
   }
 }
 
-.arabic-text {
-  direction: rtl;
-  text-align: right;
+/* RTL Helpers */
+.rtl-flip {
+  transform: scaleX(-1);
 }

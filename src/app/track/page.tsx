@@ -1,9 +1,10 @@
+
 "use client";
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Phone, Info, MapPin, Clock } from "lucide-react";
+import { ChevronRight, Phone, Info, MapPin, Clock } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function TrackingPage() {
@@ -11,14 +12,14 @@ export default function TrackingPage() {
   const trackImg = PlaceHolderImages.find(i => i.id === "ambulance-tracking");
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col font-cairo" dir="rtl">
       {/* Header */}
       <div className="p-4 flex items-center gap-4 bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-100">
         <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="w-6 h-6 rotate-180" />
+          <ChevronRight className="w-6 h-6" />
         </Button>
-        <div className="flex-1">
-          <h1 className="font-headline font-bold">تتبع الحالة</h1>
+        <div className="flex-1 text-right">
+          <h1 className="font-bold">تتبع الحالة</h1>
           <p className="text-xs text-accent font-bold">تم القبول - سيارة رقم 42</p>
         </div>
         <Button variant="ghost" size="icon" className="bg-primary/10 text-primary rounded-xl">
@@ -43,12 +44,12 @@ export default function TrackingPage() {
           <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
             <Image src="https://picsum.photos/seed/driver/100/100" alt="Driver" width={48} height={48} />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 text-right">
             <h3 className="font-bold text-sm">أحمد الشمري</h3>
             <p className="text-xs text-gray-500">سائق مسعف - خبير</p>
           </div>
-          <div className="text-right">
-            <div className="flex items-center gap-1 text-primary font-bold">
+          <div className="text-left">
+            <div className="flex items-center gap-1 text-primary font-bold justify-end">
               <Clock className="w-3 h-3" />
               <span className="text-sm">4 د</span>
             </div>
@@ -62,7 +63,7 @@ export default function TrackingPage() {
         <div className="w-12 h-1 bg-gray-200 rounded-full mx-auto mb-2"></div>
         
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold font-headline">وجهة الوصول</h2>
+          <h2 className="text-xl font-bold">وجهة الوصول</h2>
           <span className="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">معرّف البلاغ: #8821</span>
         </div>
 
@@ -73,7 +74,7 @@ export default function TrackingPage() {
               <div className="w-0.5 h-12 bg-gray-100"></div>
               <div className="w-4 h-4 rounded-full bg-gray-300"></div>
             </div>
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-4 text-right">
               <div className="bg-gray-50 p-4 rounded-2xl">
                 <p className="text-xs text-gray-400 font-bold mb-1">موقعك الحالي</p>
                 <p className="text-sm font-medium">حي النزهة، شارع الأمير سلطان</p>

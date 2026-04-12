@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useState } from "react";
 import { generateFirstAidInstructions, FirstAidInstructionOutput } from "@/ai/flows/generate-first-aid-instructions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, PlayCircle, ClipboardList, Info, Flame, Activity, Zap, Droplets, AlertCircle, ChevronLeft } from "lucide-react";
+import { Loader2, PlayCircle, ClipboardList, Info, Flame, Activity, Zap, Droplets, AlertCircle, ChevronRight } from "lucide-react";
 import BottomNav from "@/components/navigation/BottomNav";
 
 export default function InstructionsPage() {
@@ -34,9 +35,9 @@ export default function InstructionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-24 font-cairo" dir="rtl">
       <div className="p-6 bg-white border-b border-gray-100 flex justify-between items-center sticky top-0 z-20">
-        <h1 className="font-headline text-2xl font-bold">الإسعافات الأولية</h1>
+        <h1 className="text-2xl font-bold">الإسعافات الأولية</h1>
         <ClipboardList className="text-primary w-6 h-6" />
       </div>
 
@@ -44,7 +45,7 @@ export default function InstructionsPage() {
         {!instructions && !loading && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-              <h2 className="font-headline text-lg font-bold mb-2">كيف يمكننا مساعدتك؟</h2>
+              <h2 className="text-lg font-bold mb-2">كيف يمكننا مساعدتك؟</h2>
               <p className="text-sm text-gray-500">اختر الحالة للحصول على إرشادات فورية مدعومة بالذكاء الاصطناعي</p>
             </div>
 
@@ -74,15 +75,15 @@ export default function InstructionsPage() {
 
         {instructions && !loading && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <Button variant="ghost" onClick={() => setInstructions(null)} className="gap-2 text-gray-500 font-bold mb-4">
-              <ChevronLeft className="w-5 h-5" />
+            <Button variant="ghost" onClick={() => setInstructions(null)} className="gap-2 text-gray-500 font-bold mb-4 p-0">
+              <ChevronRight className="w-5 h-5" />
               العودة للأقسام
             </Button>
 
             <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
               <CardHeader className="bg-primary text-white p-6">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="font-headline text-2xl">{instructions.title}</CardTitle>
+                  <CardTitle className="text-2xl">{instructions.title}</CardTitle>
                   <Button variant="secondary" size="icon" className="rounded-full bg-white/20 text-white backdrop-blur-sm border-none">
                     <PlayCircle className="w-6 h-6" />
                   </Button>
@@ -95,14 +96,14 @@ export default function InstructionsPage() {
                       <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 font-bold text-sm group-hover:bg-primary group-hover:text-white transition-colors">
                         {idx + 1}
                       </div>
-                      <p className="text-gray-700 leading-relaxed font-medium pt-1">{step}</p>
+                      <p className="text-gray-700 leading-relaxed font-medium pt-1 text-right">{step}</p>
                     </div>
                   ))}
                 </div>
 
                 <div className="mt-8 p-4 bg-gray-50 rounded-2xl border border-gray-100 flex items-start gap-3">
                   <Info className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-gray-500 leading-relaxed italic">
+                  <p className="text-xs text-gray-500 leading-relaxed italic text-right">
                     {instructions.disclaimer}
                   </p>
                 </div>
