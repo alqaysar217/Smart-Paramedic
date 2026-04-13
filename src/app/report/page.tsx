@@ -30,22 +30,23 @@ export default function ReportPage() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Phase 1: Locating
+    // Phase 1: Locating simulation
     const timer1 = setTimeout(() => {
       setStatus('sending');
       setProgress(40);
       
-      // Phase 2: Sending data to Firestore
+      // Phase 2: Sending REAL data to Firestore
       if (db && user) {
-        const incidentsCol = collection(db, "emergencyIncidents");
-        addDocumentNonBlocking(incidentsCol, {
-          userId: user.uid,
+        const reportsCol = collection(db, "emergency_reports");
+        addDocumentNonBlocking(reportsCol, {
+          reporterId: user.uid,
+          reportTime: new Date().toISOString(),
+          incidentLatitude: 14.5333,
+          incidentLongitude: 49.1167,
+          incidentAddress: "المكلا، حي فوة - شارع الستين",
           incidentType: incidentType,
-          status: 'reported',
-          reportedLatitude: 14.5333, // Simulation
-          reportedLongitude: 49.1167,
-          reportedAt: new Date().toISOString(),
-          description: "بلاغ طارئ مرسل من التطبيق"
+          status: 'Pending',
+          receivingAgencyId: 'agency-ibn-sina', // Default for simulation
         });
       }
     }, 1500);

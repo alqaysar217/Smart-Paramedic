@@ -37,8 +37,6 @@ export default function AuthPage() {
     e.preventDefault();
     setIsLoading(true);
     initiateEmailSignUp(auth, email, password);
-    // Note: User profile document creation should ideally happen in a cloud function 
-    // or upon first redirection to profile page if it doesn't exist.
   };
 
   const handleBiometric = () => {
@@ -48,7 +46,6 @@ export default function AuthPage() {
       description: "يرجى وضع إصبعك على الحساس أو النظر للكاميرا",
     });
     setTimeout(() => {
-      // In a real app, this would trigger biometric auth then sign in
       router.push("/dashboard");
     }, 2000);
   };

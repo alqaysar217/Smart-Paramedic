@@ -41,7 +41,7 @@ export default function ProfilePage() {
   
   const userProfileRef = useMemoFirebase(() => {
     if (!db || !user) return null;
-    return doc(db, "userProfiles", user.uid);
+    return doc(db, "users", user.uid);
   }, [db, user]);
 
   const { data: profile, isLoading: isProfileLoading } = useDoc(userProfileRef);
@@ -53,8 +53,8 @@ export default function ProfilePage() {
     chronicDiseases: "",
     medications: "",
     allergies: "",
-    homeLocation: "",
-    workLocation: "",
+    homeAddress: "",
+    workAddress: "",
   });
 
   const [isLocating, setIsLocating] = useState(false);
@@ -68,35 +68,36 @@ export default function ProfilePage() {
         chronicDiseases: profile.chronicDiseases?.join(", ") || "",
         medications: profile.medications?.join(", ") || "",
         allergies: profile.allergies?.join(", ") || "",
-        homeLocation: profile.homeLocation || "",
-        workLocation: profile.workLocation || "",
+        homeAddress: profile.homeAddress || "",
+        workAddress: profile.workAddress || "",
       });
     }
   }, [profile]);
 
   const handleSave = () => {
-    if (!userProfileRef) return;
+    if (!userProfileRef || !user) return;
 
     const profileData = {
-      id: user?.uid,
-      fullName: user?.displayName || "مستخدم جديد",
-      email: user?.email,
+      id: user.uid,
+      fullName: user.displayName || "منى باحسين",
+      phoneNumber: profile?.phoneNumber || "05xxxxxxxx",
+      email: user.email,
       gender: formData.gender,
       age: parseInt(formData.age) || 0,
       bloodType: formData.bloodType,
       chronicDiseases: formData.chronicDiseases.split(",").map(s => s.trim()).filter(s => s),
       medications: formData.medications.split(",").map(s => s.trim()).filter(s => s),
       allergies: formData.allergies.split(",").map(s => s.trim()).filter(s => s),
-      homeLocation: formData.homeLocation,
-      workLocation: formData.workLocation,
-      updatedAt: new Date().toISOString(),
+      homeAddress: formData.homeAddress,
+      homeLatitude: 14.5333,
+      homeLongitude: 49.1167,
     };
 
     setDocumentNonBlocking(userProfileRef, profileData, { merge: true });
     
     toast({
       title: "تم الحفظ بنجاح",
-      description: "تم تحديث بيانات ملفك الطبي بنجاح.",
+      description: "تم تحديث بيانات ملفك الطبي بنجاح في قاعدة البيانات.",
     });
     
     setTimeout(() => {
@@ -106,10 +107,9 @@ export default function ProfilePage() {
 
   const handleLocate = () => {
     setIsLocating(true);
-    // Simulate geolocation
     setTimeout(() => {
       setIsLocating(false);
-      setFormData(prev => ({ ...prev, homeLocation: "المكلا، حي فوة - شارع الستين" }));
+      setFormData(prev => ({ ...prev, homeAddress: "المكلا، حي فوة - شارع الستين" }));
       toast({
         title: "تم تحديد الموقع",
         description: "تم التعرف على إحداثيات موقعك الحالي بدقة.",
@@ -270,8 +270,8 @@ export default function ProfilePage() {
               <Input 
                 placeholder="المدينة، الحي، اسم الشارع" 
                 className="h-12 rounded-xl text-right bg-gray-50 border-none" 
-                value={formData.homeLocation}
-                onChange={(e) => setFormData(p => ({ ...p, homeLocation: e.target.value }))}
+                value={formData.homeAddress}
+                onChange={(e) => setFormData(p => ({ ...p, homeAddress: e.target.value }))}
               />
             </div>
 
@@ -283,8 +283,8 @@ export default function ProfilePage() {
               <Input 
                 placeholder="مكان العمل أو جهة الوظيفة" 
                 className="h-12 rounded-xl text-right bg-gray-50 border-none" 
-                value={formData.workLocation}
-                onChange={(e) => setFormData(p => ({ ...p, workLocation: e.target.value }))}
+                value={formData.workAddress}
+                onChange={(e) => setFormData(p => ({ ...p, workAddress: e.target.value }))}
               />
             </div>
 

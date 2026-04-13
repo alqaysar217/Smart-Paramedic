@@ -35,17 +35,13 @@ export default function ResponderDashboard() {
   const db = useFirestore();
   const mapImg = PlaceHolderImages.find(i => i.id === "map-placeholder");
 
-  const incidentsQuery = useMemoFirebase(() => {
+  // Listen to REAL emergency reports from Firestore
+  const reportsQuery = useMemoFirebase(() => {
     if (!db) return null;
-    return query(collection(db, "emergencyIncidents"), orderBy("reportedAt", "desc"), limit(10));
+    return query(collection(db, "emergency_reports"), orderBy("reportTime", "desc"), limit(20));
   }, [db]);
 
-  const { data: realIncidents, isLoading: isIncidentsLoading } = useCollection(incidentsQuery);
-
-  const fallbackReports = [
-    { id: "#8821", name: "نجد مسيعان", type: "حادث مروري", status: "نشط", time: "منذ 3 دقائق", blood: "O+", phone: "05xxxxxx", location: "المكلا - فوة" },
-    { id: "#8820", name: "عصبان نسيب", type: "إغماء مفاجئ", status: "بانتظار الرد", time: "منذ 8 دقائق", blood: "A-", phone: "05xxxxxx", location: "سيئون - السوق" },
-  ];
+  const { data: realReports, isLoading: isReportsLoading } = useCollection(reportsQuery);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-cairo" dir="rtl">
@@ -69,7 +65,7 @@ export default function ResponderDashboard() {
               <Bell className="w-6 h-6 text-gray-500" />
             </div>
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-[10px] flex items-center justify-center rounded-full font-bold border-2 border-white">
-              {realIncidents?.length || 0}
+              {realReports?.length || 0}
             </span>
           </div>
           <div className="w-12 h-12 bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
@@ -131,8 +127,8 @@ export default function ResponderDashboard() {
                     <AlertCircle className="w-8 h-8" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400 font-black">بلاغات نشطة</p>
-                    <p className="text-3xl font-black text-gray-900">{realIncidents?.length || 0}</p>
+                    <p className="text-sm text-gray-400 font-black">بلاغات حية</p>
+                    <p className="text-3xl font-black text-gray-900">{realReports?.length || 0}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -181,9 +177,9 @@ export default function ResponderDashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
-                  {isIncidentsLoading ? (
-                    <div className="p-10 text-center font-bold">جاري تحميل البلاغات الحية...</div>
-                  ) : realIncidents?.map((report) => (
+                  {isReportsLoading ? (
+                    <div className="p-10 text-center font-bold text-gray-400">جاري الاتصال بقاعدة البيانات الحية...</div>
+                  ) : realReports?.map((report) => (
                     <Card key={report.id} className="overflow-hidden border-none shadow-sm bg-white hover:ring-2 ring-primary/20 transition-all rounded-[2rem]">
                       <CardContent className="p-0">
                         <div className="p-8 flex flex-col lg:flex-row gap-8 items-start lg:items-center">
@@ -193,19 +189,19 @@ export default function ResponderDashboard() {
                                 <User className="w-7 h-7" />
                               </div>
                               <div>
-                                <h3 className="text-xl font-black text-gray-900">بلاغ من مستخدم #{report.userId.slice(0, 5)}</h3>
+                                <h3 className="text-xl font-black text-gray-900">بلاغ من #{report.reporterId.slice(0, 5)}</h3>
                                 <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="outline" className="font-bold text-gray-400 rounded-lg">{report.id.slice(0, 6)}</Badge>
-                                  <Badge className={report.status === "reported" ? "bg-primary rounded-lg" : "bg-accent rounded-lg"}>
-                                    {report.status === "reported" ? "جديد" : "نشط"}
+                                  <Badge variant="outline" className="font-bold text-gray-400 rounded-lg">REF: {report.id.slice(0, 4)}</Badge>
+                                  <Badge className={report.status === "Pending" ? "bg-primary rounded-lg" : "bg-accent rounded-lg"}>
+                                    {report.status === "Pending" ? "انتظار" : report.status}
                                   </Badge>
                                 </div>
                               </div>
                             </div>
                             <div className="flex flex-wrap gap-6 text-sm font-bold text-gray-500 justify-start">
                               <span className="flex items-center gap-2 p-2 bg-red-50 rounded-xl text-primary"><AlertCircle className="w-4 h-4" /> {report.incidentType}</span>
-                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Navigation className="w-4 h-4 text-blue-500" /> {report.reportedLatitude.toFixed(4)}, {report.reportedLongitude.toFixed(4)}</span>
-                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Clock className="w-4 h-4 text-primary" /> {new Date(report.reportedAt).toLocaleTimeString('ar-SA')}</span>
+                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Navigation className="w-4 h-4 text-blue-500" /> {report.incidentAddress}</span>
+                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Clock className="w-4 h-4 text-primary" /> {new Date(report.reportTime).toLocaleTimeString('ar-SA')}</span>
                             </div>
                           </div>
                           
@@ -223,6 +219,11 @@ export default function ResponderDashboard() {
                       </CardContent>
                     </Card>
                   ))}
+                  {!isReportsLoading && realReports?.length === 0 && (
+                    <div className="p-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-gray-100">
+                      <p className="text-gray-400 font-bold">لا توجد بلاغات طارئة حالياً في قاعدة البيانات</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -242,10 +243,12 @@ export default function ResponderDashboard() {
                       className="object-cover"
                     />
                   )}
-                  <div className="absolute top-1/3 left-1/4 group cursor-pointer">
-                    <div className="absolute -inset-4 bg-primary/30 rounded-full animate-ping"></div>
-                    <div className="w-8 h-8 bg-primary rounded-full border-4 border-white shadow-xl relative z-10"></div>
-                  </div>
+                  {realReports?.map((report, idx) => (
+                    <div key={report.id} className="absolute group cursor-pointer" style={{ top: `${30 + (idx * 5)}%`, left: `${25 + (idx * 10)}%` }}>
+                      <div className="absolute -inset-4 bg-primary/30 rounded-full animate-ping"></div>
+                      <div className="w-8 h-8 bg-primary rounded-full border-4 border-white shadow-xl relative z-10"></div>
+                    </div>
+                  ))}
                   
                   <div className="absolute bottom-10 right-10 bg-white/95 backdrop-blur p-6 rounded-[2rem] shadow-2xl border border-white/20 w-80 space-y-4">
                     <h4 className="font-black text-lg border-b border-gray-100 pb-3 flex items-center gap-2">
@@ -255,11 +258,11 @@ export default function ResponderDashboard() {
                     <div className="space-y-3">
                       <div className="flex items-center gap-3 text-sm font-bold">
                         <div className="w-4 h-4 bg-primary rounded-full animate-pulse shadow-sm"></div>
-                        <span className="text-gray-700">بلاغ حادث نشط</span>
+                        <span className="text-gray-700">بلاغ طارئ (قاعدة البيانات)</span>
                       </div>
                       <div className="flex items-center gap-3 text-sm font-bold">
                         <div className="w-4 h-4 bg-blue-500 rounded-full shadow-sm"></div>
-                        <span className="text-gray-700">سيارة إسعاف (متاح)</span>
+                        <span className="text-gray-700">سيارة إسعاف نشطة</span>
                       </div>
                     </div>
                   </div>
