@@ -14,7 +14,8 @@ import {
   MessageCircle,
   AlertCircle,
   User,
-  Activity
+  Activity,
+  ShieldCheck
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Card, CardContent } from "@/components/ui/card";
