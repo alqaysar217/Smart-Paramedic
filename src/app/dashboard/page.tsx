@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -15,7 +16,10 @@ import {
   AlertCircle,
   Menu,
   Bell,
-  Navigation
+  Navigation,
+  MapPin,
+  Clock,
+  ShieldCheck
 } from "lucide-react";
 import BottomNav from "@/components/navigation/BottomNav";
 
@@ -24,12 +28,12 @@ export default function DashboardPage() {
   const mapImg = PlaceHolderImages.find(i => i.id === "map-placeholder");
 
   const quickActions = [
-    { id: "accident", label: "حادث", icon: Car, color: "bg-orange-100 text-orange-600" },
+    { id: "accident", label: "حادث سير", icon: Car, color: "bg-orange-100 text-orange-600" },
     { id: "fire", label: "حريق", icon: Flame, color: "bg-red-100 text-red-600" },
-    { id: "faint", label: "إغماء", icon: Activity, color: "bg-blue-100 text-blue-600" },
-    { id: "electric", label: "كهرباء", icon: Zap, color: "bg-yellow-100 text-yellow-600" },
-    { id: "bleeding", label: "نزيف", icon: Droplets, color: "bg-rose-100 text-rose-600" },
-    { id: "other", label: "أخرى", icon: AlertCircle, color: "bg-gray-100 text-gray-600" },
+    { id: "faint", label: "حالة إغماء", icon: Activity, color: "bg-blue-100 text-blue-600" },
+    { id: "electric", label: "صعق كهربائي", icon: Zap, color: "bg-yellow-100 text-yellow-600" },
+    { id: "bleeding", label: "نزيف حاد", icon: Droplets, color: "bg-rose-100 text-rose-600" },
+    { id: "other", label: "حالة أخرى", icon: AlertCircle, color: "bg-gray-100 text-gray-600" },
   ];
 
   const handleEmergency = (type = "general") => {
@@ -37,62 +41,84 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-24">
+    <div className="min-h-screen bg-white pb-24 font-cairo" dir="rtl">
       {/* Header */}
-      <div className="p-6 flex justify-between items-center bg-white sticky top-0 z-20">
+      <div className="p-6 flex justify-between items-center bg-white sticky top-0 z-20 border-b border-gray-50">
         <Button variant="ghost" size="icon" className="bg-gray-50 rounded-xl">
           <Menu className="w-6 h-6" />
         </Button>
-        <h1 className="font-headline text-xl font-bold">المسعف الذكي</h1>
-        <Button variant="ghost" size="icon" className="bg-gray-50 rounded-xl">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="w-6 h-6 text-primary" />
+          <h1 className="font-headline text-xl font-bold">المسعف الذكي</h1>
+        </div>
+        <Button variant="ghost" size="icon" className="bg-gray-50 rounded-xl relative">
           <Bell className="w-6 h-6" />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
         </Button>
       </div>
 
       <div className="px-6 space-y-8">
+        {/* Welcome Section */}
+        <div className="pt-4">
+          <h2 className="text-2xl font-black text-gray-900">مرحباً، محمد</h2>
+          <p className="text-gray-500 font-medium">نحن جاهزون لمساعدتك في أي وقت</p>
+        </div>
+
         {/* Hero Section with Big Red Button */}
-        <div className="flex flex-col items-center justify-center pt-8">
-          <div className="relative group cursor-pointer" onClick={() => handleEmergency()}>
-            <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse scale-150 group-hover:scale-175 transition-transform"></div>
-            <div className="absolute inset-0 bg-primary/10 rounded-full animate-pulse scale-125 delay-75 group-hover:scale-150 transition-transform"></div>
-            <button className="relative z-10 w-48 h-48 bg-primary rounded-full flex flex-col items-center justify-center text-white shadow-2xl emergency-pulse active:scale-95 transition-transform">
+        <div className="flex flex-col items-center justify-center py-4">
+          <div className="relative group cursor-pointer" onClick={() => handleEmergency("urgent")}>
+            <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse scale-150 group-hover:scale-175 transition-transform duration-1000"></div>
+            <div className="absolute inset-0 bg-primary/10 rounded-full animate-pulse scale-125 delay-300 group-hover:scale-150 transition-transform duration-1000"></div>
+            <button className="relative z-10 w-48 h-48 bg-primary rounded-full flex flex-col items-center justify-center text-white shadow-2xl emergency-pulse active:scale-95 transition-transform border-8 border-white">
               <AlertCircle className="w-16 h-16 mb-2" />
-              <span className="text-2xl font-bold">طلب إسعاف</span>
+              <span className="text-2xl font-black">طلب نجدة</span>
+              <span className="text-[10px] opacity-80 mt-1 uppercase tracking-widest">SOS</span>
             </button>
           </div>
-          <p className="mt-12 text-gray-500 font-medium text-center">اضغط على الزر في حالات الطوارئ القصوى</p>
+          <p className="mt-12 text-gray-500 font-bold text-center flex items-center gap-2">
+            <Clock className="w-4 h-4 text-primary" />
+            استجابة فورية خلال دقائق
+          </p>
         </div>
 
         {/* Quick Actions Grid */}
         <div className="space-y-4">
-          <h2 className="font-headline text-lg font-bold">بلاغ سريع عن:</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="font-headline text-lg font-bold flex items-center gap-2">
+              <Activity className="w-5 h-5 text-primary" />
+              بلاغ سريع عن:
+            </h2>
+          </div>
           <div className="grid grid-cols-3 gap-4">
             {quickActions.map((action) => (
               <button
                 key={action.id}
                 onClick={() => handleEmergency(action.id)}
-                className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-gray-100 hover:border-primary/20 hover:bg-primary/5 transition-all shadow-sm"
+                className="flex flex-col items-center justify-center p-4 bg-white rounded-3xl border border-gray-100 hover:border-primary/20 hover:bg-primary/5 transition-all shadow-sm group"
               >
-                <div className={`p-3 rounded-xl mb-2 ${action.color}`}>
+                <div className={`p-3 rounded-2xl mb-2 group-hover:scale-110 transition-transform ${action.color}`}>
                   <action.icon className="w-6 h-6" />
                 </div>
-                <span className="text-sm font-bold text-gray-700">{action.label}</span>
+                <span className="text-[12px] font-bold text-gray-700 whitespace-nowrap">{action.label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Mini Map */}
+        {/* Current Location Card */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="font-headline text-lg font-bold">موقعك الحالي</h2>
-            <div className="flex items-center gap-1 text-sm text-primary font-bold">
+            <h2 className="font-headline text-lg font-bold flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-primary" />
+              موقعك الحالي
+            </h2>
+            <Button variant="ghost" size="sm" className="text-primary font-bold gap-1">
               <Navigation className="w-4 h-4" />
               تحديث
-            </div>
+            </Button>
           </div>
-          <Card className="overflow-hidden border-none shadow-md rounded-2xl">
-            <div className="relative aspect-video">
+          <Card className="overflow-hidden border-none shadow-xl rounded-[2.5rem] bg-gray-50">
+            <div className="relative aspect-[16/7]">
               {mapImg && (
                 <Image
                   src={mapImg.imageUrl}
@@ -102,12 +128,20 @@ export default function DashboardPage() {
                   data-ai-hint={mapImg.imageHint}
                 />
               )}
-              <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
-                <div className="w-4 h-4 bg-primary rounded-full border-2 border-white animate-bounce"></div>
+              <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
+                <div className="relative">
+                  <div className="absolute -inset-4 bg-primary/30 rounded-full animate-ping"></div>
+                  <div className="w-6 h-6 bg-primary rounded-full border-4 border-white shadow-lg relative z-10"></div>
+                </div>
               </div>
             </div>
-            <CardContent className="p-4 bg-white">
-              <p className="text-sm text-gray-600 font-medium">الرياض، حي النزهة، طريق الملك فهد</p>
+            <CardContent className="p-5 bg-white">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <MapPin className="w-5 h-5 text-primary" />
+                </div>
+                <p className="text-sm text-gray-800 font-bold">الرياض، حي الملقا، شارع الأمير محمد بن سلمان</p>
+              </div>
             </CardContent>
           </Card>
         </div>

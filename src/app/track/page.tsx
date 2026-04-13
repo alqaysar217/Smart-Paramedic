@@ -4,31 +4,48 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Phone, Info, MapPin, Clock } from "lucide-react";
+import { 
+  ChevronRight, 
+  Phone, 
+  Info, 
+  MapPin, 
+  Clock, 
+  Navigation, 
+  MessageCircle,
+  AlertCircle,
+  User,
+  Activity
+} from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function TrackingPage() {
   const router = useRouter();
   const trackImg = PlaceHolderImages.find(i => i.id === "ambulance-tracking");
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-cairo" dir="rtl">
-      {/* Header */}
-      <div className="p-4 flex items-center gap-4 bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-gray-100">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
+    <div className="min-h-screen bg-white flex flex-col font-cairo overflow-hidden" dir="rtl">
+      {/* Header Overlay */}
+      <div className="p-4 flex items-center gap-4 bg-white/90 backdrop-blur-md absolute top-0 left-0 right-0 z-30 border-b border-gray-100/50 shadow-sm mx-4 mt-4 rounded-3xl">
+        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-2xl bg-gray-50">
           <ChevronRight className="w-6 h-6" />
         </Button>
         <div className="flex-1 text-right">
-          <h1 className="font-bold">تتبع الحالة</h1>
-          <p className="text-xs text-accent font-bold">تم القبول - سيارة رقم 42</p>
+          <h1 className="font-black text-sm">تتبع المسعف</h1>
+          <p className="text-[10px] text-accent font-black flex items-center gap-1">
+            <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
+            سيارة إسعاف طراز 2024 - رقم 42
+          </p>
         </div>
-        <Button variant="ghost" size="icon" className="bg-primary/10 text-primary rounded-xl">
-          <Phone className="w-5 h-5" />
-        </Button>
+        <div className="flex gap-2">
+          <Button size="icon" className="bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-lg shadow-primary/20">
+            <Phone className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
 
       {/* Map Section */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative min-h-[50vh]">
         {trackImg && (
           <Image
             src={trackImg.imageUrl}
@@ -39,60 +56,90 @@ export default function TrackingPage() {
           />
         )}
         
-        {/* Mock Driver Overlay */}
-        <div className="absolute top-4 left-4 right-4 bg-white/95 backdrop-blur shadow-lg rounded-2xl p-4 border border-white/20 flex items-center gap-4">
-          <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
-            <Image src="https://picsum.photos/seed/driver/100/100" alt="Driver" width={48} height={48} />
-          </div>
-          <div className="flex-1 text-right">
-            <h3 className="font-bold text-sm">أحمد الشمري</h3>
-            <p className="text-xs text-gray-500">سائق مسعف - خبير</p>
-          </div>
-          <div className="text-left">
-            <div className="flex items-center gap-1 text-primary font-bold justify-end">
-              <Clock className="w-3 h-3" />
-              <span className="text-sm">4 د</span>
+        {/* Ambulance Pulse Icon on Map */}
+        <div className="absolute top-[40%] left-[30%]">
+          <div className="relative">
+            <div className="absolute -inset-8 bg-primary/20 rounded-full animate-ping opacity-40"></div>
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-2xl flex items-center justify-center border-2 border-primary relative z-10">
+              <Activity className="w-6 h-6 text-primary" />
             </div>
-            <p className="text-[10px] text-gray-400">الوقت المتبقي</p>
           </div>
+        </div>
+
+        {/* User Marker */}
+        <div className="absolute bottom-[30%] right-[40%]">
+          <div className="w-8 h-8 bg-blue-500 rounded-full border-4 border-white shadow-xl"></div>
         </div>
       </div>
 
-      {/* Status Detail Card */}
-      <div className="bg-white p-6 rounded-t-3xl shadow-2xl border-t border-gray-100 -mt-8 relative z-10 space-y-6">
-        <div className="w-12 h-1 bg-gray-200 rounded-full mx-auto mb-2"></div>
-        
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">وجهة الوصول</h2>
-          <span className="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">معرّف البلاغ: #8821</span>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-start gap-4">
-            <div className="flex flex-col items-center gap-1 mt-1">
-              <div className="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20"></div>
-              <div className="w-0.5 h-12 bg-gray-100"></div>
-              <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-            </div>
-            <div className="flex-1 space-y-4 text-right">
-              <div className="bg-gray-50 p-4 rounded-2xl">
-                <p className="text-xs text-gray-400 font-bold mb-1">موقعك الحالي</p>
-                <p className="text-sm font-medium">حي النزهة، شارع الأمير سلطان</p>
+      {/* Driver Info Floating Card */}
+      <div className="px-6 relative z-20 -mb-6">
+        <Card className="border-none shadow-2xl rounded-[2rem] bg-white p-4">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-gray-50 shadow-inner">
+                <Image src="https://picsum.photos/seed/medic/200/200" alt="Medic" width={64} height={64} className="object-cover" />
               </div>
-              <div className="bg-gray-50 p-4 rounded-2xl">
-                <p className="text-xs text-gray-400 font-bold mb-1">الجهة المستلمة</p>
-                <p className="text-sm font-bold text-primary">مستشفى الملك فيصل التخصصي</p>
+              <div className="absolute -bottom-1 -right-1 bg-accent text-white p-1 rounded-lg shadow-md border-2 border-white">
+                <ShieldCheck className="w-3 h-3" />
+              </div>
+            </div>
+            <div className="flex-1 text-right">
+              <h3 className="font-black text-lg">د. عبد الله الماجد</h3>
+              <p className="text-xs text-gray-500 font-bold">مسعف أول - خبرة 10 سنوات</p>
+              <div className="flex items-center gap-1 mt-1">
+                {[1,2,3,4,5].map(i => <div key={i} className="w-2 h-2 bg-yellow-400 rounded-full"></div>)}
+                <span className="text-[10px] text-gray-400 mr-2">4.9 تقييم</span>
+              </div>
+            </div>
+            <div className="flex flex-col items-center justify-center p-3 bg-primary/5 rounded-2xl min-w-[70px]">
+              <span className="text-2xl font-black text-primary leading-none">4</span>
+              <span className="text-[10px] text-primary font-bold">دقائق</span>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Details Card */}
+      <div className="bg-white p-8 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.05)] relative z-10 space-y-6">
+        <div className="w-16 h-1.5 bg-gray-100 rounded-full mx-auto mb-2"></div>
+        
+        <div className="space-y-6">
+          <div className="flex items-start gap-4">
+            <div className="flex flex-col items-center gap-1 mt-1 shrink-0">
+              <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center ring-4 ring-primary/10">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+              <div className="w-0.5 h-16 bg-gradient-to-b from-primary/30 to-gray-100"></div>
+              <div className="w-5 h-5 rounded-full bg-gray-200 border-4 border-white shadow-sm"></div>
+            </div>
+            <div className="flex-1 space-y-5 text-right">
+              <div className="space-y-1">
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">نقطة الالتقاء</p>
+                <div className="p-4 bg-gray-50 rounded-2xl flex items-center justify-between border border-gray-100">
+                  <p className="text-sm font-black text-gray-800">حي الملقا، شارع 42، مبنى 5</p>
+                  <Navigation className="w-4 h-4 text-primary" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">المستشفى المستهدف</p>
+                <div className="p-4 bg-primary/5 rounded-2xl flex items-center justify-between border border-primary/10">
+                  <p className="text-sm font-black text-primary">مستشفى الملك فيصل التخصصي</p>
+                  <Activity className="w-4 h-4 text-primary" />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex gap-4">
-          <Button variant="outline" className="flex-1 h-14 rounded-2xl font-bold border-gray-200">
-            إلغاء الطلب
+        <div className="flex gap-4 pt-4">
+          <Button variant="outline" className="flex-1 h-16 rounded-2xl font-black border-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all gap-2">
+            <AlertCircle className="w-5 h-5" />
+            إلغاء
           </Button>
-          <Button className="flex-1 h-14 rounded-2xl font-bold bg-accent hover:bg-accent/90">
-            مشاركة الموقع
+          <Button className="flex-2 h-16 rounded-2xl font-black bg-accent hover:bg-accent/90 text-white shadow-xl shadow-accent/20 gap-2 px-8">
+            <MessageCircle className="w-5 h-5" />
+            تحدث مع المسعف
           </Button>
         </div>
       </div>
