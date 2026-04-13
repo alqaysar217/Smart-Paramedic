@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Mail, Lock, Fingerprint, ScanFace } from "lucide-react";
+import { ShieldCheck, Mail, Lock, Fingerprint, ScanFace, Zap } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useAuth, useUser, initiateEmailSignIn, initiateEmailSignUp } from "@/firebase";
+import { useAuth, useUser, initiateEmailSignIn, initiateEmailSignUp, initiateAnonymousSignIn } from "@/firebase";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function AuthPage() {
     if (user && !isUserLoading) {
       toast({
         title: "تم تسجيل الدخول",
-        description: `مرحباً بك ${user.email}`,
+        description: `مرحباً بك في نظام المسعف الذكي`,
       });
       router.push("/dashboard");
     }
@@ -53,6 +53,11 @@ export default function AuthPage() {
     initiateEmailSignUp(auth, email, password);
   };
 
+  const handleGuestLogin = () => {
+    setIsLoading(true);
+    initiateAnonymousSignIn(auth);
+  };
+
   if (isUserLoading) return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -62,7 +67,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-white px-6 flex flex-col justify-center py-12">
       {/* Brand Header */}
-      <div className="flex flex-col items-center mb-12">
+      <div className="flex flex-col items-center mb-10">
         <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 mb-4 rotate-3">
           <ShieldCheck className="w-8 h-8 text-white" />
         </div>
@@ -111,6 +116,16 @@ export default function AuthPage() {
             </Button>
           </form>
 
+          <Button 
+            variant="outline" 
+            onClick={handleGuestLogin}
+            className="w-full h-13 text-xs font-bold border-slate-100 rounded-xl text-slate-500 gap-2 active-scale"
+            disabled={isLoading}
+          >
+            <Zap className="w-4 h-4" />
+            دخول تجريبي سريع
+          </Button>
+
           <div className="relative flex items-center justify-center py-2">
             <span className="bg-white px-3 text-[10px] text-slate-300 font-bold uppercase tracking-wider relative z-10">أو عبر التقنيات الحيوية</span>
             <div className="absolute w-full h-px bg-slate-100"></div>
@@ -118,11 +133,11 @@ export default function AuthPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Button variant="outline" className="h-16 rounded-2xl border-slate-100 bg-slate-50/50 flex flex-col gap-1 active-scale">
-              <Fingerprint className="w-5 h-5" />
+              <Fingerprint className="w-5 h-5 text-slate-400" />
               <span className="text-[10px] font-bold">بصمة الإصبع</span>
             </Button>
             <Button variant="outline" className="h-16 rounded-2xl border-slate-100 bg-slate-50/50 flex flex-col gap-1 active-scale">
-              <ScanFace className="w-5 h-5" />
+              <ScanFace className="w-5 h-5 text-slate-400" />
               <span className="text-[10px] font-bold">بصمة الوجه</span>
             </Button>
           </div>
@@ -134,7 +149,7 @@ export default function AuthPage() {
               <Label className="text-[11px] font-bold text-slate-500 mr-1">الاسم الكامل</Label>
               <Input 
                 placeholder="منى باحسين" 
-                className="h-12 rounded-xl bg-slate-50 border-none text-right" 
+                className="h-12 rounded-xl bg-slate-50 border-none text-right shadow-inner-soft" 
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required 
@@ -144,7 +159,7 @@ export default function AuthPage() {
               <Label className="text-[11px] font-bold text-slate-500 mr-1">البريد الإلكتروني</Label>
               <Input 
                 type="email" 
-                className="h-12 rounded-xl bg-slate-50 border-none text-right" 
+                className="h-12 rounded-xl bg-slate-50 border-none text-right shadow-inner-soft" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
@@ -154,7 +169,7 @@ export default function AuthPage() {
               <Label className="text-[11px] font-bold text-slate-500 mr-1">كلمة المرور</Label>
               <Input 
                 type="password" 
-                className="h-12 rounded-xl bg-slate-50 border-none text-right" 
+                className="h-12 rounded-xl bg-slate-50 border-none text-right shadow-inner-soft" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required 
