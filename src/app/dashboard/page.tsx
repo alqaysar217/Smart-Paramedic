@@ -51,7 +51,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-cairo" dir="rtl">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-50 px-5 h-14 flex items-center justify-between shadow-sm">
-        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9">
+        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9 active-scale">
           <Menu className="w-4 h-4 text-slate-600" />
         </Button>
         <div className="flex items-center gap-2">
@@ -60,7 +60,7 @@ export default function DashboardPage() {
           </div>
           <span className="font-black text-xs tracking-tight text-slate-800 uppercase">Smart Medic</span>
         </div>
-        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9 relative">
+        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9 relative active-scale">
           <Bell className="w-4 h-4 text-slate-600" />
           <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-primary rounded-full ring-2 ring-white"></span>
         </Button>
@@ -87,7 +87,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Real Map Module */}
+        {/* Real Interactive Map */}
         <section className="space-y-3">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
@@ -102,7 +102,6 @@ export default function DashboardPage() {
           </div>
           
           <Card className="overflow-hidden border-none shadow-soft rounded-[2.5rem] bg-slate-100 relative group aspect-[16/10]">
-            {/* Real Interactive Map using OpenStreetMap */}
             <iframe 
               width="100%" 
               height="100%" 
@@ -111,22 +110,18 @@ export default function DashboardPage() {
               marginHeight={0} 
               marginWidth={0} 
               src="https://www.openstreetmap.org/export/embed.html?bbox=49.10,14.52,49.15,14.56&amp;layer=mapnik&amp;marker=14.54,49.12"
-              className="grayscale-[0.2] contrast-[1.1]"
+              className="grayscale-[0.2] contrast-[1.1] w-full h-full"
+              style={{ border: 0 }}
             ></iframe>
             
             <div className="absolute inset-0 pointer-events-none border-[12px] border-white/50 rounded-[2.5rem]"></div>
             
-            {/* Map UI Overlays */}
             <div className="absolute top-4 left-4 flex flex-col gap-2 pointer-events-auto">
               <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
                 <Maximize2 className="w-4 h-4" />
               </button>
-              <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
-                <Layers className="w-4 h-4" />
-              </button>
             </div>
 
-            {/* Address Overlay */}
             <div className="absolute bottom-4 left-4 right-4 pointer-events-auto">
               <div className="bg-white/95 backdrop-blur p-3 rounded-2xl shadow-xl flex items-center justify-between border border-white/20">
                 <div className="flex items-center gap-3">
@@ -140,7 +135,7 @@ export default function DashboardPage() {
                     <p className="text-[9px] text-slate-400 font-bold">موقعك الحالي - دقة عالية</p>
                   </div>
                 </div>
-                <Button size="icon" className="h-9 w-9 bg-primary hover:bg-primary/90 rounded-xl shadow-lg shadow-primary/20">
+                <Button onClick={() => router.push('/track')} size="icon" className="h-9 w-9 bg-primary hover:bg-primary/90 rounded-xl shadow-lg shadow-primary/20 active-scale">
                   <Navigation className="w-4 h-4 text-white" />
                 </Button>
               </div>
