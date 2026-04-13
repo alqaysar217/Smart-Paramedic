@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -24,12 +23,13 @@ import {
   Activity, 
   Pill, 
   AlertTriangle, 
-  ArrowRight,
+  ChevronRight,
   Home,
   Briefcase,
   LocateFixed,
   Save,
-  CheckCircle2
+  CheckCircle2,
+  Info
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from "@/firebase";
@@ -96,13 +96,13 @@ export default function ProfilePage() {
     setDocumentNonBlocking(userProfileRef, profileData, { merge: true });
     
     toast({
-      title: "تم الحفظ بنجاح",
-      description: "تم تحديث بيانات ملفك الطبي بنجاح في قاعدة البيانات.",
+      title: "تم الحفظ",
+      description: "تم تحديث بيانات ملفك الطبي بنجاح.",
     });
     
     setTimeout(() => {
       router.push("/dashboard");
-    }, 1500);
+    }, 1000);
   };
 
   const handleLocate = () => {
@@ -110,215 +110,163 @@ export default function ProfilePage() {
     setTimeout(() => {
       setIsLocating(false);
       setFormData(prev => ({ ...prev, homeAddress: "المكلا، حي فوة - شارع الستين" }));
-      toast({
-        title: "تم تحديد الموقع",
-        description: "تم التعرف على إحداثيات موقعك الحالي بدقة.",
-      });
-    }, 2000);
+    }, 1500);
   };
 
-  if (isProfileLoading) return <div className="p-8 text-center">جاري التحميل...</div>;
+  if (isProfileLoading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 font-cairo" dir="rtl">
-      <div className="bg-white p-6 sticky top-0 z-30 border-b border-gray-100 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="p-2 bg-primary/10 rounded-xl">
-            <User className="w-6 h-6 text-primary" />
-          </div>
-          <h1 className="text-xl font-bold">ملفي الطبي</h1>
-        </div>
+    <div className="min-h-screen bg-slate-50 pb-28">
+      {/* Header */}
+      <header className="sticky top-0 z-30 bg-white border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-soft">
+        <h1 className="text-base font-bold text-slate-800">الملف الطبي الرقمي</h1>
         <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full">
-          <ArrowRight className="w-6 h-6" />
+          <ChevronRight className="w-5 h-5 text-slate-400" />
         </Button>
-      </div>
+      </header>
 
-      <div className="p-6 space-y-6">
-        <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
-          <CardHeader className="bg-primary/5 pb-4">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-              المعلومات الأساسية
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6 space-y-4">
+      <main className="px-5 pt-6 space-y-6">
+        {/* Info Banner */}
+        <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100 flex gap-3 items-start">
+          <Info className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+          <p className="text-[10px] text-blue-700 leading-normal font-medium">
+            هذه المعلومات ستكون متاحة للمسعفين فور طلبك للنجدة لضمان تقديم العلاج الأنسب لك في أسرع وقت.
+          </p>
+        </div>
+
+        {/* Basic Info Card */}
+        <Card className="border-none shadow-soft rounded-3xl">
+          <CardContent className="p-6 space-y-5">
+            <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+              <User className="w-3.5 h-3.5" /> الأساسيات
+            </h2>
+            
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-gray-600">
-                  <User className="w-4 h-4" />
-                  الجنس
-                </Label>
+              <div className="space-y-1.5">
+                <Label className="text-[11px] font-bold text-slate-500 mr-1">الجنس</Label>
                 <Select value={formData.gender} onValueChange={(v) => setFormData(p => ({ ...p, gender: v }))}>
-                  <SelectTrigger className="h-12 rounded-xl">
+                  <SelectTrigger className="h-11 rounded-xl bg-slate-50 border-none shadow-inner-soft">
                     <SelectValue placeholder="اختر" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="rounded-xl">
                     <SelectItem value="male">ذكر</SelectItem>
                     <SelectItem value="female">أنثى</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-gray-600">
-                  <Calendar className="w-4 h-4" />
-                  العمر
-                </Label>
+              <div className="space-y-1.5">
+                <Label className="text-[11px] font-bold text-slate-500 mr-1">العمر</Label>
                 <Input 
                   type="number" 
                   placeholder="مثال: 25" 
-                  className="h-12 rounded-xl text-right" 
+                  className="h-11 rounded-xl bg-slate-50 border-none shadow-inner-soft text-right" 
                   value={formData.age}
                   onChange={(e) => setFormData(p => ({ ...p, age: e.target.value }))}
                 />
               </div>
             </div>
 
-            <div className="space-y-2 text-right">
-              <Label className="flex items-center gap-2 text-gray-600">
-                <Droplet className="w-4 h-4 text-primary" />
-                فصيلة الدم
+            <div className="space-y-1.5">
+              <Label className="text-[11px] font-bold text-slate-500 mr-1 flex items-center gap-1.5">
+                <Droplet className="w-3.5 h-3.5 text-primary" /> فصيلة الدم
               </Label>
               <Select value={formData.bloodType} onValueChange={(v) => setFormData(p => ({ ...p, bloodType: v }))}>
-                <SelectTrigger className="h-12 rounded-xl border-primary/20 bg-primary/5">
-                  <SelectValue placeholder="اختر فصيلة الدم" />
+                <SelectTrigger className="h-11 rounded-xl bg-primary/5 border-primary/10 text-primary font-bold">
+                  <SelectValue placeholder="اختر الفصيلة" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="A+">A+</SelectItem>
-                  <SelectItem value="A-">A-</SelectItem>
-                  <SelectItem value="B+">B+</SelectItem>
-                  <SelectItem value="B-">B-</SelectItem>
-                  <SelectItem value="O+">O+</SelectItem>
-                  <SelectItem value="O-">O-</SelectItem>
-                  <SelectItem value="AB+">AB+</SelectItem>
-                  <SelectItem value="AB-">AB-</SelectItem>
+                <SelectContent className="rounded-xl">
+                  {["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].map(type => (
+                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold px-2">التاريخ الطبي (أسئلة هامة)</h2>
-          <Accordion type="single" collapsible className="space-y-3">
-            <AccordionItem value="chronic" className="border-none bg-white rounded-2xl shadow-sm px-4">
-              <AccordionTrigger className="hover:no-underline py-4">
-                <div className="flex items-center gap-3 text-right">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Activity className="w-5 h-5 text-blue-600" />
+        {/* Medical History Questions */}
+        <section className="space-y-3">
+          <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest px-2">التاريخ المرضي</h2>
+          <Accordion type="single" collapsible className="space-y-2">
+            {[
+              { id: "chronic", label: "هل تعاني من أمراض مزمنة؟", icon: Activity, color: "text-blue-500 bg-blue-50" },
+              { id: "meds", label: "هل تتناول أدوية حالياً؟", icon: Pill, color: "text-purple-500 bg-purple-50" },
+              { id: "allergies", label: "هل لديك أي حساسيات؟", icon: AlertTriangle, color: "text-red-500 bg-red-50" }
+            ].map((q) => (
+              <AccordionItem key={q.id} value={q.id} className="border-none bg-white rounded-2xl shadow-soft px-4 overflow-hidden">
+                <AccordionTrigger className="hover:no-underline py-4 text-right">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${q.color}`}>
+                      <q.icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-[13px] font-bold text-slate-700">{q.label}</span>
                   </div>
-                  <span className="font-bold text-gray-700">هل تعاني من أمراض مزمنة؟</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pb-4">
-                <Textarea 
-                  placeholder="يرجى كتابة أي أمراض تعاني منها (مثل السكري، الضغط، الربو...)" 
-                  className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
-                  value={formData.chronicDiseases}
-                  onChange={(e) => setFormData(p => ({ ...p, chronicDiseases: e.target.value }))}
-                />
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="meds" className="border-none bg-white rounded-2xl shadow-sm px-4">
-              <AccordionTrigger className="hover:no-underline py-4">
-                <div className="flex items-center gap-3 text-right">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <Pill className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <span className="font-bold text-gray-700">ما هي الأدوية التي تتناولها حالياً؟</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pb-4">
-                <Textarea 
-                  placeholder="اذكر الأدوية وجرعاتها إذا أمكن..." 
-                  className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
-                  value={formData.medications}
-                  onChange={(e) => setFormData(p => ({ ...p, medications: e.target.value }))}
-                />
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="allergies" className="border-none bg-white rounded-2xl shadow-sm px-4">
-              <AccordionTrigger className="hover:no-underline py-4">
-                <div className="flex items-center gap-3 text-right">
-                  <div className="p-2 bg-red-100 rounded-lg">
-                    <AlertTriangle className="w-5 h-5 text-red-600" />
-                  </div>
-                  <span className="font-bold text-gray-700">هل لديك حساسية من أدوية أو أطعمة؟</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pb-4">
-                <Textarea 
-                  placeholder="مثال: حساسية البنسلين، حساسية الفول..." 
-                  className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
-                  value={formData.allergies}
-                  onChange={(e) => setFormData(p => ({ ...p, allergies: e.target.value }))}
-                />
-              </AccordionContent>
-            </AccordionItem>
+                </AccordionTrigger>
+                <AccordionContent className="pb-4">
+                  <Textarea 
+                    placeholder="يرجى الكتابة هنا بالتفصيل..." 
+                    className="bg-slate-50 border-none rounded-xl min-h-[90px] text-right text-[12px] p-3 shadow-inner-soft"
+                    value={formData[q.id as keyof typeof formData]}
+                    onChange={(e) => setFormData(p => ({ ...p, [q.id]: e.target.value }))}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            ))}
           </Accordion>
-        </div>
+        </section>
 
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold px-2">مواقع العناوين</h2>
-          <Card className="border-none shadow-sm rounded-3xl p-6 space-y-5 bg-white">
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2 font-bold">
-                <Home className="w-4 h-4 text-green-600" />
-                عنوان السكن
+        {/* Addresses */}
+        <section className="space-y-3">
+          <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest px-2">العناوين</h2>
+          <Card className="border-none shadow-soft rounded-3xl p-5 space-y-4">
+            <div className="space-y-1.5">
+              <Label className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5 mr-1">
+                <Home className="w-3.5 h-3.5 text-slate-400" /> السكن
               </Label>
               <Input 
-                placeholder="المدينة، الحي، اسم الشارع" 
-                className="h-12 rounded-xl text-right bg-gray-50 border-none" 
+                placeholder="المدينة، الحي، الشارع" 
+                className="h-11 rounded-xl bg-slate-50 border-none text-right shadow-inner-soft" 
                 value={formData.homeAddress}
                 onChange={(e) => setFormData(p => ({ ...p, homeAddress: e.target.value }))}
               />
             </div>
-
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2 font-bold">
-                <Briefcase className="w-4 h-4 text-orange-600" />
-                عنوان العمل
+            <div className="space-y-1.5">
+              <Label className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5 mr-1">
+                <Briefcase className="w-3.5 h-3.5 text-slate-400" /> العمل
               </Label>
               <Input 
-                placeholder="مكان العمل أو جهة الوظيفة" 
-                className="h-12 rounded-xl text-right bg-gray-50 border-none" 
+                placeholder="جهة العمل أو العنوان" 
+                className="h-11 rounded-xl bg-slate-50 border-none text-right shadow-inner-soft" 
                 value={formData.workAddress}
                 onChange={(e) => setFormData(p => ({ ...p, workAddress: e.target.value }))}
               />
             </div>
-
-            <div className="pt-2">
-              <Button 
-                onClick={handleLocate} 
-                variant="outline" 
-                className="w-full h-14 rounded-2xl border-dashed border-primary/40 text-primary hover:bg-primary/5 gap-3"
-                disabled={isLocating}
-              >
-                {isLocating ? (
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-primary rounded-full animate-ping"></span>
-                    جاري تحديد الموقع...
-                  </div>
-                ) : (
-                  <>
-                    <LocateFixed className="w-5 h-5" />
-                    تحديد موقعي الحالي على الخريطة
-                  </>
-                )}
-              </Button>
-            </div>
+            <Button 
+              onClick={handleLocate} 
+              variant="outline" 
+              className="w-full h-12 rounded-xl border-dashed border-slate-200 text-slate-500 hover:bg-slate-50 text-[11px] font-bold gap-2 active-scale"
+              disabled={isLocating}
+            >
+              {isLocating ? <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div> : <LocateFixed className="w-4 h-4" />}
+              تحديد موقعي الحالي بدقة
+            </Button>
           </Card>
-        </div>
+        </section>
 
         <Button 
           onClick={handleSave} 
-          className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 rounded-2xl gap-3 mt-6"
+          className="w-full h-14 text-sm font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 rounded-2xl gap-2 active-scale mb-4"
         >
-          <Save className="w-6 h-6" />
-          حفظ كافة البيانات
+          <Save className="w-4 h-4" />
+          حفظ التعديلات
         </Button>
-      </div>
+      </main>
+      
+      <BottomNav activeTab="profile" />
     </div>
   );
 }
