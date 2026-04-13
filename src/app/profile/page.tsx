@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from "@/firebase";
+import BottomNav from "@/components/navigation/BottomNav";
 
 export default function ProfilePage() {
   const router = useRouter();
