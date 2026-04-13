@@ -7,7 +7,6 @@ import Image from "next/image";
 import { doc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { 
   Car, 
   Flame, 
@@ -38,7 +37,6 @@ export default function DashboardPage() {
   }, [db, user]);
 
   const { data: profile } = useDoc(userProfileRef);
-  const mapImg = PlaceHolderImages.find(i => i.id === "map-placeholder");
 
   const quickActions = [
     { id: "accident", label: "حادث سير", icon: Car, color: "text-orange-500 bg-orange-50" },
@@ -74,7 +72,7 @@ export default function DashboardPage() {
           <div>
             <p className="text-[10px] font-black text-slate-400 mb-0.5 uppercase tracking-widest">مرحباً بك مجدداً</p>
             <h1 className="text-lg font-black text-slate-900 leading-tight">
-              كابتن {profile?.fullName?.split(' ')[0] || "منى"}
+              كابتن {profile?.fullName?.split(' ')[0] || "منى باحسين"}
             </h1>
           </div>
           <div className="flex -space-x-2 rtl:space-x-reverse">
@@ -89,11 +87,11 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Real-time Map Card */}
+        {/* Real Map Module */}
         <section className="space-y-3">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-              <MapPin className="w-3 h-3 text-primary" /> موقعك الحي في المكلا
+              <MapPin className="w-3 h-3 text-primary" /> خريطة المكلا الحية
             </h2>
             <div className="flex gap-2">
               <div className="flex items-center gap-1.5 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
@@ -103,58 +101,48 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          <Card className="overflow-hidden border-none shadow-soft rounded-[2.5rem] bg-slate-100 relative group">
-            <div className="relative aspect-[16/10]">
-              {mapImg && (
-                <Image
-                  src={mapImg.imageUrl}
-                  alt="Location Map"
-                  fill
-                  className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
-                  data-ai-hint={mapImg.imageHint}
-                />
-              )}
-              {/* Map UI Elements */}
-              <div className="absolute inset-0 bg-slate-900/5 pointer-events-none"></div>
-              
-              {/* Compass & Controls */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
-                <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
-                  <Maximize2 className="w-4 h-4" />
-                </button>
-                <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
-                  <Layers className="w-4 h-4" />
-                </button>
-              </div>
+          <Card className="overflow-hidden border-none shadow-soft rounded-[2.5rem] bg-slate-100 relative group aspect-[16/10]">
+            {/* Real Interactive Map using OpenStreetMap */}
+            <iframe 
+              width="100%" 
+              height="100%" 
+              frameBorder="0" 
+              scrolling="no" 
+              marginHeight={0} 
+              marginWidth={0} 
+              src="https://www.openstreetmap.org/export/embed.html?bbox=49.10,14.52,49.15,14.56&amp;layer=mapnik&amp;marker=14.54,49.12"
+              className="grayscale-[0.2] contrast-[1.1]"
+            ></iframe>
+            
+            <div className="absolute inset-0 pointer-events-none border-[12px] border-white/50 rounded-[2.5rem]"></div>
+            
+            {/* Map UI Overlays */}
+            <div className="absolute top-4 left-4 flex flex-col gap-2 pointer-events-auto">
+              <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
+                <Maximize2 className="w-4 h-4" />
+              </button>
+              <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
+                <Layers className="w-4 h-4" />
+              </button>
+            </div>
 
-              {/* Pulse Indicator */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative">
-                  <div className="absolute -inset-6 bg-primary/20 rounded-full animate-ping"></div>
-                  <div className="w-6 h-6 bg-primary rounded-full border-[4px] border-white shadow-xl relative z-10 flex items-center justify-center">
-                    <div className="w-1 h-1 bg-white rounded-full"></div>
+            {/* Address Overlay */}
+            <div className="absolute bottom-4 left-4 right-4 pointer-events-auto">
+              <div className="bg-white/95 backdrop-blur p-3 rounded-2xl shadow-xl flex items-center justify-between border border-white/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center">
+                    <Search className="w-3.5 h-3.5 text-slate-400" />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] font-black text-slate-800 truncate max-w-[150px]">
+                      {profile?.homeAddress || "حي فوة، شارع الستين، المكلا"}
+                    </p>
+                    <p className="text-[9px] text-slate-400 font-bold">موقعك الحالي - دقة عالية</p>
                   </div>
                 </div>
-              </div>
-
-              {/* Address Overlay */}
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-white/95 backdrop-blur p-3 rounded-2xl shadow-xl flex items-center justify-between border border-white/20">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center">
-                      <Search className="w-3.5 h-3.5 text-slate-400" />
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[11px] font-black text-slate-800 truncate max-w-[150px]">
-                        {profile?.homeAddress || "حي فوة، شارع الستين، المكلا"}
-                      </p>
-                      <p className="text-[9px] text-slate-400 font-bold">دقة الموقع: 5 أمتار</p>
-                    </div>
-                  </div>
-                  <Button size="icon" className="h-9 w-9 bg-primary hover:bg-primary/90 rounded-xl shadow-lg shadow-primary/20">
-                    <Navigation className="w-4 h-4 text-white" />
-                  </Button>
-                </div>
+                <Button size="icon" className="h-9 w-9 bg-primary hover:bg-primary/90 rounded-xl shadow-lg shadow-primary/20">
+                  <Navigation className="w-4 h-4 text-white" />
+                </Button>
               </div>
             </div>
           </Card>

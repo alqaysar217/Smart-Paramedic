@@ -18,12 +18,10 @@ import {
   Layers,
   Info
 } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function TrackingPage() {
   const router = useRouter();
-  const trackImg = PlaceHolderImages.find(i => i.id === "ambulance-tracking");
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-cairo overflow-hidden" dir="rtl">
@@ -48,15 +46,19 @@ export default function TrackingPage() {
 
       {/* Real Map Tracking Section */}
       <div className="flex-1 relative">
-        {trackImg && (
-          <Image
-            src={trackImg.imageUrl}
-            alt="Real-time map tracking"
-            fill
-            className="object-cover transition-opacity duration-1000"
-            data-ai-hint={trackImg.imageHint}
-          />
-        )}
+        {/* Real Interactive Map using OpenStreetMap */}
+        <iframe 
+          width="100%" 
+          height="100%" 
+          frameBorder="0" 
+          scrolling="no" 
+          marginHeight={0} 
+          marginWidth={0} 
+          src="https://www.openstreetmap.org/export/embed.html?bbox=49.11,14.53,49.14,14.55&amp;layer=mapnik&amp;marker=14.542,49.125"
+          className="grayscale-[0.1] contrast-[1.1]"
+        ></iframe>
+
+        <div className="absolute inset-0 pointer-events-none bg-primary/5"></div>
         
         {/* Map UI Elements */}
         <div className="absolute top-24 left-6 flex flex-col gap-3">
@@ -68,27 +70,15 @@ export default function TrackingPage() {
           </button>
         </div>
 
-        {/* Live Ambulance Marker */}
-        <div className="absolute top-[35%] left-[35%] transition-all duration-1000">
+        {/* Live Ambulance Marker Overlay */}
+        <div className="absolute top-[45%] left-[45%] pointer-events-none">
           <div className="relative">
             <div className="absolute -inset-10 bg-primary/20 rounded-full animate-ping opacity-40"></div>
-            <div className="absolute -inset-6 bg-primary/10 rounded-full animate-pulse opacity-60"></div>
-            <div className="w-14 h-14 bg-white rounded-3xl shadow-2xl flex items-center justify-center border-[3px] border-primary relative z-10 rotate-12 transition-transform hover:rotate-0">
-              <Activity className="w-7 h-7 text-primary" />
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-2xl flex items-center justify-center border-[3px] border-primary relative z-10 rotate-12">
+              <Activity className="w-6 h-6 text-primary" />
             </div>
-            {/* Tooltip for Ambulance */}
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-3 py-1 rounded-full text-[9px] font-black shadow-xl whitespace-nowrap">
+            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-3 py-1 rounded-full text-[8px] font-black shadow-xl whitespace-nowrap">
               سرعة الإسعاف: 85 كم/س
-            </div>
-          </div>
-        </div>
-
-        {/* User Destination Marker */}
-        <div className="absolute bottom-[35%] right-[45%]">
-          <div className="relative">
-            <div className="w-8 h-8 bg-blue-500 rounded-full border-[4px] border-white shadow-2xl relative z-10"></div>
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur px-2 py-1 rounded-lg text-[9px] font-black border border-slate-100 shadow-lg whitespace-nowrap">
-              موقعك الحالي
             </div>
           </div>
         </div>
@@ -138,7 +128,7 @@ export default function TrackingPage() {
             <div className="flex-1 space-y-4 text-right">
               <div className="space-y-1">
                 <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">الموقع المستهدف</p>
-                <div className="p-3.5 bg-slate-50 rounded-2xl flex items-center justify-between border border-slate-100 shadow-inner-soft group hover:bg-slate-100 transition-colors">
+                <div className="p-3.5 bg-slate-50 rounded-2xl flex items-center justify-between border border-slate-100 shadow-inner-soft">
                   <p className="text-xs font-black text-slate-700">المكلا، حي فوة، شارع الستين</p>
                   <MapPin className="w-4 h-4 text-primary" />
                 </div>
@@ -148,7 +138,7 @@ export default function TrackingPage() {
         </div>
 
         <div className="flex gap-3 pt-2">
-          <Button variant="outline" className="flex-1 h-14 rounded-2xl font-black border-slate-100 text-slate-400 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100 transition-all gap-2 text-xs active-scale">
+          <Button variant="outline" className="flex-1 h-14 rounded-2xl font-black border-slate-100 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all gap-2 text-xs active-scale">
             <AlertCircle className="w-4 h-4" />
             إلغاء الطلب
           </Button>
@@ -156,11 +146,6 @@ export default function TrackingPage() {
             <MessageCircle className="w-4 h-4" />
             مراسلة الطبيب
           </Button>
-        </div>
-        
-        <div className="flex items-center justify-center gap-2 pb-2">
-          <Info className="w-3 h-3 text-slate-300" />
-          <p className="text-[9px] text-slate-300 font-bold">تم تحديث الموقع قبل لحظات</p>
         </div>
       </div>
     </div>

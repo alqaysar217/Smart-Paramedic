@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,25 +7,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, User, Phone, Mail, Lock, Fingerprint, ScanFace, ChevronLeft } from "lucide-react";
+import { ShieldCheck, Mail, Lock, Fingerprint, ScanFace } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth, useUser, initiateEmailSignIn, initiateEmailSignUp } from "@/firebase";
 
 export default function AuthPage() {
   const router = useRouter();
   const auth = useAuth();
-  const { user, isUserLoading } = useUser();
+  const { user, isUserLoading, userError } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     if (user && !isUserLoading) {
+      toast({
+        title: "تم تسجيل الدخول",
+        description: `مرحباً بك ${user.email}`,
+      });
       router.push("/dashboard");
     }
   }, [user, isUserLoading, router]);
+
+  useEffect(() => {
+    if (userError) {
+      setIsLoading(false);
+      toast({
+        variant: "destructive",
+        title: "خطأ في الدخول",
+        description: "يرجى التأكد من البريد وكلمة المرور.",
+      });
+    }
+  }, [userError]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +53,11 @@ export default function AuthPage() {
     initiateEmailSignUp(auth, email, password);
   };
 
-  if (isUserLoading) return null;
+  if (isUserLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-white px-6 flex flex-col justify-center py-12">
@@ -48,7 +67,7 @@ export default function AuthPage() {
           <ShieldCheck className="w-8 h-8 text-white" />
         </div>
         <h1 className="text-2xl font-black text-slate-900 mb-1">المسعف الذكي</h1>
-        <p className="text-slate-400 text-xs font-medium">الأمان، السرعة، والإنقاذ في متناول يدك</p>
+        <p className="text-slate-400 text-xs font-medium">الأمان والإنقاذ في حضرموت</p>
       </div>
 
       <Tabs defaultValue="login" className="w-full">
@@ -59,10 +78,10 @@ export default function AuthPage() {
 
         <TabsContent value="login" className="space-y-6">
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 text-right">
               <Label className="text-[11px] font-bold text-slate-500 mr-1">البريد الإلكتروني</Label>
               <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                 <Input 
                   type="email" 
                   placeholder="name@example.com" 
@@ -73,10 +92,10 @@ export default function AuthPage() {
                 />
               </div>
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 text-right">
               <Label className="text-[11px] font-bold text-slate-500 mr-1">كلمة المرور</Label>
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                 <Input 
                   type="password" 
                   className="pl-10 pr-4 h-12 rounded-xl bg-slate-50 border-none shadow-inner-soft text-right" 
@@ -88,7 +107,7 @@ export default function AuthPage() {
             </div>
             
             <Button type="submit" className="w-full h-13 text-sm font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 rounded-xl active-scale" disabled={isLoading}>
-              {isLoading ? "جاري الدخول..." : "دخول"}
+              {isLoading ? "جاري التحقق..." : "دخول آمن"}
             </Button>
           </form>
 
@@ -98,11 +117,11 @@ export default function AuthPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-16 rounded-2xl border-slate-100 bg-slate-50/50 hover:bg-primary/5 hover:text-primary hover:border-primary/20 flex flex-col gap-1 active-scale">
+            <Button variant="outline" className="h-16 rounded-2xl border-slate-100 bg-slate-50/50 flex flex-col gap-1 active-scale">
               <Fingerprint className="w-5 h-5" />
               <span className="text-[10px] font-bold">بصمة الإصبع</span>
             </Button>
-            <Button variant="outline" className="h-16 rounded-2xl border-slate-100 bg-slate-50/50 hover:bg-primary/5 hover:text-primary hover:border-primary/20 flex flex-col gap-1 active-scale">
+            <Button variant="outline" className="h-16 rounded-2xl border-slate-100 bg-slate-50/50 flex flex-col gap-1 active-scale">
               <ScanFace className="w-5 h-5" />
               <span className="text-[10px] font-bold">بصمة الوجه</span>
             </Button>
@@ -111,46 +130,42 @@ export default function AuthPage() {
 
         <TabsContent value="signup" className="space-y-4">
           <form onSubmit={handleSignUp} className="space-y-4">
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 text-right">
               <Label className="text-[11px] font-bold text-slate-500 mr-1">الاسم الكامل</Label>
               <Input 
-                placeholder="محمد باوزير" 
-                className="h-12 rounded-xl bg-slate-50 border-none shadow-inner-soft text-right" 
+                placeholder="منى باحسين" 
+                className="h-12 rounded-xl bg-slate-50 border-none text-right" 
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required 
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 text-right">
               <Label className="text-[11px] font-bold text-slate-500 mr-1">البريد الإلكتروني</Label>
               <Input 
                 type="email" 
-                className="h-12 rounded-xl bg-slate-50 border-none shadow-inner-soft text-right" 
+                className="h-12 rounded-xl bg-slate-50 border-none text-right" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 text-right">
               <Label className="text-[11px] font-bold text-slate-500 mr-1">كلمة المرور</Label>
               <Input 
                 type="password" 
-                className="h-12 rounded-xl bg-slate-50 border-none shadow-inner-soft text-right" 
+                className="h-12 rounded-xl bg-slate-50 border-none text-right" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required 
               />
             </div>
-            <Button type="submit" className="w-full h-13 text-sm font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 rounded-xl active-scale mt-4">
-              إنشاء حساب جديد
+            <Button type="submit" className="w-full h-13 text-sm font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 rounded-xl active-scale mt-4" disabled={isLoading}>
+              {isLoading ? "جاري الإنشاء..." : "إنشاء حساب حقيقي"}
             </Button>
           </form>
         </TabsContent>
       </Tabs>
-      
-      <p className="mt-12 text-center text-[10px] text-slate-400 font-medium leading-relaxed">
-        باستخدامك للتطبيق، أنت توافق على <span className="text-primary font-bold underline">سياسة الخصوصية</span> و <span className="text-primary font-bold underline">شروط الاستخدام</span> الخاصة بنا.
-      </p>
     </div>
   );
 }

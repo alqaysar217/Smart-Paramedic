@@ -23,19 +23,15 @@ import {
   LogOut,
   Hospital,
   Activity,
-  Heart,
   Maximize2,
   Layers,
-  Search,
-  MousePointer2
+  Search
 } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 
 export default function ResponderDashboard() {
   const [activeTab, setActiveTab] = useState<'reports' | 'map' | 'units'>('reports');
   const db = useFirestore();
-  const mapImg = PlaceHolderImages.find(i => i.id === "map-placeholder");
 
   const reportsQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -78,7 +74,7 @@ export default function ResponderDashboard() {
           <div className="space-y-1.5">
             <Button 
               variant={activeTab === 'reports' ? "default" : "ghost"} 
-              className={`w-full justify-start gap-3 h-12 rounded-xl text-xs font-black ${activeTab === 'reports' ? 'bg-slate-900 shadow-xl shadow-slate-900/10' : 'text-slate-500 hover:bg-slate-50'}`}
+              className={`w-full justify-start gap-3 h-12 rounded-xl text-xs font-black ${activeTab === 'reports' ? 'bg-slate-900' : 'text-slate-500'}`}
               onClick={() => setActiveTab('reports')}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -86,7 +82,7 @@ export default function ResponderDashboard() {
             </Button>
             <Button 
               variant={activeTab === 'map' ? "default" : "ghost"} 
-              className={`w-full justify-start gap-3 h-12 rounded-xl text-xs font-black ${activeTab === 'map' ? 'bg-slate-900 shadow-xl shadow-slate-900/10' : 'text-slate-500 hover:bg-slate-50'}`}
+              className={`w-full justify-start gap-3 h-12 rounded-xl text-xs font-black ${activeTab === 'map' ? 'bg-slate-900' : 'text-slate-500'}`}
               onClick={() => setActiveTab('map')}
             >
               <MapIcon className="w-4 h-4" />
@@ -94,7 +90,7 @@ export default function ResponderDashboard() {
             </Button>
             <Button 
               variant={activeTab === 'units' ? "default" : "ghost"} 
-              className={`w-full justify-start gap-3 h-12 rounded-xl text-xs font-black ${activeTab === 'units' ? 'bg-slate-900 shadow-xl shadow-slate-900/10' : 'text-slate-500 hover:bg-slate-50'}`}
+              className={`w-full justify-start gap-3 h-12 rounded-xl text-xs font-black ${activeTab === 'units' ? 'bg-slate-900' : 'text-slate-500'}`}
               onClick={() => setActiveTab('units')}
             >
               <Users className="w-4 h-4" />
@@ -103,11 +99,11 @@ export default function ResponderDashboard() {
           </div>
           
           <div className="mt-auto space-y-1">
-            <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl text-slate-400 hover:text-slate-600 text-xs font-black">
+            <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl text-slate-400 text-xs font-black">
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">الإعدادات</span>
             </Button>
-            <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl text-rose-400 hover:text-rose-600 hover:bg-rose-50 text-xs font-black">
+            <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl text-rose-400 text-xs font-black">
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">تسجيل الخروج</span>
             </Button>
@@ -116,7 +112,6 @@ export default function ResponderDashboard() {
 
         <main className="flex-1 overflow-auto p-6 sm:p-8">
           <div className="max-w-6xl mx-auto space-y-8">
-            {/* Real Map Module */}
             {activeTab === 'map' ? (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex justify-between items-center">
@@ -124,61 +119,48 @@ export default function ResponderDashboard() {
                     <div className="w-1 h-5 bg-primary rounded-full"></div>
                     خريطة السيطرة والتحكم (المكلا)
                   </h2>
-                  <div className="flex gap-2">
-                    <Badge variant="outline" className="bg-white border-slate-200 text-slate-500 font-black h-8 px-4 rounded-xl">24 سيارة إسعاف متصلة</Badge>
-                  </div>
+                  <Badge variant="outline" className="bg-white border-slate-200 text-slate-500 font-black h-8 px-4 rounded-xl">24 سيارة إسعاف متصلة</Badge>
                 </div>
 
                 <Card className="overflow-hidden border-none shadow-2xl aspect-[16/9] relative rounded-[3rem] bg-slate-900 group">
-                  {mapImg && (
-                    <Image
-                      src={mapImg.imageUrl}
-                      alt="Mukalla Satellite Control Map"
-                      fill
-                      className="object-cover opacity-80"
-                    />
-                  )}
+                  {/* Real Interactive Map using OpenStreetMap */}
+                  <iframe 
+                    width="100%" 
+                    height="100%" 
+                    frameBorder="0" 
+                    scrolling="no" 
+                    marginHeight={0} 
+                    marginWidth={0} 
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=49.05,14.50,49.20,14.60&amp;layer=mapnik"
+                    className="grayscale-[0.3] contrast-[1.2]"
+                  ></iframe>
                   
                   {/* Real-time Map Overlays */}
                   <div className="absolute top-8 left-8 flex flex-col gap-3">
-                    <button className="w-12 h-12 bg-white shadow-2xl rounded-2xl flex items-center justify-center text-slate-600 active-scale border border-white/20">
+                    <button className="w-12 h-12 bg-white shadow-2xl rounded-2xl flex items-center justify-center text-slate-600 active-scale">
                       <Maximize2 className="w-5 h-5" />
                     </button>
-                    <button className="w-12 h-12 bg-white shadow-2xl rounded-2xl flex items-center justify-center text-slate-600 active-scale border border-white/20">
+                    <button className="w-12 h-12 bg-white shadow-2xl rounded-2xl flex items-center justify-center text-slate-600 active-scale">
                       <Layers className="w-5 h-5" />
                     </button>
-                    <button className="w-12 h-12 bg-white shadow-2xl rounded-2xl flex items-center justify-center text-slate-600 active-scale border border-white/20">
+                    <button className="w-12 h-12 bg-white shadow-2xl rounded-2xl flex items-center justify-center text-slate-600 active-scale">
                       <Search className="w-5 h-5" />
                     </button>
                   </div>
 
-                  {/* Dynamic Incident Markers from Data */}
+                  {/* Dynamic Incident Markers Overlay */}
                   {realReports?.map((report, idx) => (
                     <div 
                       key={report.id} 
-                      className="absolute group cursor-pointer transition-all hover:z-50" 
+                      className="absolute group cursor-pointer" 
                       style={{ top: `${20 + (idx * 8)}%`, left: `${30 + (idx * 12)}%` }}
                     >
                       <div className="absolute -inset-6 bg-primary/20 rounded-full animate-ping"></div>
-                      <div className="w-8 h-8 bg-primary rounded-full border-[3px] border-white shadow-2xl relative z-10 flex items-center justify-center transition-transform hover:scale-125">
+                      <div className="w-8 h-8 bg-primary rounded-full border-[3px] border-white shadow-2xl relative z-10 flex items-center justify-center">
                         <AlertCircle className="w-4 h-4 text-white" />
-                      </div>
-                      {/* Interactive Tooltip */}
-                      <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white p-3 rounded-2xl shadow-2xl border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-                        <p className="text-[10px] font-black text-slate-800 mb-1">{report.incidentType}</p>
-                        <p className="text-[9px] text-slate-400 font-bold mb-2">{report.incidentAddress}</p>
-                        <Button size="sm" className="h-7 w-full bg-slate-900 text-[8px] rounded-lg">توجيه أقرب وحدة</Button>
                       </div>
                     </div>
                   ))}
-
-                  {/* Static Ambulance Markers (Simulated Live Fleet) */}
-                  <div className="absolute bottom-[40%] right-[30%] group cursor-pointer">
-                    <div className="w-10 h-10 bg-accent rounded-2xl border-[3px] border-white shadow-2xl flex items-center justify-center rotate-45 relative z-10">
-                      <Navigation className="w-5 h-5 text-white -rotate-45" />
-                    </div>
-                    <div className="absolute top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-2 py-0.5 rounded text-[8px] font-black">AMB-042</div>
-                  </div>
 
                   {/* Map Status Overlay */}
                   <div className="absolute bottom-10 right-10 bg-white/95 backdrop-blur-md p-6 rounded-[2.5rem] shadow-2xl border border-white/40 w-72 space-y-4">
@@ -191,18 +173,13 @@ export default function ResponderDashboard() {
                         <span className="text-slate-500">تغطية GPS:</span>
                         <span className="text-green-600">ممتازة (98%)</span>
                       </div>
-                      <div className="flex items-center justify-between text-[10px] font-bold">
-                        <span className="text-slate-500">زمن الاستجابة للبيانات:</span>
-                        <span className="text-slate-800">45ms</span>
-                      </div>
                     </div>
-                    <Button variant="outline" className="w-full h-10 rounded-xl text-[10px] font-black border-slate-100">تحميل بيانات المنطقة بالكامل</Button>
+                    <Button variant="outline" className="w-full h-10 rounded-xl text-[10px] font-black border-slate-100">تحميل بيانات المنطقة</Button>
                   </div>
                 </Card>
               </div>
             ) : (
               <div className="space-y-6 animate-in fade-in duration-500">
-                {/* Reports List View */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   <Card className="border-none shadow-sm rounded-3xl p-6 bg-white flex items-center gap-4">
                     <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
@@ -211,24 +188,6 @@ export default function ResponderDashboard() {
                     <div>
                       <p className="text-[10px] text-slate-400 font-black uppercase">نشط الآن</p>
                       <p className="text-xl font-black text-slate-800">{realReports?.length || 0}</p>
-                    </div>
-                  </Card>
-                  <Card className="border-none shadow-sm rounded-3xl p-6 bg-white flex items-center gap-4">
-                    <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent">
-                      <Check className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-slate-400 font-black uppercase">مكتمل اليوم</p>
-                      <p className="text-xl font-black text-slate-800">124</p>
-                    </div>
-                  </Card>
-                  <Card className="border-none shadow-sm rounded-3xl p-6 bg-white flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
-                      <MousePointer2 className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-slate-400 font-black uppercase">الاستجابة</p>
-                      <p className="text-xl font-black text-slate-800">6.4 د</p>
                     </div>
                   </Card>
                 </div>
@@ -240,16 +199,9 @@ export default function ResponderDashboard() {
                     <Card key={report.id} className="overflow-hidden border-none shadow-sm bg-white hover:ring-2 ring-primary/10 transition-all rounded-[2rem]">
                       <CardContent className="p-0">
                         <div className="p-6 flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                          <div className="flex-1 space-y-3">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
-                                <User className="w-5 h-5" />
-                              </div>
-                              <div>
-                                <h3 className="text-[13px] font-black text-slate-800">بلاغ طارئ #{report.id.slice(-4)}</h3>
-                                <p className="text-[9px] text-slate-400 font-black uppercase">{new Date(report.reportTime).toLocaleString('ar-SA')}</p>
-                              </div>
-                            </div>
+                          <div className="flex-1 space-y-3 text-right">
+                            <h3 className="text-[13px] font-black text-slate-800">بلاغ طارئ #{report.id.slice(-4)}</h3>
+                            <p className="text-[9px] text-slate-400 font-black uppercase">{new Date(report.reportTime).toLocaleString('ar-SA')}</p>
                           </div>
                           <div className="flex gap-4 items-center">
                             <Badge className="bg-primary/5 text-primary border-none font-black h-7 px-3 rounded-lg">{report.incidentType}</Badge>
