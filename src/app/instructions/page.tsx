@@ -18,99 +18,142 @@ import {
   Brain,
   UserMinus,
   Volume2,
-  Share2
+  Share2,
+  HeartPulse,
+  ThermometerSnowflake,
+  Stethoscope
 } from "lucide-react";
 import BottomNav from "@/components/navigation/BottomNav";
 
-// قاعدة بيانات الإسعافات الأولية الفورية
+// قاعدة بيانات الإسعافات الأولية الموسعة والشاملة
 const FIRST_AID_DATA = {
   bleeding: {
-    title: "إسعاف حالات النزيف الحاد",
+    title: "الدليل الشامل للتعامل مع النزيف الحاد",
     steps: [
-      "ارتدِ قفازات طبية إن وجدت لحماية نفسك.",
-      "اضغط مباشرة على الجرح بقطعة قماش نظيفة أو شاش.",
-      "ارفع العضو المصاب أعلى من مستوى القلب إن أمكن.",
-      "إذا لم يتوقف النزيف، لا ترفع الشاش القديم بل ضع فوقه طبقة أخرى.",
-      "ثبّت الضمادة جيداً وانتظر وصول فريق الإسعاف."
+      "تأكد أولاً من سلامة الموقع لك وللمصاب قبل البدء بالإسعاف.",
+      "ارتدِ القفازات الطبية فوراً لتجنب انتقال الأمراض عبر الدم.",
+      "قم بإزالة الملابس عن الجرح لرؤية مصدر النزيف بوضوح.",
+      "طبق ضغطاً مباشراً وقوياً على الجرح باستخدام شاش معقم أو قطعة قماش نظيفة.",
+      "إذا تشبع الشاش بالدم، لا تنزعه بل ضع شاشاً جديداً فوقه واستمر في الضغط.",
+      "ارفع الطرف المصاب فوق مستوى القلب لتقليل تدفق الدم.",
+      "في حال نزيف الأطراف الشديد الذي لا يتوقف بالضغط، قد يتطلب الأمر استخدام 'المرقأة' (Tourniquet) فوق الجرح بـ 5 سم.",
+      "ثبّت الضمادة برباط ضاغط دون قطع الدورة الدموية تماماً.",
+      "راقب علامات الصدمة: شحوب الوجه، برودة الأطراف، وسرعة النبض.",
+      "ابقِ المصاب مستلقياً ودافئاً حتى وصول سيارة الإسعاف."
     ],
-    disclaimer: "هذه التعليمات لغرض الإسعاف الأولي السريع ولا تغني عن التدخل الطبي المتخصص."
+    disclaimer: "النزيف الشرياني (دم أحمر فاتح يتدفق بقوة) حالة طارئة جداً تتطلب ضغطاً مستمراً دون انقطاع."
   },
   choking: {
-    title: "إسعاف حالات الاختناق (غصة الطعام)",
+    title: "إسعاف غصة الطعام والاختناق للأطفال والكبار",
     steps: [
-      "قف خلف الشخص المصاب ولف ذراعيك حول خصره.",
-      "أغلق قبضة يدك وضعها فوق سرة الشخص مباشرة.",
-      "أمسك قبضتك بيدك الأخرى واضغط بقوة للداخل وللأعلى (مناورة هيمليك).",
-      "كرر الضغطات حتى يخرج الجسم الغريب أو يفقد الشخص وعيه.",
-      "إذا فقد الشخص وعيه، ابدأ فوراً في الإنعاش القلبي الرئوي (CPR)."
+      "إذا كان المصاب يسعل بقوة، شجعه على السعال ولا تتدخل.",
+      "إذا توقف السعال ولم يستطع التنفس أو الكلام، ابدأ فوراً بمناورة هيمليك.",
+      "قف خلف المصاب ولف ذراعيك حول خصره.",
+      "اصنع قبضة بيدك وضعها فوق السرة مباشرة (تحت عظمة القص).",
+      "أمسك قبضتك باليد الأخرى وادفع بقوة للداخل وللأعلى (حركة حرف J).",
+      "كرر الدفعات (5 دفعات) ثم اتبعها بـ 5 ضربات قوية بين لوحي الكتف.",
+      "استمر حتى يخرج الجسم الغريب أو يفقد الشخص وعيه.",
+      "بالنسبة للرضع: ضع الرضيع على ذراعك ووجهه للأسفل، واضرب 5 ضربات لطيفة على الظهر.",
+      "إذا فقد المصاب الوعي، ابدأ فوراً بعملية الإنعاش القلبي الرئوي (CPR).",
+      "لا تحاول إدخال إصبعك في الفم إلا إذا كنت ترى الجسم الغريب بوضوح."
     ],
-    disclaimer: "تأكد من طلب الإسعاف فوراً إذا لم تنجح المحاولة الأولى."
+    disclaimer: "مناورة هيمليك قد تسبب إصابات داخلية، لذا يجب فحص المصاب طبياً حتى بعد نجاح الإسعاف."
   },
   poisoning: {
-    title: "إسعاف حالات التسمم",
+    title: "البروتوكول الطبي لإسعاف حالات التسمم الكيميائي والغذائي",
     steps: [
-      "حاول معرفة المادة التي ابتلعها المصاب وكميتها.",
-      "لا تحاول إجبار المصاب على التقيؤ ما لم يطلب منك الطبيب ذلك.",
-      "إذا كانت المادة حارقة، لا تعطِ المصاب أي سوائل.",
-      "احتفظ بعبوة المادة السامة لتسليمها لفريق الإسعاف.",
-      "اتصل فوراً بمركز السموم أو الإسعاف (191)."
+      "حاول تحديد نوع المادة السامة ووقت تناولها وكميتها.",
+      "اتصل فوراً بالإسعاف (191) أو مركز السموم وأخبرهم بنوع المادة.",
+      "إذا كان السم مادة كاوية (مثل الفلاش أو الأسيد)، لا تجعل المصاب يتقيأ أبداً.",
+      "في حالات المواد الكاوية، يمكن إعطاء القليل من الماء أو الحليب فقط إذا كان المصاب واعياً ويستطيع البلع.",
+      "إذا كان السم غازاً (مثل أول أكسيد الكربون)، انقل المصاب للهواء الطلق فوراً.",
+      "إذا انسكب السم على الجلد، اغسل المنطقة بماء جاري لمدة 20 دقيقة على الأقل.",
+      "إذا وصل السم للعين، اغسلها بماء فاتر برفق من جهة الأنف للخارج.",
+      "لا تعطِ 'شراب عرق الذهب' أو الفحم المنشط إلا بأمر طبي مباشر.",
+      "حافظ على مجرى التنفس مفتوحاً وضع المصاب على جنبه في حال تقيأ.",
+      "خذ عبوة المادة السامة معك إلى المستشفى للتعرف على الترياق المناسب."
     ],
-    disclaimer: "التسمم حالة حرجة تتطلب تدخلاً طبياً عاجلاً جداً."
+    disclaimer: "تجنب الوصفات المنزلية مثل شرب الزيت أو الملح، فقد تسرع من امتصاص السم."
   },
   burns: {
-    title: "إسعاف حالات الحروق",
+    title: "إسعاف الحروق (الحرارية، الكيميائية، والكهربائية)",
     steps: [
-      "ضع المنطقة المصابة تحت ماء جاري فاتر لمدة 10-20 دقيقة.",
-      "لا تستخدم الثلج مباشرة على الحرق لأنه قد يتلف الأنسجة.",
-      "قم بإزالة الخواتم أو الملابس الضيقة من المنطقة قبل تورمها.",
-      "غطِّ الحرق بضمادة معقمة غير لاصقة أو غلاف بلاستيكي نظيف.",
-      "لا تضع معجون الأسنان أو الزيوت على الحرق."
+      "أبعد المصاب عن مصدر الحرق فوراً (نار، بخار، مواد كيميائية).",
+      "حروق الدرجة الأولى والثانية: ضع المنطقة تحت ماء جاري فاتر (وليس بارداً جداً) لمدة 20 دقيقة.",
+      "لا تستخدم الثلج مباشرة، حيث يسبب صدمة للأنسجة ويؤخر الشفاء.",
+      "قم بإزالة الخواتم والساعات والملابس قبل أن تتورم المنطقة، إلا إذا كانت ملتصقة بالحرق.",
+      "غطِّ المنطقة بضمادة معقمة غير لاصقة أو غلاف بلاستيكي نظيف (Wrap) دون ضغط.",
+      "لا تفتح البثور (الفقاعات) المليئة بالسوائل لتجنب العدوى.",
+      "الحروق الكيميائية: اغسل بالماء الجاري لمدة أطول (30-60 دقيقة) لإزالة المادة تماماً.",
+      "في الحروق الكبيرة، ارفع الأطراف المصابة فوق مستوى القلب.",
+      "راقب التنفس خاصة إذا كان الحرق في الوجه أو الصدر أو نتج عن استنشاق دخان.",
+      "لا تضع معجون الأسنان، الزبدة، أو أي مراهم منزلية على الحرق."
     ],
-    disclaimer: "الحروق الكبيرة أو حروق الوجه تتطلب نقلاً فورياً للمستشفى."
+    disclaimer: "حروق الدرجة الثالثة (الجلد المتفحم أو الأبيض) لا تسبب ألماً أحياناً بسبب تلف الأعصاب وهي حالة حرجة جداً."
   },
   fractures: {
-    title: "إسعاف حالات الكسور",
+    title: "إسعاف الكسور وإصابات العمود الفقري",
     steps: [
-      "لا تحاول تحريك العضو المكسور أو إعادته لوضعه الطبيعي.",
-      "ثبّت العضو المصاب باستخدام جبيرة مؤقتة (كرتون أو خشب مبطن).",
-      "ضع كيس ثلج ملفوف بقطعة قماش لتقليل التورم والألم.",
-      "إذا كان هناك جرح مفتوح، غطّه بشاش معقم دون الضغط على العظم.",
-      "راقب علامات الصدمة على المصاب (شحوب، سرعة تنفس)."
+      "لا تحاول إطلاقاً إعادة العظم المكسور إلى وضعه الطبيعي.",
+      "ثبّت العضو المصاب في الوضعية التي وجدته عليها.",
+      "استخدم جبائر مؤقتة (خشب، كرتون مقوى) تثبت المفصل فوق وتحت الكسر.",
+      "في حال الكسر المفتوح (بروز العظم)، غطِّ الجرح بشاش معقم دون لمس العظم.",
+      "تحقق من وجود نبض وإحساس في الأطراف بعد وضع الجبيرة للتأكد من أنها ليست ضيقة.",
+      "طبق كمدات باردة فوق الجبيرة لتقليل التورم.",
+      "إصابات الرأس والرقبة: لا تحرك المصاب أبداً إلا في حال خطر انفجار أو حريق.",
+      "استخدم يديك لتثبيت رأس المصاب ومنعه من الحركة حتى وصول الإسعاف.",
+      "راقب وعي المصاب وتحدث معه باستمرار لمنعه من فقدان الوعي.",
+      "في حال وجوب نقل المصاب بكسر عمود فقري، يجب أن يتم ذلك بواسطة 4 أشخاص ككتلة واحدة."
     ],
-    disclaimer: "تحريك المصاب بكسر في الظهر أو الرقبة خطر جداً ويجب تركه للمختصين."
+    disclaimer: "أي حركة خاطئة في كسور الرقبة قد تؤدي إلى شلل رباعي دائم."
   },
-  electric_shock: {
-    title: "إسعاف الصعق الكهربائي",
+  heart_attack: {
+    title: "إسعاف النوبات القلبية والسكتة الصدرية",
     steps: [
-      "افصل مصدر الكهرباء فوراً أو ابعد المصاب باستخدام أداة غير موصلة (خشب).",
-      "لا تلمس المصاب بيدك المجردة وهو لا يزال متصلاً بالكهرباء.",
-      "بمجرد تأمين الموقع، افحص التنفس والنبض.",
-      "إذا كان التنفس متوقفاً، ابدأ الإنعاش القلبي الرئوي فوراً.",
-      "غطِّ أماكن الحروق الناتجة عن الكهرباء بشاش نظيف."
+      "اجعل المصاب يتوقف عن أي مجهود بدني فوراً.",
+      "ساعد المصاب على الجلوس في وضعية مريحة (نصف جلسة) مع دعم الظهر.",
+      "قم بفك الملابس الضيقة حول الرقبة والخصر.",
+      "اسأل المصاب إذا كان يتناول أدوية قلب سابقة (مثل حبوب تحت اللسان).",
+      "إذا كان المصاب واعياً وغير حاس لـ 'الأسبرين'، اجعله يمضغ حبة أسبرين (300 ملغ).",
+      "طمئن المصاب وحاول تهدئته لتقليل الجهد على عضلة القلب.",
+      "إذا فقد المصاب وعيه وتوقف تنفسه، ابدأ الإنعاش القلبي الرئوي (CPR) فوراً.",
+      "لا تترك المصاب وحيداً أبداً.",
+      "لا تسمح للمصاب بالمشي أو الحركة حتى لو شعر بتحسن مؤقت.",
+      "اتصل بالإسعاف فوراً وأخبرهم أنها 'اشتباه نوبة قلبية' ليرسلوا سيارة مجهزة."
     ],
-    disclaimer: "الصعق الكهربائي قد يؤثر على ضربات القلب حتى لو بدا الشخص سليماً."
+    disclaimer: "أعراض النوبة عند النساء وكبار السن قد تكون 'ضيق تنفس' أو 'ألم في الفك' بدلاً من ألم الصدر الصريح."
   },
   seizures: {
-    title: "إسعاف حالات التشنجات والصرع",
+    title: "إسعاف حالات التشنج العصبي والصرع",
     steps: [
-      "ضع المصاب على الأرض وبعيداً عن الأجسام الصلبة أو الحادة.",
-      "ضع شيئاً ناعماً تحت رأسه (مثل وسادة أو ملابس مطوية).",
-      "لا تحاول وضع أي شيء في فم المصاب أو تثبيت حركته بقوة.",
-      "بعد انتهاء التشنج، ضع المصاب على جنبه (وضعية الإفاقة).",
-      "ابقَ مع المصاب حتى يستعيد وعيه بالكامل."
+      "احسب وقت بداية التشنج بدقة.",
+      "أبعد أي أجسام صلبة أو حادة من حول المصاب.",
+      "ضع وسادة أو ملابس مطوية تحت رأس المصاب لحمايته من الارتطام.",
+      "لا تحاول تقييد حركة المصاب أو منعه من التشنج بالقوة.",
+      "لا تضع أي شيء في فم المصاب (لا ملعقة ولا أصبع ولا قماش).",
+      "قم بفك الملابس حول العنق برفق.",
+      "بعد انتهاء التشنج، ضع المصاب على جنبه (وضعية الإفاقة) لتأمين مجرى التنفس.",
+      "ابقَ مع المصاب حتى يستعيد وعيه بالكامل، فقد يكون مشوشاً أو عدوانياً بعد النوبة.",
+      "لا تعطِ المصاب أي طعام أو شراب حتى يتأكد وعيه التام.",
+      "اطلب الإسعاف إذا استمرت النوبة أكثر من 5 دقائق أو تكررت دون استعادة الوعي."
     ],
-    disclaimer: "اطلب الإسعاف إذا استمر التشنج لأكثر من 5 دقائق."
+    disclaimer: "من الطبيعي أن يتغير لون وجه المصاب أو يخرج زبد من فمه، حافظ على هدوئك."
   },
   fainting: {
-    title: "إسعاف حالات الإغماء",
+    title: "إسعاف حالات الإغماء وهبوط الضغط والسكر",
     steps: [
-      "اجعل المصاب يستلقي على ظهره وارفع قدميه (30 سم) عن الأرض.",
-      "قم بفك الملابس الضيقة حول الرقبة والخصر لسهولة التنفس.",
-      "تأكد من وجود تهوية جيدة في المكان.",
-      "امسح وجه المصاب بماء بارد قليلاً.",
-      "إذا لم يستعد وعيه خلال دقيقة، ضعه في وضعية الإفاقة واتصل بالإسعاف."
+      "تأكد من أن المصاب يتنفس ومجرى الهواء مفتوح.",
+      "ارفع قدمي المصاب حوالي 30 سم عن مستوى الأرض.",
+      "قم بتهوية المكان وابعاد المتجمهرين عن المصاب.",
+      "امسح وجه المصاب بماء بارد قليلاً ولا تسكب الماء بكميات كبيرة.",
+      "إذا استعاد المصاب وعيه، لا تجعله ينهض بسرعة بل تدريجياً.",
+      "إذا كان المصاب مريض سكر، أعطه عسيراً أو قطعة حلوى فور استعادة وعيه.",
+      "إذا لم يستعد الوعي خلال دقيقة واحدة، ضعه في وضعية الإفاقة.",
+      "تحقق من وجود بطاقة طبية أو سوار يوضح حالة مرضية معينة.",
+      "راقب النبض والتنفس باستمرار حتى وصول المساعدة.",
+      "اتصل بالإسعاف إذا كان الإغماء ناتجاً عن إصابة سابقة أو ترافق مع ألم في الصدر."
     ],
-    disclaimer: "الإغماء المتكرر قد يكون مؤشراً لمشاكل صحية باطنية."
+    disclaimer: "الإغماء المفاجئ لكبار السن يتطلب دائماً فحصاً طبياً فورياً."
   }
 };
 
@@ -118,14 +161,14 @@ export default function InstructionsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const emergencyTypes = [
-    { id: "bleeding", label: "النزيف", icon: Droplets, color: "bg-rose-50 text-rose-500" },
-    { id: "choking", label: "الاختناق", icon: Wind, color: "bg-blue-50 text-blue-500" },
-    { id: "poisoning", label: "التسمم", icon: Skull, color: "bg-orange-50 text-orange-500" },
-    { id: "burns", label: "الحروق", icon: Flame, color: "bg-red-50 text-red-500" },
-    { id: "fractures", label: "الكسور", icon: Activity, color: "bg-slate-50 text-slate-500" },
-    { id: "electric_shock", label: "صعق كهربائي", icon: Zap, color: "bg-yellow-50 text-yellow-500" },
-    { id: "seizures", label: "التشنجات", icon: Brain, color: "bg-purple-50 text-purple-500" },
-    { id: "fainting", label: "الإغماء", icon: UserMinus, color: "bg-cyan-50 text-cyan-500" },
+    { id: "bleeding", label: "النزيف الحاد", icon: Droplets, color: "bg-rose-50 text-rose-500" },
+    { id: "choking", label: "الاختناق والغصة", icon: Wind, color: "bg-blue-50 text-blue-500" },
+    { id: "heart_attack", label: "الأزمة القلبية", icon: HeartPulse, color: "bg-red-50 text-red-600" },
+    { id: "burns", label: "الحروق بأنواعها", icon: Flame, color: "bg-orange-50 text-orange-500" },
+    { id: "fractures", label: "الكسور والعمود الفقري", icon: Stethoscope, color: "bg-slate-50 text-slate-500" },
+    { id: "poisoning", label: "التسمم والمواد الكاوية", icon: Skull, color: "bg-amber-50 text-amber-600" },
+    { id: "seizures", label: "التشنجات والصرع", icon: Brain, color: "bg-purple-50 text-purple-500" },
+    { id: "fainting", label: "الإغماء وهبوط السكر", icon: UserMinus, color: "bg-cyan-50 text-cyan-500" },
   ];
 
   const currentData = selectedId ? FIRST_AID_DATA[selectedId as keyof typeof FIRST_AID_DATA] : null;
@@ -134,32 +177,50 @@ export default function InstructionsPage() {
     <div className="min-h-screen bg-[#F8FAFC] pb-28 font-cairo" dir="rtl">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-soft">
-        <h1 className="text-sm font-black text-slate-800">دليل الإسعاف الفوري</h1>
-        <ClipboardList className="text-primary w-5 h-5" />
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <Activity className="w-5 h-5 text-white" />
+          </div>
+          <h1 className="text-sm font-black text-slate-800">موسوعة الإسعافات</h1>
+        </div>
+        <ClipboardList className="text-slate-400 w-5 h-5" />
       </header>
 
       <main className="px-5 pt-6">
         {!selectedId ? (
           <div className="space-y-6">
-            <div className="bg-white p-5 rounded-3xl shadow-soft border border-slate-50">
-              <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">اختر نوع الحالة</h2>
-              <p className="text-[11px] text-slate-500 font-bold leading-relaxed">دليل استرشادي سريع للتعامل مع الحالات الطارئة في حضرموت.</p>
+            <div className="bg-white p-6 rounded-[2rem] shadow-soft border border-slate-50 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+              <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 relative z-10">الدليل الطبي التفاعلي</h2>
+              <p className="text-[12px] text-slate-600 font-bold leading-relaxed relative z-10">اختر الحالة لبدء خطوات الإنقاذ فوراً. تم مراجعة هذه المعلومات وفق المعايير الطبية الدولية.</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               {emergencyTypes.map((type) => (
                 <button
                   key={type.id}
                   onClick={() => setSelectedId(type.id)}
-                  className="bg-white p-4 rounded-3xl border border-slate-100 shadow-soft flex flex-col items-center text-center transition-all hover:border-primary/20 active:scale-95 group"
+                  className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-soft flex flex-col items-center text-center transition-all hover:border-primary/20 active:scale-95 group"
                 >
-                  <div className={`p-3 rounded-2xl mb-2 transition-transform group-hover:scale-110 ${type.color}`}>
-                    <type.icon className="w-6 h-6" />
+                  <div className={`p-4 rounded-2xl mb-3 transition-transform group-hover:scale-110 ${type.color}`}>
+                    <type.icon className="w-7 h-7" />
                   </div>
-                  <span className="font-bold text-slate-700 text-[11px]">{type.label}</span>
+                  <span className="font-bold text-slate-700 text-[11px] leading-tight">{type.label}</span>
                 </button>
               ))}
             </div>
+
+            <Card className="bg-blue-600 border-none shadow-lg shadow-blue-200 rounded-[2rem] p-6 text-white">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-white/20 rounded-2xl">
+                  <PlayCircle className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-black text-sm">التدريب الافتراضي</h4>
+                  <p className="text-[10px] opacity-80 font-bold">تعلم الإسعاف عبر محاكاة الواقع</p>
+                </div>
+              </div>
+            </Card>
           </div>
         ) : (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-400">
@@ -169,31 +230,36 @@ export default function InstructionsPage() {
               className="gap-2 text-slate-400 font-bold p-0 h-auto hover:bg-transparent text-[11px]"
             >
               <ChevronRight className="w-4 h-4" />
-              العودة للقائمة الرئيسية
+              العودة لقائمة الحالات
             </Button>
 
-            <Card className="border-none shadow-soft rounded-[2rem] overflow-hidden bg-white">
-              <CardHeader className="bg-primary p-6 text-white text-right">
-                <p className="text-[9px] font-black uppercase tracking-widest opacity-70">إرشادات طبية</p>
-                <CardTitle className="text-lg font-black mt-1">{currentData?.title}</CardTitle>
+            <Card className="border-none shadow-soft rounded-[2.5rem] overflow-hidden bg-white">
+              <CardHeader className="bg-slate-900 p-8 text-white text-right relative">
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                   <div className="absolute top-4 left-4 w-20 h-20 border-4 border-white rounded-full"></div>
+                </div>
+                <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">دليل الإنقاذ الفوري</p>
+                <CardTitle className="text-xl font-black">{currentData?.title}</CardTitle>
               </CardHeader>
-              <CardContent className="p-6 space-y-6">
-                <div className="space-y-4">
+              <CardContent className="p-8 space-y-8">
+                <div className="space-y-5">
                   {currentData?.steps.map((step, idx) => (
-                    <div key={idx} className="flex gap-4 items-start">
-                      <div className="w-8 h-8 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center shrink-0 font-black text-xs border border-slate-100">
+                    <div key={idx} className="flex gap-4 items-start group">
+                      <div className="w-9 h-9 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center shrink-0 font-black text-xs border border-slate-100 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors">
                         {idx + 1}
                       </div>
-                      <p className="text-[12px] text-slate-600 leading-relaxed font-bold pt-1">{step}</p>
+                      <p className="text-[13px] text-slate-600 leading-relaxed font-bold pt-1.5">{step}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 flex items-start gap-3">
-                  <AlertCircle className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />
+                <div className="p-5 bg-rose-50 rounded-3xl border border-rose-100 flex items-start gap-4">
+                  <div className="p-2 bg-rose-500 rounded-xl mt-1">
+                    <AlertCircle className="w-4 h-4 text-white shrink-0" />
+                  </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black text-orange-800 uppercase tracking-tighter">تنبيه هام</p>
-                    <p className="text-[10px] text-orange-700/80 leading-relaxed font-medium">
+                    <p className="text-[11px] font-black text-rose-800 uppercase tracking-tighter">تنبيه طبي حرج</p>
+                    <p className="text-[11px] text-rose-700/80 leading-relaxed font-bold">
                       {currentData?.disclaimer}
                     </p>
                   </div>
@@ -202,14 +268,20 @@ export default function InstructionsPage() {
             </Card>
 
             <div className="grid grid-cols-1 gap-3">
-              <Button className="w-full h-14 bg-accent hover:bg-accent/90 text-white text-sm font-black rounded-2xl shadow-lg shadow-accent/20 gap-2 active-scale">
-                <Volume2 className="w-4 h-4" />
-                تشغيل المساعد الصوتي
+              <Button className="w-full h-16 bg-primary hover:bg-primary/90 text-white text-sm font-black rounded-2xl shadow-xl shadow-primary/20 gap-3 active-scale">
+                <Volume2 className="w-5 h-5" />
+                تفعيل المساعد الصوتي الذكي
               </Button>
-              <Button variant="outline" className="w-full h-12 rounded-2xl border-slate-100 text-slate-400 font-bold text-[11px] gap-2 active-scale">
-                <Share2 className="w-4 h-4" />
-                مشاركة هذه الإرشادات
-              </Button>
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" className="h-14 rounded-2xl border-slate-100 text-slate-500 font-bold text-[11px] gap-2 active-scale">
+                  <Share2 className="w-4 h-4" />
+                  مشاركة
+                </Button>
+                <Button variant="outline" className="h-14 rounded-2xl border-slate-100 text-slate-500 font-bold text-[11px] gap-2 active-scale">
+                  <PlayCircle className="w-4 h-4" />
+                  فيديو توضيحي
+                </Button>
+              </div>
             </div>
           </div>
         )}
