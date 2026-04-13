@@ -1,3 +1,4 @@
+
 {
   "placeholderImages": [
     {
@@ -17,6 +18,12 @@
       "description": "Ambulance icon on map",
       "imageUrl": "https://picsum.photos/seed/ambulance/600/400",
       "imageHint": "ambulance vehicle"
+    },
+    {
+      "id": "user-avatar",
+      "description": "User profile picture",
+      "imageUrl": "https://picsum.photos/seed/user/200/200",
+      "imageHint": "person portrait"
     }
   ]
 }

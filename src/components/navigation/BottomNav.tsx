@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Home, ClipboardList, Settings, User, Activity } from "lucide-react";
+import { Home, Settings, User, Activity } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
     { id: 'home', label: 'الرئيسية', icon: Home, href: '/dashboard' },
     { id: 'instructions', label: 'إسعافات', icon: Activity, href: '/instructions' },
     { id: 'profile', label: 'ملفي الطبي', icon: User, href: '/profile' },
-    { id: 'settings', label: 'الإعدادات', icon: Settings, href: '#' },
+    { id: 'settings', label: 'الإعدادات', icon: Settings, href: '/settings' },
   ];
 
   return (
