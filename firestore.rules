@@ -1,0 +1,169 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * Smart Paramedic - Security Rules Documentation
+     *
+     * CORE PHILOSOPHY:
+     * This ruleset implements a multi-layered authorization model designed for high-stakes emergency 
+     * response. It leverages "Authorization Independence" by denormalizing ownership IDs (like 
+     * organizationId and userId) directly onto documents. This ensures rules are performant, 
+     * atomic, and do not require costly recursive lookups.
+     *
+     * DATA STRUCTURE:
+     * - /userProfiles/{userId}: Private medical data owned by the specific user.
+     * - /emergencyIncidents/{incidentId}: Shared records between a reporter (user) and a responder (organization).
+     * - /emergencyOrganizations, /emergencyUnits, /emergencyTeamMembers: Operational data managed 
+     *   by dispatchers and administrators.
+     * - /firstAidInstructions: Publicly available step-by-step medical guidance.
+     * - /roles_...: Administrative role-mapping collections used for Database-Based Access Control (DBAC).
+     *
+     * KEY SECURITY DECISIONS:
+     * 1. Path-Based Ownership: For user profiles, the UID in the path must match the Auth UID.
+     * 2. Role-Based Access: Dispatchers have management rights over units and team members belonging 
+     *    to their specific organization via existence checks in the roles collections.
+     * 3. Public Readability: Static instructions and organization details are publicly readable 
+     *    to ensure availability during emergencies, while writes are strictly restricted.
+     * 4. Relational Integrity: On creation, documents must include internal ID fields that match 
+     *    the authenticated user to prevent "impersonation" writes.
+     */
+
+    // --- Helper Functions ---
+
+    /** Checks if the user is authenticated. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** Checks if the user matches the provided ID. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** Verifies a user is a global App Admin. */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_appAdmins/$(request.auth.uid));
+    }
+
+    /** Verifies a user is a dispatcher for a specific organization. */
+    function isDispatcherFor(orgId) {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_organizationDispatchers/$(orgId)/$(request.auth.uid));
+    }
+
+    /** Helper for checking ownership on existing documents. */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for private user profiles containing sensitive medical info.
+     * @path /userProfiles/{userId}
+     * @allow (get) User retrieves their own profile. (create) User sets their UID as the doc ID.
+     * @deny (list) Prevent broad listing of users for privacy.
+     * @principle Enforces path-based ownership and relational integrity between path and data.
+     */
+    match /userProfiles/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; 
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description General information about hospitals and emergency services.
+     * @path /emergencyOrganizations/{organizationId}
+     * @allow (get, list) Anyone can find hospitals/services. (update) Global admins modify details.
+     * @deny (write) Non-admins cannot modify organization details.
+     * @principle Publicly readable data with administrative-only write access.
+     */
+    match /emergencyOrganizations/{organizationId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Management of vehicles and units (ambulances, fire trucks).
+     * @path /emergencyUnits/{unitId}
+     * @allow (list) Dispatcher queries units for their org. (update) Dispatcher changes status.
+     * @deny (create) User not belonging to the specified organization.
+     * @principle Shared access based on organizational affiliation.
+     */
+    match /emergencyUnits/{unitId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn(); // Queries should filter by organizationId
+      allow create: if isDispatcherFor(request.resource.data.organizationId);
+      allow update: if isDispatcherFor(resource.data.organizationId) && request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if isAdmin() || (resource != null && isDispatcherFor(resource.data.organizationId));
+    }
+
+    /**
+     * @description Profiles for paramedics and drivers.
+     * @path /emergencyTeamMembers/{memberId}
+     * @allow (get) Signed-in users view responders. (update) Member updates own status or dispatcher manages.
+     * @deny (create) Mismatched organizationId.
+     * @principle Self-management for team members combined with organizational oversight.
+     */
+    match /emergencyTeamMembers/{memberId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isOwner(memberId) || isDispatcherFor(request.resource.data.organizationId);
+      allow update: if isOwner(memberId) || isDispatcherFor(resource.data.organizationId);
+      allow delete: if isAdmin() || isOwner(memberId);
+    }
+
+    /**
+     * @description Emergency incident reports linking users and responders.
+     * @path /emergencyIncidents/{incidentId}
+     * @allow (create) User reports an emergency. (get) Reporter or responding dispatcher views incident.
+     * @deny (update) User trying to modify an incident they didn't report or aren't responding to.
+     * @principle Multi-party access control via denormalized userId and organizationId.
+     */
+    match /emergencyIncidents/{incidentId} {
+      allow get: if isSignedIn() && (isOwner(resource.data.userId) || isDispatcherFor(resource.data.acceptedByOrganizationId));
+      allow list: if isSignedIn(); // Query must filter by userId or acceptedByOrganizationId
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && (isOwner(resource.data.userId) || isDispatcherFor(resource.data.acceptedByOrganizationId) || isDispatcherFor(request.resource.data.acceptedByOrganizationId));
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Static medical guidance for first aid.
+     * @path /firstAidInstructions/{instructionId}
+     * @allow (get, list) Public access for emergency situations.
+     * @deny (write) Non-admin users.
+     * @principle Publicly readable, read-only content for safety and accessibility.
+     */
+    match /firstAidInstructions/{instructionId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Internal role mapping for global administrators.
+     * @path /roles_appAdmins/{adminUid}
+     * @allow (get) Checking own admin status.
+     * @deny (list, write) Direct client modification of roles.
+     * @principle Internal RBAC/DBAC system; changes should happen via Admin SDK.
+     */
+    match /roles_appAdmins/{adminUid} {
+      allow get: if isOwner(adminUid);
+      allow list, create, update, delete: if false;
+    }
+
+    /**
+     * @description Internal role mapping for organizational dispatchers.
+     * @path /roles_organizationDispatchers/{organizationId}/{dispatcherUid}
+     * @allow (get) Dispatcher verifying their own status.
+     * @deny (list, write) Direct client modification.
+     * @principle Scoped DBAC for organizational authority.
+     */
+    match /roles_organizationDispatchers/{organizationId}/{dispatcherUid} {
+      allow get: if isOwner(dispatcherUid);
+      allow list, create, update, delete: if false;
+    }
+  }
+}

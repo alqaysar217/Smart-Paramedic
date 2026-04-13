@@ -1,0 +1,497 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user of the Smart Paramedic app, storing their personal and critical medical information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "The user's full name."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The user's contact phone number."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address for communication and login.",
+          "format": "email"
+        },
+        "bloodType": {
+          "type": "string",
+          "description": "The user's blood type (e.g., 'A+', 'O-', 'AB+')."
+        },
+        "gender": {
+          "type": "string",
+          "description": "The user's gender."
+        },
+        "age": {
+          "type": "number",
+          "description": "The user's age in years."
+        },
+        "chronicDiseases": {
+          "type": "array",
+          "description": "A list of chronic diseases the user suffers from.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "medications": {
+          "type": "array",
+          "description": "A list of medications the user is currently taking.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allergies": {
+          "type": "array",
+          "description": "A list of known allergies the user has.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "homeLocation": {
+          "type": "string",
+          "description": "The user's residential address, used as a default location."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "fullName",
+        "phoneNumber",
+        "email",
+        "bloodType",
+        "gender",
+        "age",
+        "homeLocation"
+      ]
+    },
+    "EmergencyOrganization": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EmergencyOrganization",
+      "type": "object",
+      "description": "Represents an emergency response organization such as a hospital, civil defense, or traffic police.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the EmergencyOrganization entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The official name of the organization (e.g., 'King Fahd Hospital', 'Riyadh Civil Defense')."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the organization (e.g., 'hospital', 'civilDefense', 'trafficPolice')."
+        },
+        "latitude": {
+          "type": "number",
+          "description": "The latitude coordinate of the organization's primary location."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "The longitude coordinate of the organization's primary location."
+        },
+        "addressText": {
+          "type": "string",
+          "description": "A human-readable address string for the organization."
+        },
+        "contactPhoneNumber": {
+          "type": "string",
+          "description": "The primary contact phone number for the organization."
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "The primary contact email address for the organization.",
+          "format": "email"
+        },
+        "operatingHours": {
+          "type": "string",
+          "description": "Description of the organization's operating hours (e.g., '24/7')."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "type",
+        "latitude",
+        "longitude",
+        "addressText",
+        "contactPhoneNumber"
+      ]
+    },
+    "EmergencyUnit": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EmergencyUnit",
+      "type": "object",
+      "description": "Represents an individual emergency response vehicle or team (e.g., an ambulance, fire truck).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the EmergencyUnit entity."
+        },
+        "organizationId": {
+          "type": "string",
+          "description": "Reference to the EmergencyOrganization this unit belongs to. (Relationship: EmergencyOrganization 1:N EmergencyUnit)"
+        },
+        "unitName": {
+          "type": "string",
+          "description": "The name or identifier of the unit (e.g., 'Ambulance 101', 'Fire Truck Alpha')."
+        },
+        "unitType": {
+          "type": "string",
+          "description": "The type of emergency unit (e.g., 'ambulance', 'fireTruck', 'policeCar')."
+        },
+        "currentStatus": {
+          "type": "string",
+          "description": "The current operational status of the unit (e.g., 'available', 'enRoute', 'onScene', 'busy', 'outOfService')."
+        },
+        "activeTeamMemberIds": {
+          "type": "array",
+          "description": "References to the EmergencyTeamMember(s) currently assigned to this unit. (Relationship: EmergencyTeamMember N:N EmergencyUnit)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "currentLatitude": {
+          "type": "number",
+          "description": "The current latitude coordinate of the unit for real-time tracking."
+        },
+        "currentLongitude": {
+          "type": "number",
+          "description": "The current longitude coordinate of the unit for real-time tracking."
+        },
+        "lastStatusUpdate": {
+          "type": "string",
+          "description": "Timestamp of the last status or location update for the unit.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "organizationId",
+        "unitName",
+        "unitType",
+        "currentStatus"
+      ]
+    },
+    "EmergencyTeamMember": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EmergencyTeamMember",
+      "type": "object",
+      "description": "Represents a member of an emergency response team, such as a driver or paramedic.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the EmergencyTeamMember entity."
+        },
+        "organizationId": {
+          "type": "string",
+          "description": "Reference to the EmergencyOrganization this team member belongs to. (Relationship: EmergencyOrganization 1:N EmergencyTeamMember)"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "The full name of the team member."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The contact phone number of the team member."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the team member.",
+          "format": "email"
+        },
+        "employeeId": {
+          "type": "string",
+          "description": "Internal employee identifier for the team member."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the team member (e.g., 'Driver', 'Paramedic', 'Dispatcher')."
+        },
+        "currentStatus": {
+          "type": "string",
+          "description": "The current availability status of the team member (e.g., 'available', 'busy', 'onBreak', 'offDuty')."
+        }
+      },
+      "required": [
+        "id",
+        "organizationId",
+        "fullName",
+        "phoneNumber",
+        "employeeId",
+        "role",
+        "currentStatus"
+      ]
+    },
+    "EmergencyIncident": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EmergencyIncident",
+      "type": "object",
+      "description": "Represents a reported emergency incident, linking a user's request to response efforts.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the EmergencyIncident entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the UserProfile who reported the incident. (Relationship: UserProfile 1:N EmergencyIncident)"
+        },
+        "incidentType": {
+          "type": "string",
+          "description": "The type of emergency reported (e.g., 'accident', 'fire', 'unconsciousness', 'electricShock', 'bleeding', 'other')."
+        },
+        "description": {
+          "type": "string",
+          "description": "Additional details or notes about the incident provided by the user or dispatcher."
+        },
+        "reportedLatitude": {
+          "type": "number",
+          "description": "The latitude coordinate from where the incident was reported."
+        },
+        "reportedLongitude": {
+          "type": "number",
+          "description": "The longitude coordinate from where the incident was reported."
+        },
+        "reportedAddressText": {
+          "type": "string",
+          "description": "A human-readable address string for the incident location."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the incident (e.g., 'reported', 'pending', 'accepted', 'enRoute', 'onScene', 'resolved', 'canceled')."
+        },
+        "reportedAt": {
+          "type": "string",
+          "description": "Timestamp when the incident was reported.",
+          "format": "date-time"
+        },
+        "acceptedByOrganizationId": {
+          "type": "string",
+          "description": "Reference to the EmergencyOrganization that accepted this incident. (Relationship: EmergencyOrganization 1:N EmergencyIncident)"
+        },
+        "assignedUnitId": {
+          "type": "string",
+          "description": "Reference to the EmergencyUnit dispatched to this incident. (Relationship: EmergencyUnit 1:N EmergencyIncident)"
+        },
+        "estimatedArrivalTime": {
+          "type": "string",
+          "description": "Estimated time of arrival for the dispatched unit.",
+          "format": "date-time"
+        },
+        "resolvedAt": {
+          "type": "string",
+          "description": "Timestamp when the incident was marked as resolved.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "incidentType",
+        "reportedLatitude",
+        "reportedLongitude",
+        "reportedAt",
+        "status"
+      ]
+    },
+    "FirstAidInstruction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FirstAidInstruction",
+      "type": "object",
+      "description": "Provides step-by-step guidance for various first aid scenarios.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the FirstAidInstruction entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the first aid instruction (e.g., 'Fainting', 'Bleeding')."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the first aid instruction (e.g., 'Fainting', 'Bleeding', 'Burns', 'Fractures', 'Choking')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief summary or introductory description of the first aid topic."
+        },
+        "steps": {
+          "type": "array",
+          "description": "An ordered list of steps to follow for first aid.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "imageUrls": {
+          "type": "array",
+          "description": "URLs to images or illustrations associated with the instructions.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "audioUrl": {
+          "type": "string",
+          "description": "URL to an audio recording of the instructions for playback."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "category",
+        "description",
+        "steps"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "userProfiles/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores a user's private medical and personal profile. The `userId` in the path MUST match `request.auth.uid` for ownership. Follows path-based ownership for private data."
+        }
+      },
+      {
+        "path": "emergencyOrganizations/{organizationId}",
+        "definition": {
+          "entityName": "EmergencyOrganization",
+          "schema": {
+            "$ref": "#/backend/entities/EmergencyOrganization"
+          },
+          "description": "Stores details about emergency response organizations. Accessible globally for general information. Write access restricted to organizational admins/members via specific role checks."
+        }
+      },
+      {
+        "path": "emergencyUnits/{unitId}",
+        "definition": {
+          "entityName": "EmergencyUnit",
+          "schema": {
+            "$ref": "#/backend/entities/EmergencyUnit"
+          },
+          "description": "Contains information about individual emergency response units. Includes denormalized `organizationId` for direct authorization checks, achieving authorization independence and supporting QAPs.",
+          "params": [
+            {
+              "name": "unitId",
+              "description": "The unique identifier for an emergency unit."
+            }
+          ]
+        }
+      },
+      {
+        "path": "emergencyTeamMembers/{memberId}",
+        "definition": {
+          "entityName": "EmergencyTeamMember",
+          "schema": {
+            "$ref": "#/backend/entities/EmergencyTeamMember"
+          },
+          "description": "Stores profiles of emergency team members. Includes denormalized `organizationId` for direct authorization checks. `memberId` of the document should match `request.auth.uid` for self-management, and `organizationId` for organizational management and QAPs.",
+          "params": [
+            {
+              "name": "memberId",
+              "description": "The unique identifier for an emergency team member."
+            }
+          ]
+        }
+      },
+      {
+        "path": "emergencyIncidents/{incidentId}",
+        "definition": {
+          "entityName": "EmergencyIncident",
+          "schema": {
+            "$ref": "#/backend/entities/EmergencyIncident"
+          },
+          "description": "Details of reported emergency incidents. Includes denormalized `userId` (reporter's ID) and `acceptedByOrganizationId` for authorization independence. Allows users to track their reported incidents and organizations to manage accepted incidents efficiently, supporting QAPs for listing.",
+          "params": [
+            {
+              "name": "incidentId",
+              "description": "The unique identifier for an emergency incident."
+            }
+          ]
+        }
+      },
+      {
+        "path": "firstAidInstructions/{instructionId}",
+        "definition": {
+          "entityName": "FirstAidInstruction",
+          "schema": {
+            "$ref": "#/backend/entities/FirstAidInstruction"
+          },
+          "description": "Provides step-by-step first aid instructions. Publicly accessible and read-only for all users.",
+          "params": [
+            {
+              "name": "instructionId",
+              "description": "The unique identifier for a first aid instruction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "roles_appAdmins/{adminUid}",
+        "definition": {
+          "entityName": "AppAdminRole",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Identifies users with global application administration privileges. The existence of a document at this path signifies an admin role for `adminUid`. This enables DBAC via existence checks in security rules.",
+          "params": [
+            {
+              "name": "adminUid",
+              "description": "The User ID (UID) of an application administrator."
+            }
+          ]
+        }
+      },
+      {
+        "path": "roles_organizationDispatchers/{organizationId}/{dispatcherUid}",
+        "definition": {
+          "entityName": "OrganizationDispatcherRole",
+          "schema": {
+            "$ref": "#/backend/entities/EmergencyTeamMember"
+          },
+          "description": "Identifies users who are dispatchers for a specific `EmergencyOrganization`. The existence of a document signifies a dispatcher role for the given `organizationId` and `dispatcherUid`, enabling authorization for incident management and supporting DBAC.",
+          "params": [
+            {
+              "name": "organizationId",
+              "description": "The ID of the EmergencyOrganization the dispatcher belongs to."
+            },
+            {
+              "name": "dispatcherUid",
+              "description": "The User ID (UID) of an organization dispatcher."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure for the Smart Paramedic app is meticulously designed to adhere to the core principles of Authorization Independence, clarity, and scalability. This design minimizes complexity in security rules and ensures robust access control.\n\n**Authorization Independence & Denormalization Strategy:**\nAuthorization Independence is a critical mandate, achieved by strategically denormalizing authorization context directly into each document, thereby eliminating the need for `get()` calls in security rules and enabling atomic operations.\n*   **UserProfile:** Stored in `/userProfiles/{userId}`, where the `userId` directly corresponds to `request.auth.uid`. This path-based ownership makes authorization inherently independent; a user's access to their profile is determined solely by the path, not by querying a parent document.\n*   **EmergencyUnit and EmergencyTeamMember:** While these entities logically belong to an `EmergencyOrganization`, they are placed in top-level collections (`/emergencyUnits/{unitId}` and `/emergencyTeamMembers/{memberId}`). Crucially, each `EmergencyUnit` and `EmergencyTeamMember` document explicitly includes the `organizationId` field. This denormalization allows security rules to evaluate access rights (e.g., allowing an organization's dispatcher to manage their units or team members) by directly checking `resource.data.organizationId` against the authenticated user's organizational affiliation, without relying on `get()` calls to the parent `EmergencyOrganization` document.\n*   **EmergencyIncident:** This central entity includes `userId` (the reporter's ID) and `acceptedByOrganizationId` (the ID of the organization handling the incident) directly within its document. This denormalization is vital for authorization independence. A user can access their incidents by checking `request.auth.uid == resource.data.userId`. An emergency dispatcher can access incidents accepted by their organization by checking `myOrganizationId == resource.data.acceptedByOrganizationId`. Both checks are performed directly on the incident document, upholding the principle of authorization independence and enabling atomic creation and updates.\n\n**Structural Segregation (Homogeneous Security Posture) & QAPs (Queries as Permissions):**\nCollections are structured to ensure that all documents within them share a consistent security posture, simplifying rule definitions and enabling efficient `list` operations (QAPs).\n*   **`/userProfiles/{userId}`:** This collection is for private user data, where `userId` matches `request.auth.uid`. Rules are simple: a user can only read/write their own profile.\n*   **`/emergencyOrganizations/{organizationId}`:** This is a top-level collection containing information about emergency response organizations. It is publicly readable for general information (e.g., finding nearby hospitals), with write access restricted to application administrators or specific organizational roles.\n*   **`/emergencyUnits/{unitId}` and `/emergencyTeamMembers/{memberId}`:** These collections hold operational data. The `organizationId` field in each document allows QAPs to function securely. For example, a dispatcher can query `list(/emergencyUnits)` with a `where('organizationId', '==', myOrganizationId)` clause, and security rules can validate this query based on the `organizationId` present in the document and the dispatcher's known role.\n*   **`/emergencyIncidents/{incidentId}`:** This is a single, top-level collection designed to facilitate diverse QAPs. For users, `list(/emergencyIncidents)` queries using `where('userId', '==', request.auth.uid)` are permitted. For organization dispatchers, queries like `list(/emergencyIncidents)` using `where('acceptedByOrganizationId', '==', myOrganizationId)` or `where('status', 'in', ['reported', 'pending'])` are enabled. The `userId`, `acceptedByOrganizationId`, and `status` fields within each incident document allow security rules to enforce these access patterns directly on the queried data, making the rules robust and debuggable.\n*   **`/firstAidInstructions/{instructionId}`:** This collection contains static, publicly accessible content. The rules are straightforward: `allow read: true;`.\n*   **Role Collections (`/roles_appAdmins/{adminUid}`, `/roles_organizationDispatchers/{organizationId}/{dispatcherUid}`):** These collections implement DBAC using an "
+  }
+}
