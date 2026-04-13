@@ -202,7 +202,7 @@ export default function ResponderDashboard() {
               </div>
             ) : (
               <div className="space-y-6 animate-in fade-in duration-500">
-                {/* Reports List View (Existing functionality with improved UI) */}
+                {/* Reports List View */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   <Card className="border-none shadow-sm rounded-3xl p-6 bg-white flex items-center gap-4">
                     <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
