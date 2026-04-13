@@ -30,9 +30,10 @@ export default function DashboardPage() {
   const { user } = useUser();
   const db = useFirestore();
 
+  // Corrected collection name from 'userProfiles' to 'users' to match Security Rules
   const userProfileRef = useMemoFirebase(() => {
     if (!db || !user) return null;
-    return doc(db, "userProfiles", user.uid);
+    return doc(db, "users", user.uid);
   }, [db, user]);
 
   const { data: profile } = useDoc(userProfileRef);
@@ -147,7 +148,7 @@ export default function DashboardPage() {
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <MapPin className="w-5 h-5 text-primary" />
                 </div>
-                <p className="text-sm text-gray-800 font-bold">{profile?.homeLocation || "حضرموت، المكلا، حي فوة - شارع الستين"}</p>
+                <p className="text-sm text-gray-800 font-bold">{profile?.homeAddress || "حضرموت، المكلا، حي فوة - شارع الستين"}</p>
               </div>
             </CardContent>
           </Card>
