@@ -3,140 +3,245 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Droplet, User, Calendar, MapPin, Activity, Pill, AlertTriangle, ArrowLeft } from "lucide-react";
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from "@/components/ui/accordion";
+import { 
+  Droplet, 
+  User, 
+  Calendar, 
+  MapPin, 
+  Activity, 
+  Pill, 
+  AlertTriangle, 
+  ArrowRight,
+  Home,
+  Briefcase,
+  LocateFixed,
+  Save,
+  CheckCircle2
+} from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [step, setStep] = useState(1);
+  const [isLocating, setIsLocating] = useState(false);
 
   const handleSave = () => {
-    router.push("/dashboard");
+    toast({
+      title: "تم الحفظ بنجاح",
+      description: "تم تحديث بيانات ملفك الطبي بنجاح.",
+    });
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 1500);
+  };
+
+  const handleLocate = () => {
+    setIsLocating(true);
+    setTimeout(() => {
+      setIsLocating(false);
+      toast({
+        title: "تم تحديد الموقع",
+        description: "تم التعرف على إحداثيات موقعك الحالي بدقة.",
+      });
+    }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <div className="bg-white p-6 sticky top-0 z-10 border-b border-gray-100 flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="w-6 h-6 rotate-180" />
+    <div className="min-h-screen bg-gray-50 pb-24 font-cairo" dir="rtl">
+      {/* Header */}
+      <div className="bg-white p-6 sticky top-0 z-30 border-b border-gray-100 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="p-2 bg-primary/10 rounded-xl">
+            <User className="w-6 h-6 text-primary" />
+          </div>
+          <h1 className="text-xl font-bold">ملفي الطبي</h1>
+        </div>
+        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full">
+          <ArrowRight className="w-6 h-6" />
         </Button>
-        <h1 className="font-headline text-xl font-bold">الملف الطبي</h1>
       </div>
 
       <div className="p-6 space-y-6">
-        <Card className="overflow-hidden border-none shadow-md">
-          <CardContent className="p-0">
-            <div className="bg-primary p-6 text-white flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <User className="w-8 h-8" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold">معلومات المستخدم</h2>
-                <p className="text-white/80">ساعدنا لنعرف من تكون في حالات الطوارئ</p>
-              </div>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>الجنس</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">ذكر</SelectItem>
-                      <SelectItem value="female">أنثى</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>العمر</Label>
-                  <Input type="number" placeholder="25" />
-                </div>
-              </div>
-
+        {/* Basic Info Section */}
+        <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
+          <CardHeader className="bg-primary/5 pb-4">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              المعلومات الأساسية
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Droplet className="w-4 h-4 text-primary" />
-                  فصيلة الدم
+                <Label className="flex items-center gap-2 text-gray-600">
+                  <User className="w-4 h-4" />
+                  الجنس
                 </Label>
                 <Select>
-                  <SelectTrigger className="border-primary/20 bg-primary/5">
-                    <SelectValue placeholder="اختر فصيلة الدم" />
+                  <SelectTrigger className="h-12 rounded-xl">
+                    <SelectValue placeholder="اختر" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="A+">A+</SelectItem>
-                    <SelectItem value="A-">A-</SelectItem>
-                    <SelectItem value="B+">B+</SelectItem>
-                    <SelectItem value="B-">B-</SelectItem>
-                    <SelectItem value="O+">O+</SelectItem>
-                    <SelectItem value="O-">O-</SelectItem>
-                    <SelectItem value="AB+">AB+</SelectItem>
-                    <SelectItem value="AB-">AB-</SelectItem>
+                    <SelectItem value="male">ذكر</SelectItem>
+                    <SelectItem value="female">أنثى</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="w-4 h-4" />
+                  العمر
+                </Label>
+                <Input type="number" placeholder="مثال: 25" className="h-12 rounded-xl text-right" />
+              </div>
+            </div>
+
+            <div className="space-y-2 text-right">
+              <Label className="flex items-center gap-2 text-gray-600">
+                <Droplet className="w-4 h-4 text-primary" />
+                فصيلة الدم
+              </Label>
+              <Select>
+                <SelectTrigger className="h-12 rounded-xl border-primary/20 bg-primary/5">
+                  <SelectValue placeholder="اختر فصيلة الدم" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="A+">A+</SelectItem>
+                  <SelectItem value="A-">A-</SelectItem>
+                  <SelectItem value="B+">B+</SelectItem>
+                  <SelectItem value="B-">B-</SelectItem>
+                  <SelectItem value="O+">O+</SelectItem>
+                  <SelectItem value="O-">O-</SelectItem>
+                  <SelectItem value="AB+">AB+</SelectItem>
+                  <SelectItem value="AB-">AB-</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 gap-4">
-          <Card className="shadow-sm border-none bg-white">
-            <CardContent className="p-5 flex items-start gap-4">
-              <div className="p-3 bg-blue-100 rounded-xl">
-                <Activity className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <Label className="text-base font-bold mb-1 block">الأمراض المزمنة</Label>
-                <Textarea placeholder="مثلاً: سكري، ضغط..." className="mt-2 bg-gray-50 border-none" />
-              </div>
-            </CardContent>
-          </Card>
+        {/* Medical History - Questions Style */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-bold px-2">التاريخ الطبي (أسئلة هامة)</h2>
+          <Accordion type="single" collapsible className="space-y-3">
+            <AccordionItem value="chronic" className="border-none bg-white rounded-2xl shadow-sm px-4">
+              <AccordionTrigger className="hover:no-underline py-4">
+                <div className="flex items-center gap-3 text-right">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <Activity className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <span className="font-bold text-gray-700">هل تعاني من أمراض مزمنة؟</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <Textarea 
+                  placeholder="يرجى كتابة أي أمراض تعاني منها (مثل السكري، الضغط، الربو...)" 
+                  className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
+                />
+              </AccordionContent>
+            </AccordionItem>
 
-          <Card className="shadow-sm border-none bg-white">
-            <CardContent className="p-5 flex items-start gap-4">
-              <div className="p-3 bg-purple-100 rounded-xl">
-                <Pill className="w-6 h-6 text-purple-600" />
-              </div>
-              <div className="flex-1">
-                <Label className="text-base font-bold mb-1 block">الأدوية الحالية</Label>
-                <Textarea placeholder="قائمة بالأدوية التي تتناولها بانتظام" className="mt-2 bg-gray-50 border-none" />
-              </div>
-            </CardContent>
-          </Card>
+            <AccordionItem value="meds" className="border-none bg-white rounded-2xl shadow-sm px-4">
+              <AccordionTrigger className="hover:no-underline py-4">
+                <div className="flex items-center gap-3 text-right">
+                  <div className="p-2 bg-purple-100 rounded-lg">
+                    <Pill className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <span className="font-bold text-gray-700">ما هي الأدوية التي تتناولها حالياً؟</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <Textarea 
+                  placeholder="اذكر الأدوية وجرعاتها إذا أمكن..." 
+                  className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
+                />
+              </AccordionContent>
+            </AccordionItem>
 
-          <Card className="shadow-sm border-none bg-white">
-            <CardContent className="p-5 flex items-start gap-4">
-              <div className="p-3 bg-red-100 rounded-xl">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
-              </div>
-              <div className="flex-1">
-                <Label className="text-base font-bold mb-1 block">الحساسية</Label>
-                <Textarea placeholder="حساسية من أدوية أو أطعمة معينة" className="mt-2 bg-gray-50 border-none" />
-              </div>
-            </CardContent>
-          </Card>
+            <AccordionItem value="allergies" className="border-none bg-white rounded-2xl shadow-sm px-4">
+              <AccordionTrigger className="hover:no-underline py-4">
+                <div className="flex items-center gap-3 text-right">
+                  <div className="p-2 bg-red-100 rounded-lg">
+                    <AlertTriangle className="w-5 h-5 text-red-600" />
+                  </div>
+                  <span className="font-bold text-gray-700">هل لديك حساسية من أدوية أو أطعمة؟</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <Textarea 
+                  placeholder="مثال: حساسية البنسلين، حساسية الفول..." 
+                  className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
+                />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
 
-          <Card className="shadow-sm border-none bg-white">
-            <CardContent className="p-5 flex items-start gap-4">
-              <div className="p-3 bg-green-100 rounded-xl">
-                <MapPin className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="flex-1">
-                <Label className="text-base font-bold mb-1 block">موقع السكن</Label>
-                <Input placeholder="المدينة، الحي، الشارع" className="mt-2 bg-gray-50 border-none" />
-              </div>
-            </CardContent>
+        {/* Addresses Section */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-bold px-2">مواقع العناوين</h2>
+          <Card className="border-none shadow-sm rounded-3xl p-6 space-y-5 bg-white">
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 font-bold">
+                <Home className="w-4 h-4 text-green-600" />
+                عنوان السكن
+              </Label>
+              <Input placeholder="المدينة، الحي، اسم الشارع" className="h-12 rounded-xl text-right bg-gray-50 border-none" />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 font-bold">
+                <Briefcase className="w-4 h-4 text-orange-600" />
+                عنوان العمل
+              </Label>
+              <Input placeholder="مكان العمل أو جهة الوظيفة" className="h-12 rounded-xl text-right bg-gray-50 border-none" />
+            </div>
+
+            <div className="pt-2">
+              <Button 
+                onClick={handleLocate} 
+                variant="outline" 
+                className="w-full h-14 rounded-2xl border-dashed border-primary/40 text-primary hover:bg-primary/5 gap-3"
+                disabled={isLocating}
+              >
+                {isLocating ? (
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-primary rounded-full animate-ping"></span>
+                    جاري تحديد الموقع...
+                  </div>
+                ) : (
+                  <>
+                    <LocateFixed className="w-5 h-5" />
+                    تحديد موقعي الحالي على الخريطة
+                  </>
+                )}
+              </Button>
+            </div>
           </Card>
         </div>
 
-        <Button onClick={handleSave} className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 shadow-lg mt-4">
-          حفظ الملف والمتابعة
+        {/* Action Button */}
+        <Button 
+          onClick={handleSave} 
+          className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 rounded-2xl gap-3 mt-6"
+        >
+          <Save className="w-6 h-6" />
+          حفظ كافة البيانات
         </Button>
+        
+        <p className="text-center text-xs text-gray-400 mt-4">
+          يمكنك تعديل هذه البيانات في أي وقت من إعدادات الملف الشخصي
+        </p>
       </div>
     </div>
   );
