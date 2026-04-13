@@ -5,24 +5,24 @@
       "id": "medical-app-logo",
       "description": "Smart Medic App Logo",
       "imageUrl": "https://picsum.photos/seed/medical-logo/200/200",
-      "imageHint": "medical cross red"
+      "imageHint": "medical cross"
     },
     {
       "id": "map-placeholder",
-      "description": "Map showing current location",
-      "imageUrl": "https://picsum.photos/seed/map/600/400",
-      "imageHint": "city map"
+      "description": "Realistic satellite map of Mukalla city",
+      "imageUrl": "https://picsum.photos/seed/mukalla-map-dark/800/600",
+      "imageHint": "satellite map"
     },
     {
       "id": "ambulance-tracking",
-      "description": "Ambulance icon on map",
-      "imageUrl": "https://picsum.photos/seed/ambulance/600/400",
-      "imageHint": "ambulance vehicle"
+      "description": "Dynamic GPS tracking map with route",
+      "imageUrl": "https://picsum.photos/seed/gps-navigation/800/1200",
+      "imageHint": "city navigation"
     },
     {
       "id": "user-avatar",
       "description": "User profile picture",
-      "imageUrl": "https://picsum.photos/seed/user/200/200",
+      "imageUrl": "https://picsum.photos/seed/user-portrait/200/200",
       "imageHint": "person portrait"
     }
   ]

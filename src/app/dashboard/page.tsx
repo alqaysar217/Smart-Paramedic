@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -18,9 +19,10 @@ import {
   Bell,
   Navigation,
   MapPin,
-  Clock,
   ShieldCheck,
-  ChevronLeft
+  Search,
+  Maximize2,
+  Layers
 } from "lucide-react";
 import BottomNav from "@/components/navigation/BottomNav";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from "@/firebase";
@@ -48,113 +50,155 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-28">
+    <div className="min-h-screen bg-[#FDFDFD] pb-28 font-cairo" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 h-16 flex items-center justify-between shadow-soft">
-        <Button variant="ghost" size="icon" className="rounded-full bg-slate-50">
-          <Menu className="w-5 h-5 text-slate-600" />
+      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-50 px-5 h-14 flex items-center justify-between shadow-sm">
+        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9">
+          <Menu className="w-4 h-4 text-slate-600" />
         </Button>
-        <div className="flex items-center gap-1.5">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <ShieldCheck className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center shadow-sm shadow-primary/20">
+            <ShieldCheck className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-sm tracking-tight">المسعف الذكي</span>
+          <span className="font-black text-xs tracking-tight text-slate-800 uppercase">Smart Medic</span>
         </div>
-        <Button variant="ghost" size="icon" className="rounded-full bg-slate-50 relative">
-          <Bell className="w-5 h-5 text-slate-600" />
-          <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-primary rounded-full ring-2 ring-white"></span>
+        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9 relative">
+          <Bell className="w-4 h-4 text-slate-600" />
+          <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-primary rounded-full ring-2 ring-white"></span>
         </Button>
       </header>
 
       <main className="px-5 pt-6 space-y-8">
         {/* Welcome Section */}
-        <section>
-          <p className="text-xs font-semibold text-slate-400 mb-1">طاب يومك،</p>
-          <h1 className="text-xl font-bold text-slate-900 leading-tight">
-            مرحباً، {profile?.fullName?.split(' ')[0] || user?.displayName?.split(' ')[0] || "منى"}
-          </h1>
+        <section className="flex justify-between items-end">
+          <div>
+            <p className="text-[10px] font-black text-slate-400 mb-0.5 uppercase tracking-widest">مرحباً بك مجدداً</p>
+            <h1 className="text-lg font-black text-slate-900 leading-tight">
+              كابتن {profile?.fullName?.split(' ')[0] || "منى"}
+            </h1>
+          </div>
+          <div className="flex -space-x-2 rtl:space-x-reverse">
+            {[1, 2].map(i => (
+              <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm">
+                <Image src={`https://picsum.photos/seed/${i+10}/100/100`} alt="Medic" width={32} height={32} />
+              </div>
+            ))}
+            <div className="w-8 h-8 rounded-full border-2 border-white bg-primary flex items-center justify-center text-[10px] text-white font-black shadow-sm">
+              +12
+            </div>
+          </div>
         </section>
 
-        {/* SOS Button Section */}
-        <section className="flex flex-col items-center justify-center py-6">
+        {/* Real-time Map Card */}
+        <section className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+              <MapPin className="w-3 h-3 text-primary" /> موقعك الحي في المكلا
+            </h2>
+            <div className="flex gap-2">
+              <div className="flex items-center gap-1.5 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
+                <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-[9px] font-black text-green-600">GPS نشط</span>
+              </div>
+            </div>
+          </div>
+          
+          <Card className="overflow-hidden border-none shadow-soft rounded-[2.5rem] bg-slate-100 relative group">
+            <div className="relative aspect-[16/10]">
+              {mapImg && (
+                <Image
+                  src={mapImg.imageUrl}
+                  alt="Location Map"
+                  fill
+                  className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
+                  data-ai-hint={mapImg.imageHint}
+                />
+              )}
+              {/* Map UI Elements */}
+              <div className="absolute inset-0 bg-slate-900/5 pointer-events-none"></div>
+              
+              {/* Compass & Controls */}
+              <div className="absolute top-4 left-4 flex flex-col gap-2">
+                <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
+                  <Maximize2 className="w-4 h-4" />
+                </button>
+                <button className="w-8 h-8 bg-white/90 backdrop-blur shadow-md rounded-xl flex items-center justify-center text-slate-600 active-scale">
+                  <Layers className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Pulse Indicator */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative">
+                  <div className="absolute -inset-6 bg-primary/20 rounded-full animate-ping"></div>
+                  <div className="w-6 h-6 bg-primary rounded-full border-[4px] border-white shadow-xl relative z-10 flex items-center justify-center">
+                    <div className="w-1 h-1 bg-white rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Address Overlay */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <div className="bg-white/95 backdrop-blur p-3 rounded-2xl shadow-xl flex items-center justify-between border border-white/20">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center">
+                      <Search className="w-3.5 h-3.5 text-slate-400" />
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[11px] font-black text-slate-800 truncate max-w-[150px]">
+                        {profile?.homeAddress || "حي فوة، شارع الستين، المكلا"}
+                      </p>
+                      <p className="text-[9px] text-slate-400 font-bold">دقة الموقع: 5 أمتار</p>
+                    </div>
+                  </div>
+                  <Button size="icon" className="h-9 w-9 bg-primary hover:bg-primary/90 rounded-xl shadow-lg shadow-primary/20">
+                    <Navigation className="w-4 h-4 text-white" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </section>
+
+        {/* SOS Emergency Button */}
+        <section className="flex flex-col items-center justify-center py-4">
           <div className="relative">
-            <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping scale-150 opacity-40"></div>
+            <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping scale-[1.6] opacity-30"></div>
+            <div className="absolute inset-0 bg-primary/5 rounded-full animate-pulse scale-[2] opacity-20"></div>
             <button 
               onClick={() => router.push('/report?type=urgent')}
-              className="relative z-10 w-44 h-44 bg-primary rounded-full flex flex-col items-center justify-center text-white shadow-2xl active-scale emergency-pulse border-[6px] border-white ring-1 ring-primary/5"
+              className="relative z-10 w-40 h-40 bg-primary rounded-full flex flex-col items-center justify-center text-white shadow-2xl active-scale emergency-pulse border-[8px] border-white ring-1 ring-primary/5"
             >
-              <AlertCircle className="w-12 h-12 mb-2" />
-              <span className="text-lg font-black uppercase tracking-tighter">طلب نجدة</span>
-              <span className="text-[10px] opacity-70 font-bold">استجابة فورية</span>
+              <AlertCircle className="w-10 h-10 mb-2 drop-shadow-md" />
+              <span className="text-base font-black uppercase tracking-tighter">طلب نجدة</span>
+              <span className="text-[9px] opacity-80 font-black tracking-widest mt-1">SOS SIGNAL</span>
             </button>
           </div>
         </section>
 
         {/* Quick Actions Grid */}
         <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <div className="w-1.5 h-3 bg-primary rounded-full"></div>
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+              <div className="w-1 h-3 bg-primary rounded-full"></div>
               بلاغ سريع عن حالة
             </h2>
-            <Button variant="ghost" size="sm" className="text-[10px] text-slate-400 font-bold px-0 h-auto hover:bg-transparent">
-              مشاهدة الكل
-            </Button>
+            <button className="text-[10px] text-primary font-black hover:underline underline-offset-4">مشاهدة الكل</button>
           </div>
           <div className="grid grid-cols-3 gap-3">
             {quickActions.map((action) => (
               <button
                 key={action.id}
                 onClick={() => router.push(`/report?type=${action.id}`)}
-                className="flex flex-col items-center p-3.5 bg-white rounded-2xl border border-slate-100 shadow-soft hover:bg-slate-50 transition-colors active-scale group"
+                className="flex flex-col items-center p-4 bg-white rounded-[2rem] border border-slate-50 shadow-soft hover:bg-slate-50 transition-all active-scale group"
               >
-                <div className={`p-2.5 rounded-xl mb-2 transition-transform group-hover:scale-110 ${action.color}`}>
+                <div className={`p-3 rounded-2xl mb-2.5 transition-all group-hover:scale-110 shadow-sm ${action.color}`}>
                   <action.icon className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-bold text-slate-600">{action.label}</span>
+                <span className="text-[10px] font-black text-slate-700">{action.label}</span>
               </button>
             ))}
           </div>
-        </section>
-
-        {/* Location Card */}
-        <section className="space-y-3">
-          <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-            <div className="w-1.5 h-3 bg-primary rounded-full"></div>
-            موقعك الحالي في المكلا
-          </h2>
-          <Card className="overflow-hidden border-none shadow-soft rounded-3xl bg-slate-50">
-            <div className="relative aspect-[16/8]">
-              {mapImg && (
-                <Image
-                  src={mapImg.imageUrl}
-                  alt="Location Map"
-                  fill
-                  className="object-cover grayscale-[20%] opacity-90"
-                  data-ai-hint={mapImg.imageHint}
-                />
-              )}
-              <div className="absolute inset-0 bg-slate-900/10 flex items-center justify-center">
-                <div className="relative">
-                  <div className="absolute -inset-4 bg-primary/20 rounded-full animate-ping"></div>
-                  <div className="w-5 h-5 bg-primary rounded-full border-[3px] border-white shadow-lg relative z-10"></div>
-                </div>
-              </div>
-            </div>
-            <CardContent className="p-4 bg-white flex items-center justify-between">
-              <div className="flex items-center gap-3 overflow-hidden">
-                <div className="w-9 h-9 bg-slate-50 rounded-lg flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-primary" />
-                </div>
-                <p className="text-[11px] text-slate-600 font-bold truncate">
-                  {profile?.homeAddress || "حي فوة، شارع الستين، المكلا"}
-                </p>
-              </div>
-              <Button size="icon" variant="ghost" className="rounded-lg h-9 w-9 shrink-0">
-                <Navigation className="w-4 h-4 text-slate-400" />
-              </Button>
-            </CardContent>
-          </Card>
         </section>
       </main>
 

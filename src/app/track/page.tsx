@@ -12,7 +12,11 @@ import {
   MessageCircle,
   AlertCircle,
   Activity,
-  ShieldCheck
+  ShieldCheck,
+  Compass,
+  Maximize2,
+  Layers,
+  Info
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,121 +28,139 @@ export default function TrackingPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col font-cairo overflow-hidden" dir="rtl">
       {/* Header Overlay */}
-      <div className="p-4 flex items-center gap-4 bg-white/90 backdrop-blur-md absolute top-0 left-0 right-0 z-30 border-b border-gray-100/50 shadow-sm mx-4 mt-4 rounded-3xl">
-        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-2xl bg-gray-50">
-          <ChevronRight className="w-6 h-6" />
+      <div className="p-3 flex items-center gap-4 bg-white/95 backdrop-blur-md absolute top-4 left-4 right-4 z-30 border border-white/20 shadow-xl rounded-[2rem]">
+        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-2xl bg-slate-50 h-10 w-10">
+          <ChevronRight className="w-5 h-5 text-slate-600" />
         </Button>
         <div className="flex-1 text-right">
-          <h1 className="font-black text-sm">تتبع المسعف</h1>
-          <p className="text-[10px] text-accent font-black flex items-center gap-1">
+          <h1 className="font-black text-xs text-slate-800">تتبع المسعف المباشر</h1>
+          <p className="text-[9px] text-accent font-black flex items-center gap-1.5 justify-end">
             <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
-            سيارة إسعاف حضرموت - الوحدة 42
+            مستشفى ابن سينا - الوحدة 42
           </p>
         </div>
         <div className="flex gap-2">
-          <Button size="icon" className="bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-lg shadow-primary/20">
-            <Phone className="w-5 h-5" />
+          <Button size="icon" className="h-10 w-10 bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-lg shadow-primary/20">
+            <Phone className="w-4 h-4" />
           </Button>
         </div>
       </div>
 
-      {/* Map Section */}
-      <div className="flex-1 relative min-h-[50vh]">
+      {/* Real Map Tracking Section */}
+      <div className="flex-1 relative">
         {trackImg && (
           <Image
             src={trackImg.imageUrl}
-            alt="Tracking map"
+            alt="Real-time map tracking"
             fill
-            className="object-cover"
+            className="object-cover transition-opacity duration-1000"
             data-ai-hint={trackImg.imageHint}
           />
         )}
         
-        {/* Ambulance Pulse Icon on Map */}
-        <div className="absolute top-[40%] left-[30%]">
+        {/* Map UI Elements */}
+        <div className="absolute top-24 left-6 flex flex-col gap-3">
+          <button className="w-10 h-10 bg-white/95 backdrop-blur shadow-xl rounded-2xl flex items-center justify-center text-slate-500 active-scale border border-white/20">
+            <Compass className="w-5 h-5" />
+          </button>
+          <button className="w-10 h-10 bg-white/95 backdrop-blur shadow-xl rounded-2xl flex items-center justify-center text-slate-500 active-scale border border-white/20">
+            <Layers className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Live Ambulance Marker */}
+        <div className="absolute top-[35%] left-[35%] transition-all duration-1000">
           <div className="relative">
-            <div className="absolute -inset-8 bg-primary/20 rounded-full animate-ping opacity-40"></div>
-            <div className="w-12 h-12 bg-white rounded-2xl shadow-2xl flex items-center justify-center border-2 border-primary relative z-10">
-              <Activity className="w-6 h-6 text-primary" />
+            <div className="absolute -inset-10 bg-primary/20 rounded-full animate-ping opacity-40"></div>
+            <div className="absolute -inset-6 bg-primary/10 rounded-full animate-pulse opacity-60"></div>
+            <div className="w-14 h-14 bg-white rounded-3xl shadow-2xl flex items-center justify-center border-[3px] border-primary relative z-10 rotate-12 transition-transform hover:rotate-0">
+              <Activity className="w-7 h-7 text-primary" />
+            </div>
+            {/* Tooltip for Ambulance */}
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-3 py-1 rounded-full text-[9px] font-black shadow-xl whitespace-nowrap">
+              سرعة الإسعاف: 85 كم/س
             </div>
           </div>
         </div>
 
-        {/* User Marker */}
-        <div className="absolute bottom-[30%] right-[40%]">
-          <div className="w-8 h-8 bg-blue-500 rounded-full border-4 border-white shadow-xl"></div>
+        {/* User Destination Marker */}
+        <div className="absolute bottom-[35%] right-[45%]">
+          <div className="relative">
+            <div className="w-8 h-8 bg-blue-500 rounded-full border-[4px] border-white shadow-2xl relative z-10"></div>
+            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur px-2 py-1 rounded-lg text-[9px] font-black border border-slate-100 shadow-lg whitespace-nowrap">
+              موقعك الحالي
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Driver Info Floating Card */}
-      <div className="px-6 relative z-20 -mb-6">
-        <Card className="border-none shadow-2xl rounded-[2rem] bg-white p-4">
+      {/* Floating Driver Info Card */}
+      <div className="px-5 relative z-20 -mb-8">
+        <Card className="border-none shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-[2.5rem] bg-white p-5">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-gray-50 shadow-inner">
-                <Image src="https://picsum.photos/seed/medic/200/200" alt="Medic" width={64} height={64} className="object-cover" />
+              <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-slate-50 shadow-inner">
+                <Image src="https://picsum.photos/seed/medic-portrait/200/200" alt="Medic" width={56} height={56} className="object-cover" />
               </div>
               <div className="absolute -bottom-1 -right-1 bg-accent text-white p-1 rounded-lg shadow-md border-2 border-white">
                 <ShieldCheck className="w-3 h-3" />
               </div>
             </div>
             <div className="flex-1 text-right">
-              <h3 className="font-black text-lg">د. خالد سعيد العمودي</h3>
-              <p className="text-xs text-gray-500 font-bold">جراحة وطوارئ - مستشفى المكلا</p>
+              <h3 className="font-black text-[15px] text-slate-800">د. خالد سعيد العمودي</h3>
+              <p className="text-[10px] text-slate-400 font-bold">جراحة وطوارئ - مستشفى المكلا</p>
               <div className="flex items-center gap-1 mt-1 justify-end">
-                {[1,2,3,4,5].map(i => <div key={i} className="w-2 h-2 bg-yellow-400 rounded-full"></div>)}
-                <span className="text-[10px] text-gray-400 mr-2">4.9 تقييم</span>
+                {[1,2,3,4,5].map(i => <div key={i} className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>)}
+                <span className="text-[9px] text-slate-400 mr-2 font-black">4.9 / 5.0</span>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-center p-3 bg-primary/5 rounded-2xl min-w-[70px]">
-              <span className="text-2xl font-black text-primary leading-none">4</span>
-              <span className="text-[10px] text-primary font-bold">دقائق</span>
+            <div className="flex flex-col items-center justify-center p-3 bg-primary/5 rounded-2xl min-w-[65px] border border-primary/5">
+              <span className="text-xl font-black text-primary leading-none">4</span>
+              <span className="text-[9px] text-primary font-black uppercase mt-1">دقائق</span>
             </div>
           </div>
         </Card>
       </div>
 
-      {/* Details Card */}
-      <div className="bg-white p-8 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.05)] relative z-10 space-y-6">
-        <div className="w-16 h-1.5 bg-gray-100 rounded-full mx-auto mb-2"></div>
+      {/* Navigation Details Bottom Sheet */}
+      <div className="bg-white p-8 pt-12 rounded-t-[3.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.04)] relative z-10 space-y-6">
+        <div className="w-12 h-1.5 bg-slate-100 rounded-full mx-auto mb-2 opacity-50"></div>
         
         <div className="space-y-6">
           <div className="flex items-start gap-4">
-            <div className="flex flex-col items-center gap-1 mt-1 shrink-0">
-              <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center ring-4 ring-primary/10">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+            <div className="flex flex-col items-center gap-1.5 mt-1 shrink-0">
+              <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center ring-[6px] ring-primary/10">
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
-              <div className="w-0.5 h-16 bg-gradient-to-b from-primary/30 to-gray-100"></div>
-              <div className="w-5 h-5 rounded-full bg-gray-200 border-4 border-white shadow-sm"></div>
+              <div className="w-0.5 h-12 bg-gradient-to-b from-primary/20 via-slate-100 to-slate-50"></div>
+              <div className="w-4 h-4 rounded-full bg-slate-200 border-[3px] border-white shadow-sm"></div>
             </div>
-            <div className="flex-1 space-y-5 text-right">
+            <div className="flex-1 space-y-4 text-right">
               <div className="space-y-1">
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">نقطة الالتقاء</p>
-                <div className="p-4 bg-gray-50 rounded-2xl flex items-center justify-between border border-gray-100">
-                  <p className="text-sm font-black text-gray-800">المكلا، حي فوة، مقابل شارع الستين</p>
-                  <Navigation className="w-4 h-4 text-primary" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">المستشفى المستهدف</p>
-                <div className="p-4 bg-primary/5 rounded-2xl flex items-center justify-between border border-primary/10">
-                  <p className="text-sm font-black text-primary">مستشفى المكلا للأمومة والطفولة</p>
-                  <Activity className="w-4 h-4 text-primary" />
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">الموقع المستهدف</p>
+                <div className="p-3.5 bg-slate-50 rounded-2xl flex items-center justify-between border border-slate-100 shadow-inner-soft group hover:bg-slate-100 transition-colors">
+                  <p className="text-xs font-black text-slate-700">المكلا، حي فوة، شارع الستين</p>
+                  <MapPin className="w-4 h-4 text-primary" />
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex gap-4 pt-4">
-          <Button variant="outline" className="flex-1 h-16 rounded-2xl font-black border-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all gap-2">
-            <AlertCircle className="w-5 h-5" />
-            إلغاء
+        <div className="flex gap-3 pt-2">
+          <Button variant="outline" className="flex-1 h-14 rounded-2xl font-black border-slate-100 text-slate-400 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100 transition-all gap-2 text-xs active-scale">
+            <AlertCircle className="w-4 h-4" />
+            إلغاء الطلب
           </Button>
-          <Button className="flex-2 h-16 rounded-2xl font-black bg-accent hover:bg-accent/90 text-white shadow-xl shadow-accent/20 gap-2 px-8">
-            <MessageCircle className="w-5 h-5" />
-            تحدث مع المسعف
+          <Button className="flex-[1.5] h-14 rounded-2xl font-black bg-slate-900 hover:bg-slate-800 text-white shadow-xl shadow-slate-900/10 gap-2 px-8 text-xs active-scale">
+            <MessageCircle className="w-4 h-4" />
+            مراسلة الطبيب
           </Button>
+        </div>
+        
+        <div className="flex items-center justify-center gap-2 pb-2">
+          <Info className="w-3 h-3 text-slate-300" />
+          <p className="text-[9px] text-slate-300 font-bold">تم تحديث الموقع قبل لحظات</p>
         </div>
       </div>
     </div>
