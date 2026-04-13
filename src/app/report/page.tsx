@@ -5,14 +5,12 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
   CheckCircle2, 
-  Loader2, 
   MapPin, 
   Send, 
   AlertTriangle, 
   ChevronRight,
   PhoneCall,
   Activity,
-  User,
   ShieldCheck
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -24,7 +22,6 @@ export default function ReportPage() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'locating' | 'sending' | 'success'>('locating');
   const [progress, setProgress] = useState(0);
-  const type = searchParams.get('type') || 'عام';
 
   useEffect(() => {
     // Simulate steps
@@ -57,7 +54,7 @@ export default function ReportPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl">
             <ChevronRight className="w-6 h-6" />
           </Button>
-          <h1 className="text-lg font-bold">إرسال بلاغ طارئ</h1>
+          <h1 className="text-lg font-bold">إرسال بلاغ طارئ (حضرموت)</h1>
         </div>
       )}
 
@@ -77,7 +74,7 @@ export default function ReportPage() {
 
             <div className="space-y-4">
               <h1 className="text-2xl font-black text-gray-900">
-                {status === 'locating' ? "جاري تحديد موقعك بدقة..." : "جاري إرسال بياناتك للمستشفى..."}
+                {status === 'locating' ? "جاري تحديد موقعك في المكلا..." : "جاري إرسال بياناتك لمستشفى ابن سينا..."}
               </h1>
               <div className="flex items-center justify-center gap-2 text-primary bg-primary/5 py-2 px-4 rounded-full w-fit mx-auto">
                 <ShieldCheck className="w-4 h-4" />
@@ -101,7 +98,7 @@ export default function ReportPage() {
                 <div className="space-y-1">
                   <p className="font-bold text-orange-800">تعليمات فورية:</p>
                   <p className="text-sm text-orange-700 leading-relaxed">
-                    ابقَ في مكانك، حاول التنفس بعمق، ولا تحاول التحرك إلا للضرورة القصوى. المسعفون في طريقهم إليك.
+                    ابقَ في مكانك، حاول التنفس بعمق. مسعفو حضرموت في طريقهم إليك.
                   </p>
                 </div>
               </div>
@@ -116,7 +113,7 @@ export default function ReportPage() {
             
             <div className="space-y-2">
               <h1 className="text-3xl font-black text-accent">تم استلام بلاغك!</h1>
-              <p className="text-gray-500 font-bold">سيارة الإسعاف رقم (42) بدأت التحرك</p>
+              <p className="text-gray-500 font-bold">سيارة الإسعاف من مستشفى ابن سينا بدأت التحرك</p>
             </div>
 
             <Card className="bg-gray-50 border-none shadow-sm rounded-[2rem] overflow-hidden">
@@ -125,7 +122,7 @@ export default function ReportPage() {
                   <Activity className="w-4 h-4" />
                   حالة البلاغ: نشط
                 </span>
-                <span className="text-xs font-bold text-gray-400 uppercase">ID: #8821</span>
+                <span className="text-xs font-bold text-gray-400 uppercase">ID: #H-8821</span>
               </div>
               <CardContent className="p-6 text-right space-y-4">
                 <div className="flex justify-between items-center pb-2 border-b border-gray-200">

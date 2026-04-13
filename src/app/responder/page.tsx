@@ -21,7 +21,10 @@ import {
   LogOut,
   Hospital,
   Activity,
-  Heart
+  Heart,
+  Clock,
+  ShieldCheck,
+  User
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -30,9 +33,9 @@ export default function ResponderDashboard() {
   const mapImg = PlaceHolderImages.find(i => i.id === "map-placeholder");
 
   const reports = [
-    { id: "#8821", name: "محمد أحمد", type: "حادث مروري", status: "نشط", time: "منذ 3 دقائق", blood: "O+", phone: "05xxxxxx", location: "حي النزهة" },
-    { id: "#8820", name: "سارة خالد", type: "إغماء مفاجئ", status: "بانتظار الرد", time: "منذ 8 دقائق", blood: "A-", phone: "05xxxxxx", location: "حي الملقا" },
-    { id: "#8819", name: "خالد سعيد", type: "حريق مبنى", status: "نشط", time: "منذ 12 دقيقة", blood: "B+", phone: "05xxxxxx", location: "وسط المدينة" },
+    { id: "#8821", name: "نجد مسيعان", type: "حادث مروري", status: "نشط", time: "منذ 3 دقائق", blood: "O+", phone: "05xxxxxx", location: "المكلا - فوة" },
+    { id: "#8820", name: "عصبان نسيب", type: "إغماء مفاجئ", status: "بانتظار الرد", time: "منذ 8 دقائق", blood: "A-", phone: "05xxxxxx", location: "سيئون - السوق" },
+    { id: "#8819", name: "رغد بلعفير", type: "حريق مبنى", status: "نشط", time: "منذ 12 دقيقة", blood: "B+", phone: "05xxxxxx", location: "الشحر - الميناء" },
   ];
 
   return (
@@ -43,15 +46,15 @@ export default function ResponderDashboard() {
           <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
             <Hospital className="w-7 h-7" />
           </div>
-          <div className="hidden sm:block">
+          <div className="hidden sm:block text-right">
             <h1 className="font-black text-xl text-gray-900 leading-none">لوحة تحكم الطوارئ</h1>
-            <p className="text-xs text-gray-500 font-bold mt-1">مستشفى الملك خالد الجامعي</p>
+            <p className="text-xs text-gray-500 font-bold mt-1">مستشفى ابن سينا التعليمي – المكلا</p>
           </div>
         </div>
         <div className="flex items-center gap-5">
-          <div className="flex flex-col items-end hidden md:block">
-            <span className="text-sm font-bold">د. مروان العتيبي</span>
-            <span className="text-[10px] text-accent font-black">مدير النوبة - متاح</span>
+          <div className="flex flex-col items-end hidden md:block text-right">
+            <span className="text-sm font-bold">د. أحمد بن عمر باعباد</span>
+            <span className="text-[10px] text-accent font-black">مدير النوبة (طوارئ) - متاح</span>
           </div>
           <div className="relative cursor-pointer">
             <div className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
@@ -166,7 +169,7 @@ export default function ResponderDashboard() {
                 <div className="flex justify-between items-center">
                   <h2 className="text-3xl font-black text-gray-900 flex items-center gap-3">
                     <Activity className="w-8 h-8 text-primary" />
-                    البلاغات الواردة
+                    البلاغات الواردة (حضرموت)
                   </h2>
                   <div className="flex gap-3">
                     <Button variant="outline" className="rounded-xl font-bold bg-white h-12">تصفية</Button>
@@ -179,8 +182,8 @@ export default function ResponderDashboard() {
                     <Card key={report.id} className="overflow-hidden border-none shadow-sm bg-white hover:ring-2 ring-primary/20 transition-all rounded-[2rem]">
                       <CardContent className="p-0">
                         <div className="p-8 flex flex-col lg:flex-row gap-8 items-start lg:items-center">
-                          <div className="flex-1 space-y-4">
-                            <div className="flex items-center gap-4">
+                          <div className="flex-1 space-y-4 text-right">
+                            <div className="flex items-center gap-4 justify-start">
                               <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400">
                                 <User className="w-7 h-7" />
                               </div>
@@ -192,7 +195,7 @@ export default function ResponderDashboard() {
                                 </div>
                               </div>
                             </div>
-                            <div className="flex flex-wrap gap-6 text-sm font-bold text-gray-500 pr-1">
+                            <div className="flex flex-wrap gap-6 text-sm font-bold text-gray-500 justify-start">
                               <span className="flex items-center gap-2 p-2 bg-red-50 rounded-xl text-primary"><AlertCircle className="w-4 h-4" /> {report.type}</span>
                               <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Droplet className="w-4 h-4 text-primary" /> فصيلة: {report.blood}</span>
                               <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Navigation className="w-4 h-4 text-blue-500" /> {report.location}</span>
@@ -226,7 +229,7 @@ export default function ResponderDashboard() {
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <h2 className="text-3xl font-black text-gray-900 flex items-center gap-3">
                   <MapIcon className="w-8 h-8 text-primary" />
-                  خريطة البلاغات الحية
+                  خريطة البلاغات الحية (المكلا)
                 </h2>
                 <Card className="overflow-hidden border-none shadow-2xl aspect-video relative rounded-[3rem]">
                   {mapImg && (

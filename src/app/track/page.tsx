@@ -7,13 +7,10 @@ import { Button } from "@/components/ui/button";
 import { 
   ChevronRight, 
   Phone, 
-  Info, 
   MapPin, 
-  Clock, 
   Navigation, 
   MessageCircle,
   AlertCircle,
-  User,
   Activity,
   ShieldCheck
 } from "lucide-react";
@@ -35,7 +32,7 @@ export default function TrackingPage() {
           <h1 className="font-black text-sm">تتبع المسعف</h1>
           <p className="text-[10px] text-accent font-black flex items-center gap-1">
             <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
-            سيارة إسعاف طراز 2024 - رقم 42
+            سيارة إسعاف حضرموت - الوحدة 42
           </p>
         </div>
         <div className="flex gap-2">
@@ -86,9 +83,9 @@ export default function TrackingPage() {
               </div>
             </div>
             <div className="flex-1 text-right">
-              <h3 className="font-black text-lg">د. عبد الله الماجد</h3>
-              <p className="text-xs text-gray-500 font-bold">مسعف أول - خبرة 10 سنوات</p>
-              <div className="flex items-center gap-1 mt-1">
+              <h3 className="font-black text-lg">د. خالد سعيد العمودي</h3>
+              <p className="text-xs text-gray-500 font-bold">جراحة وطوارئ - مستشفى المكلا</p>
+              <div className="flex items-center gap-1 mt-1 justify-end">
                 {[1,2,3,4,5].map(i => <div key={i} className="w-2 h-2 bg-yellow-400 rounded-full"></div>)}
                 <span className="text-[10px] text-gray-400 mr-2">4.9 تقييم</span>
               </div>
@@ -118,14 +115,14 @@ export default function TrackingPage() {
               <div className="space-y-1">
                 <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">نقطة الالتقاء</p>
                 <div className="p-4 bg-gray-50 rounded-2xl flex items-center justify-between border border-gray-100">
-                  <p className="text-sm font-black text-gray-800">حي الملقا، شارع 42، مبنى 5</p>
+                  <p className="text-sm font-black text-gray-800">المكلا، حي فوة، مقابل شارع الستين</p>
                   <Navigation className="w-4 h-4 text-primary" />
                 </div>
               </div>
               <div className="space-y-1">
                 <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">المستشفى المستهدف</p>
                 <div className="p-4 bg-primary/5 rounded-2xl flex items-center justify-between border border-primary/10">
-                  <p className="text-sm font-black text-primary">مستشفى الملك فيصل التخصصي</p>
+                  <p className="text-sm font-black text-primary">مستشفى المكلا للأمومة والطفولة</p>
                   <Activity className="w-4 h-4 text-primary" />
                 </div>
               </div>

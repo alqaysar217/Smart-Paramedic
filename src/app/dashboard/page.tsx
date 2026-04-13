@@ -60,8 +60,8 @@ export default function DashboardPage() {
       <div className="px-6 space-y-8">
         {/* Welcome Section */}
         <div className="pt-4">
-          <h2 className="text-2xl font-black text-gray-900">مرحباً، محمد</h2>
-          <p className="text-gray-500 font-medium">نحن جاهزون لمساعدتك في أي وقت</p>
+          <h2 className="text-2xl font-black text-gray-900">مرحباً، منى باحسين</h2>
+          <p className="text-gray-500 font-medium">نحن جاهزون لمساعدتك في أي وقت في حضرموت</p>
         </div>
 
         {/* Hero Section with Big Red Button */}
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <MapPin className="w-5 h-5 text-primary" />
                 </div>
-                <p className="text-sm text-gray-800 font-bold">الرياض، حي الملقا، شارع الأمير محمد بن سلمان</p>
+                <p className="text-sm text-gray-800 font-bold">حضرموت، المكلا، حي فوة - شارع الستين</p>
               </div>
             </CardContent>
           </Card>
