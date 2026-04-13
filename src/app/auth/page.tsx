@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,17 +9,36 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { ShieldCheck, User, Phone, Mail, Lock, Fingerprint, ScanFace } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useAuth, useUser, initiateEmailSignIn, initiateEmailSignUp } from "@/firebase";
 
 export default function AuthPage() {
   const router = useRouter();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const handleAuth = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user && !isUserLoading) {
+      router.push("/dashboard");
+    }
+  }, [user, isUserLoading, router]);
+
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      router.push("/profile");
-    }, 1500);
+    initiateEmailSignIn(auth, email, password);
+  };
+
+  const handleSignUp = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    initiateEmailSignUp(auth, email, password);
+    // Note: User profile document creation should ideally happen in a cloud function 
+    // or upon first redirection to profile page if it doesn't exist.
   };
 
   const handleBiometric = () => {
@@ -29,9 +48,12 @@ export default function AuthPage() {
       description: "يرجى وضع إصبعك على الحساس أو النظر للكاميرا",
     });
     setTimeout(() => {
+      // In a real app, this would trigger biometric auth then sign in
       router.push("/dashboard");
     }, 2000);
   };
+
+  if (isUserLoading) return null;
 
   return (
     <div className="p-6 flex flex-col justify-center min-h-screen bg-white font-cairo" dir="rtl">
@@ -50,20 +72,34 @@ export default function AuthPage() {
         </TabsList>
 
         <TabsContent value="login" className="space-y-6">
-          <form onSubmit={handleAuth} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-right block pr-1 font-bold">البريد الإلكتروني</Label>
               <div className="relative">
-                {/* الأيقونات في الجهة اليسرى كما طلب المستخدم (عكس الاتجاه التقليدي للـ RTL) */}
                 <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                <Input id="email" type="email" placeholder="example@mail.com" className="pl-10 pr-4 h-12 rounded-xl text-right" required />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="example@mail.com" 
+                  className="pl-10 pr-4 h-12 rounded-xl text-right" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="password" title="كلمة المرور" className="text-right block pr-1 font-bold">كلمة المرور</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                <Input id="password" type="password" className="pl-10 pr-4 h-12 rounded-xl text-right" required />
+                <Input 
+                  id="password" 
+                  type="password" 
+                  className="pl-10 pr-4 h-12 rounded-xl text-right" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                />
               </div>
             </div>
             
@@ -72,7 +108,6 @@ export default function AuthPage() {
             </Button>
           </form>
 
-          {/* ميزة الدخول بالبصمة أو الوجه */}
           <div className="relative py-4">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-gray-100"></span>
@@ -105,33 +140,63 @@ export default function AuthPage() {
         </TabsContent>
 
         <TabsContent value="signup" className="space-y-6">
-          <form onSubmit={handleAuth} className="space-y-4">
+          <form onSubmit={handleSignUp} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-right block pr-1 font-bold">الاسم الكامل</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                <Input id="name" placeholder="محمد أحمد" className="pl-10 pr-4 h-12 rounded-xl text-right" required />
+                <Input 
+                  id="name" 
+                  placeholder="محمد أحمد" 
+                  className="pl-10 pr-4 h-12 rounded-xl text-right" 
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-right block pr-1 font-bold">رقم الهاتف</Label>
               <div className="relative">
                 <Phone className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                <Input id="phone" type="tel" placeholder="05xxxxxxxx" className="pl-10 pr-4 h-12 rounded-xl text-right" required />
+                <Input 
+                  id="phone" 
+                  type="tel" 
+                  placeholder="05xxxxxxxx" 
+                  className="pl-10 pr-4 h-12 rounded-xl text-right" 
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="reg-email" className="text-right block pr-1 font-bold">البريد الإلكتروني</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                <Input id="reg-email" type="email" placeholder="example@mail.com" className="pl-10 pr-4 h-12 rounded-xl text-right" required />
+                <Input 
+                  id="reg-email" 
+                  type="email" 
+                  placeholder="example@mail.com" 
+                  className="pl-10 pr-4 h-12 rounded-xl text-right" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="reg-password" title="كلمة المرور" className="text-right block pr-1 font-bold">كلمة المرور</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                <Input id="reg-password" type="password" className="pl-10 pr-4 h-12 rounded-xl text-right" required />
+                <Input 
+                  id="reg-password" 
+                  type="password" 
+                  className="pl-10 pr-4 h-12 rounded-xl text-right" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                />
               </div>
             </div>
             <Button type="submit" className="w-full h-14 text-xl font-black bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 rounded-2xl mt-4" disabled={isLoading}>

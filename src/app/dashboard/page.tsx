@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { doc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -22,9 +23,20 @@ import {
   ShieldCheck
 } from "lucide-react";
 import BottomNav from "@/components/navigation/BottomNav";
+import { useUser, useFirestore, useDoc, useMemoFirebase } from "@/firebase";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { user } = useUser();
+  const db = useFirestore();
+
+  const userProfileRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, "userProfiles", user.uid);
+  }, [db, user]);
+
+  const { data: profile } = useDoc(userProfileRef);
+
   const mapImg = PlaceHolderImages.find(i => i.id === "map-placeholder");
 
   const quickActions = [
@@ -42,7 +54,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-white pb-24 font-cairo" dir="rtl">
-      {/* Header */}
       <div className="p-6 flex justify-between items-center bg-white sticky top-0 z-20 border-b border-gray-50">
         <Button variant="ghost" size="icon" className="bg-gray-50 rounded-xl">
           <Menu className="w-6 h-6" />
@@ -58,13 +69,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="px-6 space-y-8">
-        {/* Welcome Section */}
         <div className="pt-4">
-          <h2 className="text-2xl font-black text-gray-900">مرحباً، منى باحسين</h2>
+          <h2 className="text-2xl font-black text-gray-900">مرحباً، {profile?.fullName || user?.displayName || "منى باحسين"}</h2>
           <p className="text-gray-500 font-medium">نحن جاهزون لمساعدتك في أي وقت في حضرموت</p>
         </div>
 
-        {/* Hero Section with Big Red Button */}
         <div className="flex flex-col items-center justify-center py-4">
           <div className="relative group cursor-pointer" onClick={() => handleEmergency("urgent")}>
             <div className="absolute inset-0 bg-primary/20 rounded-full animate-pulse scale-150 group-hover:scale-175 transition-transform duration-1000"></div>
@@ -81,7 +90,6 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Quick Actions Grid */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="font-headline text-lg font-bold flex items-center gap-2">
@@ -105,7 +113,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Current Location Card */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="font-headline text-lg font-bold flex items-center gap-2">
@@ -140,7 +147,7 @@ export default function DashboardPage() {
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <MapPin className="w-5 h-5 text-primary" />
                 </div>
-                <p className="text-sm text-gray-800 font-bold">حضرموت، المكلا، حي فوة - شارع الستين</p>
+                <p className="text-sm text-gray-800 font-bold">{profile?.homeLocation || "حضرموت، المكلا، حي فوة - شارع الستين"}</p>
               </div>
             </CardContent>
           </Card>

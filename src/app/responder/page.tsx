@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { collection, query, orderBy, limit } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,20 +28,27 @@ import {
   User
 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 
 export default function ResponderDashboard() {
   const [activeTab, setActiveTab] = useState<'reports' | 'map' | 'units'>('reports');
+  const db = useFirestore();
   const mapImg = PlaceHolderImages.find(i => i.id === "map-placeholder");
 
-  const reports = [
+  const incidentsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "emergencyIncidents"), orderBy("reportedAt", "desc"), limit(10));
+  }, [db]);
+
+  const { data: realIncidents, isLoading: isIncidentsLoading } = useCollection(incidentsQuery);
+
+  const fallbackReports = [
     { id: "#8821", name: "نجد مسيعان", type: "حادث مروري", status: "نشط", time: "منذ 3 دقائق", blood: "O+", phone: "05xxxxxx", location: "المكلا - فوة" },
     { id: "#8820", name: "عصبان نسيب", type: "إغماء مفاجئ", status: "بانتظار الرد", time: "منذ 8 دقائق", blood: "A-", phone: "05xxxxxx", location: "سيئون - السوق" },
-    { id: "#8819", name: "رغد بلعفير", type: "حريق مبنى", status: "نشط", time: "منذ 12 دقيقة", blood: "B+", phone: "05xxxxxx", location: "الشحر - الميناء" },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-cairo" dir="rtl">
-      {/* Top Header */}
       <header className="bg-white border-b border-gray-200 p-4 flex justify-between items-center sticky top-0 z-40">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
@@ -60,7 +68,9 @@ export default function ResponderDashboard() {
             <div className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
               <Bell className="w-6 h-6 text-gray-500" />
             </div>
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-[10px] flex items-center justify-center rounded-full font-bold border-2 border-white">2</span>
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-[10px] flex items-center justify-center rounded-full font-bold border-2 border-white">
+              {realIncidents?.length || 0}
+            </span>
           </div>
           <div className="w-12 h-12 bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
             <Image src="https://picsum.photos/seed/admin/200/200" alt="Admin" width={48} height={48} className="object-cover" />
@@ -69,7 +79,6 @@ export default function ResponderDashboard() {
       </header>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar Navigation */}
         <aside className="w-24 sm:w-72 bg-white border-l border-gray-200 flex flex-col p-6 gap-3 z-30 shadow-sm">
           <div className="mb-6 px-2">
             <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-4">القائمة الرئيسية</p>
@@ -113,10 +122,8 @@ export default function ResponderDashboard() {
           </div>
         </aside>
 
-        {/* Main Content Area */}
         <main className="flex-1 overflow-auto p-4 sm:p-10">
           <div className="max-w-7xl mx-auto space-y-10">
-            {/* Stats Overview */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white group hover:shadow-xl transition-all">
                 <CardContent className="p-8 flex items-center gap-6">
@@ -125,7 +132,7 @@ export default function ResponderDashboard() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400 font-black">بلاغات نشطة</p>
-                    <p className="text-3xl font-black text-gray-900">12</p>
+                    <p className="text-3xl font-black text-gray-900">{realIncidents?.length || 0}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -171,14 +178,12 @@ export default function ResponderDashboard() {
                     <Activity className="w-8 h-8 text-primary" />
                     البلاغات الواردة (حضرموت)
                   </h2>
-                  <div className="flex gap-3">
-                    <Button variant="outline" className="rounded-xl font-bold bg-white h-12">تصفية</Button>
-                    <Button variant="outline" className="rounded-xl font-bold bg-white h-12 text-primary border-primary/20">تحديث تلقائي</Button>
-                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
-                  {reports.map((report) => (
+                  {isIncidentsLoading ? (
+                    <div className="p-10 text-center font-bold">جاري تحميل البلاغات الحية...</div>
+                  ) : realIncidents?.map((report) => (
                     <Card key={report.id} className="overflow-hidden border-none shadow-sm bg-white hover:ring-2 ring-primary/20 transition-all rounded-[2rem]">
                       <CardContent className="p-0">
                         <div className="p-8 flex flex-col lg:flex-row gap-8 items-start lg:items-center">
@@ -188,26 +193,23 @@ export default function ResponderDashboard() {
                                 <User className="w-7 h-7" />
                               </div>
                               <div>
-                                <h3 className="text-xl font-black text-gray-900">{report.name}</h3>
+                                <h3 className="text-xl font-black text-gray-900">بلاغ من مستخدم #{report.userId.slice(0, 5)}</h3>
                                 <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="outline" className="font-bold text-gray-400 rounded-lg">{report.id}</Badge>
-                                  <Badge className={report.status === "نشط" ? "bg-accent rounded-lg" : "bg-orange-500 rounded-lg"}>{report.status}</Badge>
+                                  <Badge variant="outline" className="font-bold text-gray-400 rounded-lg">{report.id.slice(0, 6)}</Badge>
+                                  <Badge className={report.status === "reported" ? "bg-primary rounded-lg" : "bg-accent rounded-lg"}>
+                                    {report.status === "reported" ? "جديد" : "نشط"}
+                                  </Badge>
                                 </div>
                               </div>
                             </div>
                             <div className="flex flex-wrap gap-6 text-sm font-bold text-gray-500 justify-start">
-                              <span className="flex items-center gap-2 p-2 bg-red-50 rounded-xl text-primary"><AlertCircle className="w-4 h-4" /> {report.type}</span>
-                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Droplet className="w-4 h-4 text-primary" /> فصيلة: {report.blood}</span>
-                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Navigation className="w-4 h-4 text-blue-500" /> {report.location}</span>
-                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Phone className="w-4 h-4 text-green-500" /> {report.phone}</span>
+                              <span className="flex items-center gap-2 p-2 bg-red-50 rounded-xl text-primary"><AlertCircle className="w-4 h-4" /> {report.incidentType}</span>
+                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Navigation className="w-4 h-4 text-blue-500" /> {report.reportedLatitude.toFixed(4)}, {report.reportedLongitude.toFixed(4)}</span>
+                              <span className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl"><Clock className="w-4 h-4 text-primary" /> {new Date(report.reportedAt).toLocaleTimeString('ar-SA')}</span>
                             </div>
                           </div>
                           
                           <div className="flex flex-col items-end gap-2 shrink-0">
-                            <p className="text-xs font-black text-gray-400 mb-2 flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {report.time}
-                            </p>
                             <div className="flex items-center gap-3 w-full lg:w-auto">
                               <Button className="flex-1 lg:flex-none h-14 bg-accent hover:bg-accent/90 gap-3 px-8 rounded-2xl shadow-lg shadow-accent/10">
                                 <Check className="w-5 h-5" /> قبول وتوجيه
@@ -240,7 +242,6 @@ export default function ResponderDashboard() {
                       className="object-cover"
                     />
                   )}
-                  {/* Map Overlay Markers */}
                   <div className="absolute top-1/3 left-1/4 group cursor-pointer">
                     <div className="absolute -inset-4 bg-primary/30 rounded-full animate-ping"></div>
                     <div className="w-8 h-8 bg-primary rounded-full border-4 border-white shadow-xl relative z-10"></div>
@@ -260,14 +261,7 @@ export default function ResponderDashboard() {
                         <div className="w-4 h-4 bg-blue-500 rounded-full shadow-sm"></div>
                         <span className="text-gray-700">سيارة إسعاف (متاح)</span>
                       </div>
-                      <div className="flex items-center gap-3 text-sm font-bold">
-                        <div className="w-4 h-4 bg-gray-400 rounded-full shadow-sm"></div>
-                        <span className="text-gray-700">سيارة إسعاف (مشغول)</span>
-                      </div>
                     </div>
-                    <Button className="w-full bg-primary/10 text-primary hover:bg-primary/20 rounded-xl font-black h-12">
-                      إظهار كافة الوحدات
-                    </Button>
                   </div>
                 </Card>
               </div>

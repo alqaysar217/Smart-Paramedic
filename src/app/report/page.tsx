@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { collection } from "firebase/firestore";
 import { 
   CheckCircle2, 
   MapPin, 
@@ -16,18 +17,37 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useUser, useFirestore, addDocumentNonBlocking } from "@/firebase";
 
 export default function ReportPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useUser();
+  const db = useFirestore();
+  const incidentType = searchParams.get('type') || 'general';
+
   const [status, setStatus] = useState<'locating' | 'sending' | 'success'>('locating');
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simulate steps
+    // Phase 1: Locating
     const timer1 = setTimeout(() => {
       setStatus('sending');
       setProgress(40);
+      
+      // Phase 2: Sending data to Firestore
+      if (db && user) {
+        const incidentsCol = collection(db, "emergencyIncidents");
+        addDocumentNonBlocking(incidentsCol, {
+          userId: user.uid,
+          incidentType: incidentType,
+          status: 'reported',
+          reportedLatitude: 14.5333, // Simulation
+          reportedLongitude: 49.1167,
+          reportedAt: new Date().toISOString(),
+          description: "بلاغ طارئ مرسل من التطبيق"
+        });
+      }
     }, 1500);
 
     const timer2 = setTimeout(() => {
@@ -44,11 +64,10 @@ export default function ReportPage() {
       clearTimeout(timer2);
       clearTimeout(timer3);
     };
-  }, []);
+  }, [db, user, incidentType]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-cairo" dir="rtl">
-      {/* Header during process */}
       {status !== 'success' && (
         <div className="p-6 flex items-center gap-4 border-b border-gray-50">
           <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl">

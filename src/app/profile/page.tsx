@@ -1,7 +1,9 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { doc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,16 +32,73 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from "@/firebase";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { user } = useUser();
+  const db = useFirestore();
+  
+  const userProfileRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, "userProfiles", user.uid);
+  }, [db, user]);
+
+  const { data: profile, isLoading: isProfileLoading } = useDoc(userProfileRef);
+
+  const [formData, setFormData] = useState({
+    gender: "",
+    age: "",
+    bloodType: "",
+    chronicDiseases: "",
+    medications: "",
+    allergies: "",
+    homeLocation: "",
+    workLocation: "",
+  });
+
   const [isLocating, setIsLocating] = useState(false);
 
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        gender: profile.gender || "",
+        age: profile.age?.toString() || "",
+        bloodType: profile.bloodType || "",
+        chronicDiseases: profile.chronicDiseases?.join(", ") || "",
+        medications: profile.medications?.join(", ") || "",
+        allergies: profile.allergies?.join(", ") || "",
+        homeLocation: profile.homeLocation || "",
+        workLocation: profile.workLocation || "",
+      });
+    }
+  }, [profile]);
+
   const handleSave = () => {
+    if (!userProfileRef) return;
+
+    const profileData = {
+      id: user?.uid,
+      fullName: user?.displayName || "مستخدم جديد",
+      email: user?.email,
+      gender: formData.gender,
+      age: parseInt(formData.age) || 0,
+      bloodType: formData.bloodType,
+      chronicDiseases: formData.chronicDiseases.split(",").map(s => s.trim()).filter(s => s),
+      medications: formData.medications.split(",").map(s => s.trim()).filter(s => s),
+      allergies: formData.allergies.split(",").map(s => s.trim()).filter(s => s),
+      homeLocation: formData.homeLocation,
+      workLocation: formData.workLocation,
+      updatedAt: new Date().toISOString(),
+    };
+
+    setDocumentNonBlocking(userProfileRef, profileData, { merge: true });
+    
     toast({
       title: "تم الحفظ بنجاح",
       description: "تم تحديث بيانات ملفك الطبي بنجاح.",
     });
+    
     setTimeout(() => {
       router.push("/dashboard");
     }, 1500);
@@ -47,8 +106,10 @@ export default function ProfilePage() {
 
   const handleLocate = () => {
     setIsLocating(true);
+    // Simulate geolocation
     setTimeout(() => {
       setIsLocating(false);
+      setFormData(prev => ({ ...prev, homeLocation: "المكلا، حي فوة - شارع الستين" }));
       toast({
         title: "تم تحديد الموقع",
         description: "تم التعرف على إحداثيات موقعك الحالي بدقة.",
@@ -56,9 +117,10 @@ export default function ProfilePage() {
     }, 2000);
   };
 
+  if (isProfileLoading) return <div className="p-8 text-center">جاري التحميل...</div>;
+
   return (
     <div className="min-h-screen bg-gray-50 pb-24 font-cairo" dir="rtl">
-      {/* Header */}
       <div className="bg-white p-6 sticky top-0 z-30 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-primary/10 rounded-xl">
@@ -72,7 +134,6 @@ export default function ProfilePage() {
       </div>
 
       <div className="p-6 space-y-6">
-        {/* Basic Info Section */}
         <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
           <CardHeader className="bg-primary/5 pb-4">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -87,7 +148,7 @@ export default function ProfilePage() {
                   <User className="w-4 h-4" />
                   الجنس
                 </Label>
-                <Select>
+                <Select value={formData.gender} onValueChange={(v) => setFormData(p => ({ ...p, gender: v }))}>
                   <SelectTrigger className="h-12 rounded-xl">
                     <SelectValue placeholder="اختر" />
                   </SelectTrigger>
@@ -102,7 +163,13 @@ export default function ProfilePage() {
                   <Calendar className="w-4 h-4" />
                   العمر
                 </Label>
-                <Input type="number" placeholder="مثال: 25" className="h-12 rounded-xl text-right" />
+                <Input 
+                  type="number" 
+                  placeholder="مثال: 25" 
+                  className="h-12 rounded-xl text-right" 
+                  value={formData.age}
+                  onChange={(e) => setFormData(p => ({ ...p, age: e.target.value }))}
+                />
               </div>
             </div>
 
@@ -111,7 +178,7 @@ export default function ProfilePage() {
                 <Droplet className="w-4 h-4 text-primary" />
                 فصيلة الدم
               </Label>
-              <Select>
+              <Select value={formData.bloodType} onValueChange={(v) => setFormData(p => ({ ...p, bloodType: v }))}>
                 <SelectTrigger className="h-12 rounded-xl border-primary/20 bg-primary/5">
                   <SelectValue placeholder="اختر فصيلة الدم" />
                 </SelectTrigger>
@@ -130,7 +197,6 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        {/* Medical History - Questions Style */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold px-2">التاريخ الطبي (أسئلة هامة)</h2>
           <Accordion type="single" collapsible className="space-y-3">
@@ -147,6 +213,8 @@ export default function ProfilePage() {
                 <Textarea 
                   placeholder="يرجى كتابة أي أمراض تعاني منها (مثل السكري، الضغط، الربو...)" 
                   className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
+                  value={formData.chronicDiseases}
+                  onChange={(e) => setFormData(p => ({ ...p, chronicDiseases: e.target.value }))}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -164,6 +232,8 @@ export default function ProfilePage() {
                 <Textarea 
                   placeholder="اذكر الأدوية وجرعاتها إذا أمكن..." 
                   className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
+                  value={formData.medications}
+                  onChange={(e) => setFormData(p => ({ ...p, medications: e.target.value }))}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -181,13 +251,14 @@ export default function ProfilePage() {
                 <Textarea 
                   placeholder="مثال: حساسية البنسلين، حساسية الفول..." 
                   className="bg-gray-50 border-none rounded-xl min-h-[100px] text-right"
+                  value={formData.allergies}
+                  onChange={(e) => setFormData(p => ({ ...p, allergies: e.target.value }))}
                 />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
 
-        {/* Addresses Section */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold px-2">مواقع العناوين</h2>
           <Card className="border-none shadow-sm rounded-3xl p-6 space-y-5 bg-white">
@@ -196,7 +267,12 @@ export default function ProfilePage() {
                 <Home className="w-4 h-4 text-green-600" />
                 عنوان السكن
               </Label>
-              <Input placeholder="المدينة، الحي، اسم الشارع" className="h-12 rounded-xl text-right bg-gray-50 border-none" />
+              <Input 
+                placeholder="المدينة، الحي، اسم الشارع" 
+                className="h-12 rounded-xl text-right bg-gray-50 border-none" 
+                value={formData.homeLocation}
+                onChange={(e) => setFormData(p => ({ ...p, homeLocation: e.target.value }))}
+              />
             </div>
 
             <div className="space-y-2">
@@ -204,7 +280,12 @@ export default function ProfilePage() {
                 <Briefcase className="w-4 h-4 text-orange-600" />
                 عنوان العمل
               </Label>
-              <Input placeholder="مكان العمل أو جهة الوظيفة" className="h-12 rounded-xl text-right bg-gray-50 border-none" />
+              <Input 
+                placeholder="مكان العمل أو جهة الوظيفة" 
+                className="h-12 rounded-xl text-right bg-gray-50 border-none" 
+                value={formData.workLocation}
+                onChange={(e) => setFormData(p => ({ ...p, workLocation: e.target.value }))}
+              />
             </div>
 
             <div className="pt-2">
@@ -230,7 +311,6 @@ export default function ProfilePage() {
           </Card>
         </div>
 
-        {/* Action Button */}
         <Button 
           onClick={handleSave} 
           className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 rounded-2xl gap-3 mt-6"
@@ -238,10 +318,6 @@ export default function ProfilePage() {
           <Save className="w-6 h-6" />
           حفظ كافة البيانات
         </Button>
-        
-        <p className="text-center text-xs text-gray-400 mt-4">
-          يمكنك تعديل هذه البيانات في أي وقت من إعدادات الملف الشخصي
-        </p>
       </div>
     </div>
   );
