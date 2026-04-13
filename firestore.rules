@@ -1,169 +1,146 @@
+/**
+ * Smart Paramedic Security Rules
+ * 
+ * CORE PHILOSOPHY:
+ * This ruleset implements a hybrid security model tailored for emergency response: 
+ * private ownership for citizens and role-based access for emergency agency personnel. 
+ * High priority is given to "Authorization Independence" via denormalization—all 
+ * authorization metadata (userIds, agencyIds) is stored directly on documents to 
+ * avoid expensive cross-document lookups.
+ * 
+ * DATA STRUCTURE:
+ * - /users/{userId}: Private user profiles containing critical medical data.
+ * - /emergency_reports/{reportId}: Shared incidents between a reporter and an agency.
+ * - /emergency_agencies/{agencyId}: Organizational data with a /members subcollection for RBAC.
+ * - /ambulance_units/{unitId} & /drivers/{driverId}: Operational assets linked to agencies.
+ * - /first_aid_guidelines/{guidelineId}: Publicly accessible instructional content.
+ * 
+ * KEY SECURITY DECISIONS:
+ * - Ownership: Citizens have full CRUD on their own profiles and reports.
+ * - Agency Access: Personnel access is granted by verifying membership in a specific 
+ *   agency via the /emergency_agencies/{agencyId}/members subcollection.
+ * - Public Read: First aid guidelines are open to all users (including anonymous) 
+ *   to ensure immediate access to life-saving information during emergencies.
+ * - Relational Integrity: On creation, documents must match the authenticated user's 
+ *   UID or the relevant path parameters to prevent data hijacking.
+ */
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * Smart Paramedic - Security Rules Documentation
-     *
-     * CORE PHILOSOPHY:
-     * This ruleset implements a multi-layered authorization model designed for high-stakes emergency 
-     * response. It leverages "Authorization Independence" by denormalizing ownership IDs (like 
-     * organizationId and userId) directly onto documents. This ensures rules are performant, 
-     * atomic, and do not require costly recursive lookups.
-     *
-     * DATA STRUCTURE:
-     * - /userProfiles/{userId}: Private medical data owned by the specific user.
-     * - /emergencyIncidents/{incidentId}: Shared records between a reporter (user) and a responder (organization).
-     * - /emergencyOrganizations, /emergencyUnits, /emergencyTeamMembers: Operational data managed 
-     *   by dispatchers and administrators.
-     * - /firstAidInstructions: Publicly available step-by-step medical guidance.
-     * - /roles_...: Administrative role-mapping collections used for Database-Based Access Control (DBAC).
-     *
-     * KEY SECURITY DECISIONS:
-     * 1. Path-Based Ownership: For user profiles, the UID in the path must match the Auth UID.
-     * 2. Role-Based Access: Dispatchers have management rights over units and team members belonging 
-     *    to their specific organization via existence checks in the roles collections.
-     * 3. Public Readability: Static instructions and organization details are publicly readable 
-     *    to ensure availability during emergencies, while writes are strictly restricted.
-     * 4. Relational Integrity: On creation, documents must include internal ID fields that match 
-     *    the authenticated user to prevent "impersonation" writes.
-     */
+    // --- GLOBAL HELPER FUNCTIONS ---
 
-    // --- Helper Functions ---
-
-    /** Checks if the user is authenticated. */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** Checks if the user matches the provided ID. */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /** Verifies a user is a global App Admin. */
-    function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/roles_appAdmins/$(request.auth.uid));
-    }
-
-    /** Verifies a user is a dispatcher for a specific organization. */
-    function isDispatcherFor(orgId) {
-      return isSignedIn() && exists(/databases/$(database)/documents/roles_organizationDispatchers/$(orgId)/$(request.auth.uid));
-    }
-
-    /** Helper for checking ownership on existing documents. */
     function isExistingOwner(userId) {
       return resource != null && isOwner(userId);
     }
 
-    // --- Collection Rules ---
+    function isAgencyMember(agencyId) {
+      return isSignedIn() && exists(/databases/$(database)/documents/emergency_agencies/$(agencyId)/members/$(request.auth.uid));
+    }
+
+    function isReportParticipant(reportData) {
+      return isOwner(reportData.reporterId) || isAgencyMember(reportData.receivingAgencyId);
+    }
+
+    // --- COLLECTION RULES ---
 
     /**
-     * @description Rules for private user profiles containing sensitive medical info.
-     * @path /userProfiles/{userId}
-     * @allow (get) User retrieves their own profile. (create) User sets their UID as the doc ID.
-     * @deny (list) Prevent broad listing of users for privacy.
-     * @principle Enforces path-based ownership and relational integrity between path and data.
+     * @description Rules for personal and medical user profiles.
+     * @path /users/{userId}
+     * @allow (create) if the UID matches the path and data.
+     * @deny (read) if the user is not the owner of the profile.
+     * @principle Enforces strict document ownership and path-to-data consistency.
      */
-    match /userProfiles/{userId} {
-      allow get: if isOwner(userId);
-      allow list: if false; 
+    match /users/{userId} {
+      allow get, list: if isOwner(userId);
       allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description General information about hospitals and emergency services.
-     * @path /emergencyOrganizations/{organizationId}
-     * @allow (get, list) Anyone can find hospitals/services. (update) Global admins modify details.
-     * @deny (write) Non-admins cannot modify organization details.
-     * @principle Publicly readable data with administrative-only write access.
+     * @description Rules for emergency reports shared between users and agencies.
+     * @path /emergency_reports/{reportId}
+     * @allow (list) if the user is the reporter or a member of the assigned agency.
+     * @deny (create) if the reporterId in the data does not match the authenticated UID.
+     * @principle Multi-party access based on denormalized IDs (reporterId/receivingAgencyId).
      */
-    match /emergencyOrganizations/{organizationId} {
+    match /emergency_reports/{reportId} {
+      allow get, list: if isSignedIn() && (isOwner(resource.data.reporterId) || isAgencyMember(resource.data.receivingAgencyId));
+      allow create: if isSignedIn() && request.resource.data.reporterId == request.auth.uid;
+      allow update: if resource != null && isReportParticipant(resource.data);
+      allow delete: if resource != null && isOwner(resource.data.reporterId);
+    }
+
+    /**
+     * @description Rules for emergency response organizations.
+     * @path /emergency_agencies/{agencyId}
+     * @allow (get) for any signed-in user to find help.
+     * @deny (write) if the user is not a verified member of that specific agency.
+     * @principle Restricts organizational management to agency personnel.
+     */
+    match /emergency_agencies/{agencyId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isAgencyMember(agencyId);
+
+      /**
+       * @description Membership subcollection defining agency roles.
+       * @path /emergency_agencies/{agencyId}/members/{memberId}
+       */
+      match /members/{memberId} {
+        allow get: if isSignedIn();
+        allow list: if isAgencyMember(agencyId);
+        allow create, update, delete: if isAgencyMember(agencyId); // Prototyping: Members manage members
+      }
+    }
+
+    /**
+     * @description Rules for ambulance units managed by agencies.
+     * @path /ambulance_units/{unitId}
+     * @allow (update) if the user is the assigned driver or an agency member.
+     * @deny (create) if the agencyId is not provided or valid.
+     * @principle Agency-wide access for asset management and status updates.
+     */
+    match /ambulance_units/{unitId} {
+      allow get, list: if isSignedIn();
+      allow create: if isAgencyMember(request.resource.data.agencyId);
+      allow update: if resource != null && (isAgencyMember(resource.data.agencyId) || isOwner(resource.data.driverId));
+      allow delete: if resource != null && isAgencyMember(resource.data.agencyId);
+    }
+
+    /**
+     * @description Rules for driver profiles and availability status.
+     * @path /drivers/{driverId}
+     * @allow (create) if the UID matches the driverId and user is an agency member.
+     * @deny (update) if the agencyId is changed (immutable relation).
+     * @principle Ensures drivers manage their own status while linked to an agency.
+     */
+    match /drivers/{driverId} {
+      allow get, list: if isSignedIn();
+      allow create: if isOwner(driverId) && isAgencyMember(request.resource.data.agencyId);
+      allow update: if isExistingOwner(driverId) && request.resource.data.agencyId == resource.data.agencyId;
+      allow delete: if isExistingOwner(driverId);
+    }
+
+    /**
+     * @description Publicly readable first aid guidelines.
+     * @path /first_aid_guidelines/{guidelineId}
+     * @allow (read) for everyone (including anonymous users).
+     * @deny (write) for all users through the client app.
+     * @principle Read-only public resource for emergency education.
+     */
+    match /first_aid_guidelines/{guidelineId} {
       allow get, list: if true;
-      allow create, update, delete: if isAdmin();
-    }
-
-    /**
-     * @description Management of vehicles and units (ambulances, fire trucks).
-     * @path /emergencyUnits/{unitId}
-     * @allow (list) Dispatcher queries units for their org. (update) Dispatcher changes status.
-     * @deny (create) User not belonging to the specified organization.
-     * @principle Shared access based on organizational affiliation.
-     */
-    match /emergencyUnits/{unitId} {
-      allow get: if isSignedIn();
-      allow list: if isSignedIn(); // Queries should filter by organizationId
-      allow create: if isDispatcherFor(request.resource.data.organizationId);
-      allow update: if isDispatcherFor(resource.data.organizationId) && request.resource.data.organizationId == resource.data.organizationId;
-      allow delete: if isAdmin() || (resource != null && isDispatcherFor(resource.data.organizationId));
-    }
-
-    /**
-     * @description Profiles for paramedics and drivers.
-     * @path /emergencyTeamMembers/{memberId}
-     * @allow (get) Signed-in users view responders. (update) Member updates own status or dispatcher manages.
-     * @deny (create) Mismatched organizationId.
-     * @principle Self-management for team members combined with organizational oversight.
-     */
-    match /emergencyTeamMembers/{memberId} {
-      allow get: if isSignedIn();
-      allow list: if isSignedIn();
-      allow create: if isOwner(memberId) || isDispatcherFor(request.resource.data.organizationId);
-      allow update: if isOwner(memberId) || isDispatcherFor(resource.data.organizationId);
-      allow delete: if isAdmin() || isOwner(memberId);
-    }
-
-    /**
-     * @description Emergency incident reports linking users and responders.
-     * @path /emergencyIncidents/{incidentId}
-     * @allow (create) User reports an emergency. (get) Reporter or responding dispatcher views incident.
-     * @deny (update) User trying to modify an incident they didn't report or aren't responding to.
-     * @principle Multi-party access control via denormalized userId and organizationId.
-     */
-    match /emergencyIncidents/{incidentId} {
-      allow get: if isSignedIn() && (isOwner(resource.data.userId) || isDispatcherFor(resource.data.acceptedByOrganizationId));
-      allow list: if isSignedIn(); // Query must filter by userId or acceptedByOrganizationId
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      allow update: if isSignedIn() && (isOwner(resource.data.userId) || isDispatcherFor(resource.data.acceptedByOrganizationId) || isDispatcherFor(request.resource.data.acceptedByOrganizationId));
-      allow delete: if isAdmin();
-    }
-
-    /**
-     * @description Static medical guidance for first aid.
-     * @path /firstAidInstructions/{instructionId}
-     * @allow (get, list) Public access for emergency situations.
-     * @deny (write) Non-admin users.
-     * @principle Publicly readable, read-only content for safety and accessibility.
-     */
-    match /firstAidInstructions/{instructionId} {
-      allow get, list: if true;
-      allow create, update, delete: if isAdmin();
-    }
-
-    /**
-     * @description Internal role mapping for global administrators.
-     * @path /roles_appAdmins/{adminUid}
-     * @allow (get) Checking own admin status.
-     * @deny (list, write) Direct client modification of roles.
-     * @principle Internal RBAC/DBAC system; changes should happen via Admin SDK.
-     */
-    match /roles_appAdmins/{adminUid} {
-      allow get: if isOwner(adminUid);
-      allow list, create, update, delete: if false;
-    }
-
-    /**
-     * @description Internal role mapping for organizational dispatchers.
-     * @path /roles_organizationDispatchers/{organizationId}/{dispatcherUid}
-     * @allow (get) Dispatcher verifying their own status.
-     * @deny (list, write) Direct client modification.
-     * @principle Scoped DBAC for organizational authority.
-     */
-    match /roles_organizationDispatchers/{organizationId}/{dispatcherUid} {
-      allow get: if isOwner(dispatcherUid);
-      allow list, create, update, delete: if false;
+      allow create, update, delete: if false; // Guidelines managed via Admin/Console only
     }
   }
 }
