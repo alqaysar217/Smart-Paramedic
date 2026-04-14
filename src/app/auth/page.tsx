@@ -38,11 +38,8 @@ export default function AuthPage() {
   const [acceptTerms, setAcceptTerms] = useState(false);
 
   useEffect(() => {
-    // If user is already logged in, we check if they are coming from a specific intent
-    // But generally we send them to dashboard.
     if (user && !isUserLoading) {
-      // Basic check: if we are on auth page and user is logged in, send them to dashboard
-      // unless we just performed a responder login
+      // User is already logged in
     }
   }, [user, isUserLoading, router]);
 
@@ -140,7 +137,6 @@ export default function AuthPage() {
 
   const handleResponderLogin = () => {
     setIsLoading(true);
-    // Ensure user is signed in (anonymously if needed) to bypass the responder page redirect
     if (!user) {
       initiateAnonymousSignIn(auth)
         .then(() => {
@@ -283,13 +279,7 @@ export default function AuthPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2 py-1 flex-row-reverse">
-              <label 
-                htmlFor="terms" 
-                className="text-[9px] font-bold text-slate-500 leading-relaxed cursor-pointer flex-1 text-right"
-              >
-                أوافق على شروط الخدمة وسياسة الخصوصية الخاصة بالمسعف الذكي ومعايير التعامل الطبي الطارئ في حضرموت.
-              </label>
+            <div className="flex items-center gap-2 py-1">
               <Checkbox 
                 id="terms" 
                 checked={acceptTerms} 
@@ -300,6 +290,12 @@ export default function AuthPage() {
                 }}
                 className="mt-0.5 border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
+              <label 
+                htmlFor="terms" 
+                className="text-[9px] font-bold text-slate-500 leading-relaxed cursor-pointer flex-1 text-right"
+              >
+                أوافق على شروط الخدمة وسياسة الخصوصية الخاصة بالمسعف الذكي ومعايير التعامل الطبي الطارئ في حضرموت.
+              </label>
             </div>
 
             <Button type="submit" className="w-full h-10 text-[11px] font-bold bg-primary rounded-[10px] shadow-md shadow-primary/10 mt-1 active-scale" disabled={isLoading}>
