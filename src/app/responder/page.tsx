@@ -8,8 +8,7 @@ import {
   Button 
 } from "@/components/ui/button";
 import { 
-  Card, 
-  CardContent 
+  Card 
 } from "@/components/ui/card";
 import { 
   Badge 
@@ -57,18 +56,96 @@ import {
 import { useAuth, useUser, signOutUser } from "@/firebase";
 import { cn } from "@/lib/utils";
 
+// بيانات الطالبات مع روابط صور فريدة لكل واحدة
 const ACTIVE_REPORTS = [
-  { id: "REP-001", reporterName: "عصبان ةنسيب", type: "إغماء مفاجئ", location: "المكلا - فوة - المساكن", medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["هبوط سكر"], medications: ["فيتامينات"], allergies: ["البنسلين"], phone: "0533112233" } },
-  { id: "REP-002", reporterName: "منى باحسين", type: "أزمة تنفسية", location: "المكلا - الديس - شارع الغويزي", medicalProfile: { age: 20, gender: "أنثى", bloodType: "A-", chronicDiseases: ["الربو"], medications: ["فنتولين"], allergies: ["الغبار"], phone: "0544223344" } },
-  { id: "REP-003", reporterName: "نجد مسيعان", type: "نزيف حاد", location: "المكلا - روكب", medicalProfile: { age: 22, gender: "أنثى", bloodType: "B+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0555334455" } },
-  { id: "REP-004", reporterName: "نور العمودي", type: "تشنجات", location: "المكلا - بويش", medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB+", chronicDiseases: ["صرع"], medications: ["إيبانوتين"], allergies: ["لا يوجد"], phone: "0566445566" } },
-  { id: "REP-005", reporterName: "رغد بلعفير", type: "حادث سير", location: "المكلا - شارع الستين", medicalProfile: { age: 23, gender: "أنثى", bloodType: "O-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0577556677" } },
-  { id: "REP-006", reporterName: "خلود بن ثابت", type: "ألم في الصدر", location: "المكلا - الشرج", medicalProfile: { age: 21, gender: "أنثى", bloodType: "A+", chronicDiseases: ["اشتباه صمام"], medications: ["أسبرين"], allergies: ["لا يوجد"], phone: "0588667788" } },
-  { id: "REP-007", reporterName: "عائشة مرعي", type: "هبوط حاد", location: "المكلا - جول مسحة", medicalProfile: { age: 22, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["مأكولات بحرية"], phone: "0599778899" } },
-  { id: "REP-008", reporterName: "نور باعباد", type: "كسر مضاعف", location: "المكلا - امبيخة", medicalProfile: { age: 20, gender: "أنثى", bloodType: "B-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["براسيتامول"], phone: "0500112233" } },
-  { id: "REP-009", reporterName: "منية باكرمان", type: "صدمة حرارية", location: "المكلا - بروم", medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0511223344" } },
-  { id: "REP-010", reporterName: "هديل المنهالي", type: "تسمم غذائي", location: "المكلا - غيل باوزير", medicalProfile: { age: 22, gender: "أنثى", bloodType: "A-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لاكتوز"], phone: "0522334455" } },
-  { id: "REP-011", reporterName: "ماريا الحيقي", type: "اختناق", location: "المكلا - الديس", medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0533445566" } },
+  { 
+    id: "REP-001", 
+    reporterName: "عصبان ةنسيب", 
+    avatarUrl: "https://picsum.photos/seed/asban/100/100",
+    type: "إغماء مفاجئ", 
+    location: "المكلا - فوة - المساكن", 
+    medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["هبوط سكر"], medications: ["فيتامينات"], allergies: ["البنسلين"], phone: "0533112233" } 
+  },
+  { 
+    id: "REP-002", 
+    reporterName: "منى باحسين", 
+    avatarUrl: "https://picsum.photos/seed/muna/100/100",
+    type: "أزمة تنفسية", 
+    location: "المكلا - الديس - شارع الغويزي", 
+    medicalProfile: { age: 20, gender: "أنثى", bloodType: "A-", chronicDiseases: ["الربو"], medications: ["فنتولين"], allergies: ["الغبار"], phone: "0544223344" } 
+  },
+  { 
+    id: "REP-003", 
+    reporterName: "نجد مسيعان", 
+    avatarUrl: "https://picsum.photos/seed/najd/100/100",
+    type: "نزيف حاد", 
+    location: "المكلا - روكب", 
+    medicalProfile: { age: 22, gender: "أنثى", bloodType: "B+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0555334455" } 
+  },
+  { 
+    id: "REP-004", 
+    reporterName: "نور العمودي", 
+    avatarUrl: "https://picsum.photos/seed/nour1/100/100",
+    type: "تشنجات", 
+    location: "المكلا - بويش", 
+    medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB+", chronicDiseases: ["صرع"], medications: ["إيبانوتين"], allergies: ["لا يوجد"], phone: "0566445566" } 
+  },
+  { 
+    id: "REP-005", 
+    reporterName: "رغد بلعفير", 
+    avatarUrl: "https://picsum.photos/seed/raghad/100/100",
+    type: "حادث سير", 
+    location: "المكلا - شارع الستين", 
+    medicalProfile: { age: 23, gender: "أنثى", bloodType: "O-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0577556677" } 
+  },
+  { 
+    id: "REP-006", 
+    reporterName: "خلود بن ثابت", 
+    avatarUrl: "https://picsum.photos/seed/kholoud/100/100",
+    type: "ألم في الصدر", 
+    location: "المكلا - الشرج", 
+    medicalProfile: { age: 21, gender: "أنثى", bloodType: "A+", chronicDiseases: ["اشتباه صمام"], medications: ["أسبرين"], allergies: ["لا يوجد"], phone: "0588667788" } 
+  },
+  { 
+    id: "REP-007", 
+    reporterName: "عائشة مرعي", 
+    avatarUrl: "https://picsum.photos/seed/asha/100/100",
+    type: "هبوط حاد", 
+    location: "المكلا - جول مسحة", 
+    medicalProfile: { age: 22, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["مأكولات بحرية"], phone: "0599778899" } 
+  },
+  { 
+    id: "REP-008", 
+    reporterName: "نور باعباد", 
+    avatarUrl: "https://picsum.photos/seed/nour2/100/100",
+    type: "كسر مضاف", 
+    location: "المكلا - امبيخة", 
+    medicalProfile: { age: 20, gender: "أنثى", bloodType: "B-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["براسيتامول"], phone: "0500112233" } 
+  },
+  { 
+    id: "REP-009", 
+    reporterName: "منية باكرمان", 
+    avatarUrl: "https://picsum.photos/seed/monya/100/100",
+    type: "صدمة حرارية", 
+    location: "المكلا - بروم", 
+    medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0511223344" } 
+  },
+  { 
+    id: "REP-010", 
+    reporterName: "هديل المنهالي", 
+    avatarUrl: "https://picsum.photos/seed/hadeel/100/100",
+    type: "تسمم غذائي", 
+    location: "المكلا - غيل باوزير", 
+    medicalProfile: { age: 22, gender: "أنثى", bloodType: "A-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لاكتوز"], phone: "0522334455" } 
+  },
+  { 
+    id: "REP-011", 
+    reporterName: "ماريا الحيقي", 
+    avatarUrl: "https://picsum.photos/seed/maria/100/100",
+    type: "اختناق", 
+    location: "المكلا - الديس", 
+    medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0533445566" } 
+  },
 ];
 
 const ARCHIVED_REPORTS = [
@@ -134,7 +211,7 @@ export default function ResponderDashboard() {
                 <p className="text-[9px] text-slate-400 font-bold">النوبة المسائية</p>
              </div>
              <div className="w-10 h-10 rounded-[10px] overflow-hidden border-2 border-slate-100 relative shadow-sm">
-                <Image src="https://picsum.photos/seed/admin1/200/200" alt="Admin" fill className="object-cover" />
+                <Image src="https://picsum.photos/seed/admin-hq/200/200" alt="Admin" fill className="object-cover" />
              </div>
           </div>
         </div>
@@ -203,7 +280,7 @@ export default function ResponderDashboard() {
             {activeTab === 'reports' && (
               <div className="space-y-6 animate-in fade-in duration-500">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-1">
+                  <div className="space-y-1 text-right">
                     <h2 className="text-[22px] font-bold text-slate-900">سجل البلاغات الحية</h2>
                     <p className="text-[12px] text-slate-400 font-bold">متابعة كافة طلبات النجدة الواردة لحظياً</p>
                   </div>
@@ -237,7 +314,7 @@ export default function ResponderDashboard() {
                           <TableCell>
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-[10px] overflow-hidden border border-slate-100 relative shadow-sm">
-                                <Image src={`https://picsum.photos/seed/${report.id}/100/100`} alt="Avatar" fill className="object-cover" />
+                                <Image src={report.avatarUrl} alt="Avatar" fill className="object-cover" />
                               </div>
                               <p className="text-[13px] font-bold text-slate-800">{report.reporterName}</p>
                             </div>
@@ -259,20 +336,20 @@ export default function ResponderDashboard() {
                                     <Eye className="w-4 h-4" />
                                   </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-md rounded-[15px] font-cairo" dir="rtl">
-                                  <DialogHeader>
-                                    <DialogTitle className="text-right text-md font-bold flex items-center gap-2 border-b pb-4">
+                                <DialogContent className="max-w-md rounded-[15px] font-cairo p-0 overflow-hidden" dir="rtl">
+                                  <DialogHeader className="bg-slate-900 p-6 text-white text-right relative">
+                                    <DialogTitle className="text-md font-bold flex items-center gap-2">
                                       <ShieldCheck className="w-5 h-5 text-primary" />
                                       الملف الطبي الرقمي الموحد
                                     </DialogTitle>
                                   </DialogHeader>
                                   {selectedReport && (
-                                    <div className="space-y-6 pt-4">
+                                    <div className="p-6 space-y-6">
                                       <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-[12px] border border-slate-100">
                                         <div className="w-16 h-16 bg-white rounded-full border-2 border-primary/20 overflow-hidden relative shadow-sm">
-                                          <Image src={`https://picsum.photos/seed/${selectedReport.id}/200/200`} alt="Avatar" fill className="object-cover" />
+                                          <Image src={selectedReport.avatarUrl} alt="Avatar" fill className="object-cover" />
                                         </div>
-                                        <div className="text-right">
+                                        <div className="text-right flex-1">
                                           <h4 className="font-bold text-[15px] text-slate-900">{selectedReport.reporterName}</h4>
                                           <p className="text-[11px] text-slate-400 font-bold flex items-center gap-1 mt-1">
                                             <Phone className="w-3.5 h-3.5" /> {selectedReport.medicalProfile.phone}
@@ -281,11 +358,11 @@ export default function ResponderDashboard() {
                                       </div>
 
                                       <div className="grid grid-cols-2 gap-4">
-                                        <div className="bg-slate-50 p-4 rounded-[12px] border border-slate-100">
+                                        <div className="bg-slate-50 p-4 rounded-[12px] border border-slate-100 text-right">
                                           <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">البيانات الحيوية</p>
                                           <p className="text-[12px] font-bold text-slate-800">{selectedReport.medicalProfile.age} سنة - {selectedReport.medicalProfile.gender}</p>
                                         </div>
-                                        <div className="bg-rose-50 p-4 rounded-[12px] border border-rose-100">
+                                        <div className="bg-rose-50 p-4 rounded-[12px] border border-rose-100 text-right">
                                           <p className="text-[10px] text-rose-400 font-black uppercase mb-1">فصيلة الدم</p>
                                           <p className="text-[14px] font-black text-rose-700 flex items-center gap-1.5">
                                             <Droplet className="w-4 h-4" /> {selectedReport.medicalProfile.bloodType}
@@ -298,9 +375,9 @@ export default function ResponderDashboard() {
                                           <Activity className="w-4 h-4 text-blue-500" /> الحالة الصحية والسريرية
                                         </h5>
                                         <div className="bg-white border border-slate-100 rounded-[12px] p-5 space-y-4 shadow-sm">
-                                          <div className="flex items-start gap-4">
+                                          <div className="flex items-start gap-4 text-right">
                                             <AlertCircle className="w-5 h-5 text-orange-500 shrink-0" />
-                                            <div className="text-right">
+                                            <div>
                                               <p className="text-[11px] font-black text-slate-800">الأمراض المزمنة:</p>
                                               <div className="flex flex-wrap gap-2 mt-2">
                                                 {selectedReport.medicalProfile.chronicDiseases.map((d: any) => (
@@ -309,16 +386,16 @@ export default function ResponderDashboard() {
                                               </div>
                                             </div>
                                           </div>
-                                          <div className="flex items-start gap-4">
+                                          <div className="flex items-start gap-4 text-right">
                                             <Pill className="w-5 h-5 text-purple-500 shrink-0" />
-                                            <div className="text-right">
+                                            <div>
                                               <p className="text-[11px] font-black text-slate-800">الأدوية النشطة:</p>
                                               <p className="text-[11px] text-slate-500 font-bold mt-1">{selectedReport.medicalProfile.medications.join("، ")}</p>
                                             </div>
                                           </div>
-                                          <div className="flex items-start gap-4">
+                                          <div className="flex items-start gap-4 text-right">
                                             <X className="w-5 h-5 text-rose-500 shrink-0" />
-                                            <div className="text-right">
+                                            <div>
                                               <p className="text-[11px] font-black text-rose-600">سجل الحساسية:</p>
                                               <p className="text-[11px] text-slate-500 font-bold mt-1">{selectedReport.medicalProfile.allergies.join("، ")}</p>
                                             </div>
@@ -386,13 +463,13 @@ export default function ResponderDashboard() {
                         </div>
                         <Badge className="bg-green-500 text-white border-none text-[9px] font-bold">{unit.status}</Badge>
                      </div>
-                     <div>
+                     <div className="text-right">
                         <h4 className="text-[16px] font-bold text-slate-800">الوحدة {unit.id}</h4>
-                        <p className="text-[11px] text-slate-400 font-bold flex items-center gap-2 mt-1">
-                          <MapPin className="w-3.5 h-3.5 text-primary" /> {unit.location}
+                        <p className="text-[11px] text-slate-400 font-bold flex items-center justify-end gap-2 mt-1">
+                           {unit.location} <MapPin className="w-3.5 h-3.5 text-primary" />
                         </p>
                      </div>
-                     <div className="pt-4 border-t border-slate-50">
+                     <div className="pt-4 border-t border-slate-50 text-right">
                         <p className="text-[10px] text-slate-400 font-bold mb-2">الجاهزية:</p>
                         <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                           <div className="h-full bg-green-500 w-[95%]"></div>
@@ -446,3 +523,4 @@ export default function ResponderDashboard() {
     </div>
   );
 }
+

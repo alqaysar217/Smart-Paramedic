@@ -87,7 +87,7 @@ export default function DashboardPage() {
 
       <main className="px-4 pt-4 space-y-6">
         <section className="flex justify-between items-center px-1">
-          <div>
+          <div className="text-right">
             <p className="text-[9px] font-bold text-slate-400 mb-0.5 uppercase tracking-wider">مرحباً بك مجدداً</p>
             <h1 className="text-md font-bold text-slate-900 leading-tight">
                {profile?.fullName?.split(' ')[0] || "المستخدم العزيز"}
@@ -96,13 +96,13 @@ export default function DashboardPage() {
           <div className="flex flex-col items-end gap-1">
             <div className="flex -space-x-1.5 rtl:space-x-reverse">
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/medic1/100/100" alt="Medic 1" fill className="object-cover" />
+                  <Image src="https://picsum.photos/seed/m1/100/100" alt="Medic 1" fill className="object-cover" />
                 </div>
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/medic2/100/100" alt="Medic 2" fill className="object-cover" />
+                  <Image src="https://picsum.photos/seed/m2/100/100" alt="Medic 2" fill className="object-cover" />
                 </div>
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/medic3/100/100" alt="Medic 3" fill className="object-cover" />
+                  <Image src="https://picsum.photos/seed/m3/100/100" alt="Medic 3" fill className="object-cover" />
                 </div>
             </div>
             <p className="text-[7px] font-bold text-accent uppercase flex items-center gap-1">
@@ -113,7 +113,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1.5 px-1">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1.5 px-1 justify-start">
             <MapPin className="w-3 h-3 text-primary" /> خريطة المكلا الحية
           </h2>
           
@@ -129,20 +129,20 @@ export default function DashboardPage() {
             
             <div className="absolute bottom-3 left-3 right-3">
               <div className="bg-white/95 backdrop-blur p-2.5 rounded-[10px] shadow-lg flex items-center justify-between border border-white/20">
+                <Button onClick={() => router.push('/track')} size="icon" className="h-8 w-8 bg-primary rounded-[10px] shadow-md active-scale">
+                  <Navigation className="w-3.5 h-3.5 text-white" />
+                </Button>
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
-                    <Search className="w-3 h-3 text-slate-400" />
-                  </div>
                   <div className="text-right">
                     <p className="text-[10px] font-bold text-slate-800 truncate max-w-[120px]">
                       {profile?.homeAddress || "حي فوة، المكلا"}
                     </p>
                     <p className="text-[8px] text-slate-400">موقعك الحالي</p>
                   </div>
+                  <div className="w-7 h-7 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
+                    <Search className="w-3 h-3 text-slate-400" />
+                  </div>
                 </div>
-                <Button onClick={() => router.push('/track')} size="icon" className="h-8 w-8 bg-primary rounded-[10px] shadow-md active-scale">
-                  <Navigation className="w-3.5 h-3.5 text-white" />
-                </Button>
               </div>
             </div>
           </Card>
@@ -169,11 +169,11 @@ export default function DashboardPage() {
 
         <section className="space-y-3">
           <div className="flex items-center justify-between px-1">
+            <button className="text-[9px] text-primary font-bold">المزيد</button>
             <h2 className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1.5">
               <div className="w-0.5 h-2.5 bg-primary rounded-full"></div>
               بلاغ سريع
             </h2>
-            <button className="text-[9px] text-primary font-bold">المزيد</button>
           </div>
           <div className="grid grid-cols-3 gap-3">
             {quickActions.map((action) => (
@@ -196,3 +196,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
