@@ -8,11 +8,6 @@ import { doc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { 
   Car, 
   Flame, 
   Activity, 
@@ -52,17 +47,11 @@ export default function DashboardPage() {
     { id: "other", label: "أخرى", icon: AlertCircle, color: "text-slate-500 bg-slate-50" },
   ];
 
-  const notifications = [
-    { id: 1, title: "سيارة الإسعاف قريبة", desc: "الوحدة AMB-022 تبعد 500 متر عنك الآن", time: "منذ دقيقتين", icon: Navigation, color: "text-blue-500" },
-    { id: 2, title: "تم تحديث الملف الطبي", desc: "تم حفظ بيانات فصيلة الدم بنجاح في السحابة", time: "منذ ساعة", icon: CheckCircle2, color: "text-green-500" },
-    { id: 3, title: "تنبيه جوي", desc: "يرجى توخي الحذر عند القيادة في ساحل المكلا اليوم", time: "منذ 3 ساعات", icon: AlertCircle, color: "text-orange-500" },
-  ];
-
   const logo = PlaceHolderImages.find((img) => img.id === "medical-app-logo");
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-cairo" dir="rtl">
-      {/* Header Updated for Logo and Notifications */}
+      {/* Header with Real Image Logo and Full-Page Notification Access */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-soft">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 relative bg-primary/5 rounded-xl border border-primary/10 overflow-hidden shadow-sm">
@@ -86,42 +75,15 @@ export default function DashboardPage() {
           </div>
         </div>
         
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-2xl bg-slate-50 h-11 w-11 relative active-scale border border-slate-100">
-              <Bell className="w-5 h-5 text-slate-600" />
-              <span className="absolute top-3 right-3 w-2 h-2 bg-primary rounded-full ring-2 ring-white"></span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80 p-0 rounded-[2rem] border-none shadow-2xl overflow-hidden mt-2" align="start">
-            <div className="bg-slate-900 p-5 text-white">
-              <div className="flex justify-between items-center">
-                <h3 className="font-black text-sm">مركز التنبيهات</h3>
-                <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold">3 جديدة</span>
-              </div>
-            </div>
-            <div className="max-h-[350px] overflow-y-auto bg-white">
-              {notifications.map((n) => (
-                <div key={n.id} className="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors flex gap-4 cursor-pointer">
-                  <div className={`p-2 rounded-xl bg-slate-50 h-fit ${n.color}`}>
-                    <n.icon className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-[12px] font-black text-slate-800">{n.title}</p>
-                    <p className="text-[10px] text-slate-500 font-bold leading-relaxed">{n.desc}</p>
-                    <div className="flex items-center gap-1.5 text-[9px] text-slate-300 font-bold pt-1">
-                      <Clock className="w-3 h-3" />
-                      {n.time}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Button variant="ghost" className="w-full h-12 text-[10px] font-black text-slate-400 hover:bg-slate-50 rounded-none border-t border-slate-50">
-              مشاهدة جميع الإشعارات
-            </Button>
-          </PopoverContent>
-        </Popover>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => router.push('/notifications')}
+          className="rounded-2xl bg-slate-50 h-11 w-11 relative active-scale border border-slate-100"
+        >
+          <Bell className="w-5 h-5 text-slate-600" />
+          <span className="absolute top-3 right-3 w-2 h-2 bg-primary rounded-full ring-2 ring-white"></span>
+        </Button>
       </header>
 
       <main className="px-5 pt-6 space-y-8">
