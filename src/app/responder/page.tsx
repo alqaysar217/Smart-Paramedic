@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { collection, query, orderBy, limit } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
@@ -26,20 +27,45 @@ import {
   Maximize2,
   Layers,
   Search,
-  Truck
+  Truck,
+  Loader2
 } from "lucide-react";
-import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { useFirestore, useCollection, useMemoFirebase, useUser, signOutUser, useAuth } from "@/firebase";
 
 export default function ResponderDashboard() {
+  const router = useRouter();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
   const [activeTab, setActiveTab] = useState<'reports' | 'map' | 'units'>('reports');
   const db = useFirestore();
 
+  // منع محاولة جلب البيانات إذا لم يكن هناك مستخدم مسجل
   const reportsQuery = useMemoFirebase(() => {
-    if (!db) return null;
+    if (!db || !user) return null;
     return query(collection(db, "emergency_reports"), orderBy("reportTime", "desc"), limit(20));
-  }, [db]);
+  }, [db, user]);
 
   const { data: realReports, isLoading: isReportsLoading } = useCollection(reportsQuery);
+
+  // حماية الصفحة: إعادة التوجيه لصفحة الدخول إذا لم يكن المستخدم مسجلاً
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push("/auth");
+    }
+  }, [user, isUserLoading, router]);
+
+  const handleLogout = () => {
+    signOutUser(auth);
+    router.push("/auth");
+  };
+
+  if (isUserLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <Loader2 className="w-6 h-6 text-primary animate-spin" />
+    </div>
+  );
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col font-cairo" dir="rtl">
@@ -95,7 +121,11 @@ export default function ResponderDashboard() {
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">الإعدادات</span>
             </Button>
-            <Button variant="ghost" className="w-full justify-start gap-3 h-11 rounded-[10px] text-rose-400 text-[11px] font-bold">
+            <Button 
+              variant="ghost" 
+              onClick={handleLogout}
+              className="w-full justify-start gap-3 h-11 rounded-[10px] text-rose-400 text-[11px] font-bold"
+            >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">خروج</span>
             </Button>
