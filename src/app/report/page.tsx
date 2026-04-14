@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { collection } from "firebase/firestore";
 import { 
@@ -12,14 +12,16 @@ import {
   ChevronRight,
   PhoneCall,
   Activity,
-  ShieldCheck
+  ShieldCheck,
+  Clock,
+  Navigation
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser, useFirestore, addDocumentNonBlocking } from "@/firebase";
 
-export default function ReportPage() {
+function ReportContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useUser();
@@ -35,7 +37,6 @@ export default function ReportPage() {
       setStatus('sending');
       setProgress(40);
       
-      // Phase 2: Sending REAL data to Firestore
       if (db && user) {
         const reportsCol = collection(db, "emergency_reports");
         addDocumentNonBlocking(reportsCol, {
@@ -46,13 +47,13 @@ export default function ReportPage() {
           incidentAddress: "المكلا، حي فوة - شارع الستين",
           incidentType: incidentType,
           status: 'Pending',
-          receivingAgencyId: 'agency-ibn-sina', // Default for simulation
+          receivingAgencyId: 'agency-ibn-sina',
         });
       }
     }, 1500);
 
     const timer2 = setTimeout(() => {
-      setProgress(85);
+      setProgress(75);
     }, 3000);
 
     const timer3 = setTimeout(() => {
@@ -68,126 +69,144 @@ export default function ReportPage() {
   }, [db, user, incidentType]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-cairo" dir="rtl">
+    <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-cairo" dir="rtl">
       {status !== 'success' && (
-        <div className="p-6 flex items-center gap-4 border-b border-gray-50">
-          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl">
-            <ChevronRight className="w-6 h-6" />
+        <header className="sticky top-0 z-50 bg-white border-b border-slate-100 px-4 h-14 flex items-center gap-3 shadow-soft">
+          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-[10px] bg-slate-50 h-9 w-9 active-scale">
+            <ChevronRight className="w-4 h-4 text-slate-600" />
           </Button>
-          <h1 className="text-lg font-bold">إرسال بلاغ طارئ (حضرموت)</h1>
-        </div>
+          <h1 className="text-[13px] font-bold text-slate-800">إرسال بلاغ نجدة</h1>
+        </header>
       )}
 
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-10">
+      <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
         {status !== 'success' ? (
-          <div className="w-full space-y-10">
-            <div className="relative">
-              <div className="w-32 h-32 bg-primary/5 rounded-full flex items-center justify-center mx-auto relative z-10">
+          <div className="w-full max-w-xs space-y-8 animate-in fade-in duration-500">
+            <div className="relative mx-auto w-24 h-24">
+              <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping opacity-20"></div>
+              <div className="relative z-10 w-full h-full bg-white border border-slate-100 rounded-[20px] shadow-soft flex items-center justify-center">
                 {status === 'locating' ? (
-                  <MapPin className="w-12 h-12 text-primary animate-bounce" />
+                  <MapPin className="w-8 h-8 text-primary animate-bounce" />
                 ) : (
-                  <Send className="w-12 h-12 text-primary animate-pulse" />
+                  <Send className="w-8 h-8 text-primary animate-pulse" />
                 )}
               </div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border-2 border-dashed border-primary/20 rounded-full animate-spin-slow"></div>
             </div>
 
-            <div className="space-y-4">
-              <h1 className="text-2xl font-black text-gray-900">
-                {status === 'locating' ? "جاري تحديد موقعك في المكلا..." : "جاري إرسال بياناتك لمستشفى ابن سينا..."}
-              </h1>
-              <div className="flex items-center justify-center gap-2 text-primary bg-primary/5 py-2 px-4 rounded-full w-fit mx-auto">
-                <ShieldCheck className="w-4 h-4" />
-                <span className="text-sm font-bold">يتم إرفاق ملفك الطبي تلقائياً</span>
+            <div className="space-y-2">
+              <h2 className="text-md font-bold text-slate-900 leading-tight">
+                {status === 'locating' ? "جاري تحديد موقعك..." : "جاري إبلاغ العمليات..."}
+              </h2>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/5 rounded-full border border-primary/10">
+                <ShieldCheck className="w-3 h-3 text-primary" />
+                <span className="text-[9px] font-bold text-primary uppercase">تشفير البيانات الطبي مفعل</span>
               </div>
             </div>
 
-            <div className="space-y-4 w-full max-w-xs mx-auto">
-              <Progress value={progress} className="h-3 bg-gray-100 rounded-full" />
-              <div className="flex justify-between text-sm font-bold text-gray-400 px-1">
-                <span>{progress}%</span>
-                <span>{status === 'locating' ? 'تحديد الموقع' : 'توصيل البلاغ'}</span>
+            <div className="space-y-3">
+              <Progress value={progress} className="h-1.5 bg-slate-100 rounded-full overflow-hidden" />
+              <div className="flex justify-between text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                <span>{progress}% اكتمل</span>
+                <span>{status === 'locating' ? 'GPS تتبع' : 'اتصال سحابي'}</span>
               </div>
             </div>
 
-            <Card className="bg-orange-50 border-none shadow-none p-5 rounded-3xl text-right">
-              <div className="flex gap-4">
-                <div className="p-2 bg-orange-100 rounded-xl shrink-0 h-fit">
-                  <AlertTriangle className="w-6 h-6 text-orange-600" />
+            <Card className="border-none bg-orange-50/50 shadow-inner-soft rounded-[10px] p-4 text-right">
+              <div className="flex gap-3">
+                <div className="p-2 bg-orange-100 rounded-lg h-fit">
+                  <AlertTriangle className="w-4 h-4 text-orange-600" />
                 </div>
                 <div className="space-y-1">
-                  <p className="font-bold text-orange-800">تعليمات فورية:</p>
-                  <p className="text-sm text-orange-700 leading-relaxed">
-                    ابقَ في مكانك، حاول التنفس بعمق. مسعفو حضرموت في طريقهم إليك.
+                  <p className="text-[10px] font-bold text-orange-800">تعليمات فورية:</p>
+                  <p className="text-[10px] text-orange-700/80 leading-relaxed font-bold">
+                    حافظ على هدوئك، المساعدة في الطريق إليك عبر أقرب وحدة إسعاف.
                   </p>
                 </div>
               </div>
             </Card>
           </div>
         ) : (
-          <div className="w-full space-y-8 animate-in fade-in zoom-in duration-700">
-            <div className="w-32 h-32 bg-accent/10 rounded-full flex items-center justify-center mx-auto relative">
-              <div className="absolute inset-0 bg-accent/20 rounded-full animate-ping opacity-20"></div>
-              <CheckCircle2 className="w-16 h-16 text-accent relative z-10" />
+          <div className="w-full max-w-sm space-y-6 animate-in fade-in zoom-in duration-700 px-2">
+            <div className="w-20 h-20 bg-accent/10 rounded-[20px] flex items-center justify-center mx-auto relative border border-accent/20 shadow-soft">
+              <div className="absolute inset-0 bg-accent/20 rounded-[20px] animate-ping opacity-20"></div>
+              <CheckCircle2 className="w-10 h-10 text-accent relative z-10" />
             </div>
             
-            <div className="space-y-2">
-              <h1 className="text-3xl font-black text-accent">تم استلام بلاغك!</h1>
-              <p className="text-gray-500 font-bold">سيارة الإسعاف من مستشفى ابن سينا بدأت التحرك</p>
+            <div className="space-y-1">
+              <h2 className="text-xl font-bold text-slate-900">تم استلام البلاغ!</h2>
+              <p className="text-[11px] text-slate-400 font-bold">بدأت الوحدة التحرك من مستشفى ابن سينا</p>
             </div>
 
-            <Card className="bg-gray-50 border-none shadow-sm rounded-[2rem] overflow-hidden">
-              <div className="bg-accent/10 p-4 border-b border-accent/10 flex items-center justify-between">
-                <span className="font-bold text-accent flex items-center gap-2">
-                  <Activity className="w-4 h-4" />
-                  حالة البلاغ: نشط
-                </span>
-                <span className="text-xs font-bold text-gray-400 uppercase">ID: #H-8821</span>
+            <Card className="border-none shadow-soft rounded-[10px] bg-white overflow-hidden text-right border border-slate-50">
+              <div className="bg-slate-50 p-3 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></div>
+                  <span className="text-[10px] font-bold text-slate-600">البلاغ نشط</span>
+                </div>
+                <span className="text-[9px] font-bold text-slate-300">ID: #H-8821</span>
               </div>
-              <CardContent className="p-6 text-right space-y-4">
-                <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-                  <span className="text-gray-500 font-bold">المسافة المقدرة:</span>
-                  <span className="font-black text-lg">2.4 كم</span>
+              <CardContent className="p-5 space-y-4">
+                <div className="flex justify-between items-center pb-3 border-b border-slate-50">
+                  <div className="flex items-center gap-2">
+                    <Navigation className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-[11px] text-slate-500 font-bold">المسافة:</span>
+                  </div>
+                  <span className="text-[13px] font-bold text-slate-800">2.4 كم</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500 font-bold">وقت الوصول المتوقع:</span>
-                  <div className="flex items-center gap-2 text-primary font-black text-2xl">
-                    <span>6</span>
-                    <span className="text-sm">دقائق</span>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-[11px] text-slate-500 font-bold">وصول مقدر:</span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-lg font-bold text-primary">6</span>
+                    <span className="text-[9px] font-bold text-primary opacity-70">دقائق</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 gap-4 w-full">
+            <div className="space-y-3 w-full">
               <Button 
                 onClick={() => router.push("/track")} 
-                className="w-full h-16 bg-primary hover:bg-primary/90 text-xl font-black rounded-2xl shadow-xl shadow-primary/20 gap-3"
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-[13px] font-bold rounded-[10px] shadow-lg shadow-primary/20 gap-2 active-scale"
               >
-                <MapPin className="w-6 h-6" />
-                تتبع سيارة الإسعاف
+                <MapPin className="w-4 h-4" />
+                تتبع المسعف فوراً
               </Button>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <Button 
                   variant="outline" 
                   onClick={() => router.push("/instructions")} 
-                  className="h-16 border-gray-100 text-lg font-bold rounded-2xl gap-2 shadow-sm"
+                  className="h-11 rounded-[10px] border-slate-100 text-[11px] font-bold gap-2 text-slate-600 bg-white active-scale"
                 >
-                  <Activity className="w-5 h-5" />
+                  <Activity className="w-3.5 h-3.5" />
                   إرشادات
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="h-16 border-accent/20 text-accent hover:bg-accent/5 text-lg font-bold rounded-2xl gap-2 shadow-sm"
+                  className="h-11 rounded-[10px] border-accent/20 text-accent hover:bg-accent/5 text-[11px] font-bold gap-2 active-scale bg-accent/5"
                 >
-                  <PhoneCall className="w-5 h-5" />
+                  <PhoneCall className="w-3.5 h-3.5" />
                   اتصال
                 </Button>
               </div>
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
+  );
+}
+
+export default function ReportPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <ReportContent />
+    </Suspense>
   );
 }
