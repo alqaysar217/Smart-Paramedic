@@ -78,15 +78,21 @@ export default function DashboardPage() {
           <div>
             <p className="text-[9px] font-bold text-slate-400 mb-0.5 uppercase tracking-wider">مرحباً بك مجدداً</p>
             <h1 className="text-md font-bold text-slate-900 leading-tight">
-              كابتن {profile?.fullName?.split(' ')[0] || "المستخدم"}
+               {profile?.fullName?.split(' ')[0] || "المستخدم العزيز"}
             </h1>
           </div>
-          <div className="flex -space-x-1.5 rtl:space-x-reverse">
-            {[1, 2].map(i => (
-              <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                <Image src={`https://picsum.photos/seed/${i+10}/100/100`} alt="Medic" fill className="object-cover" />
-              </div>
-            ))}
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex -space-x-1.5 rtl:space-x-reverse">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
+                  <Image src={`https://picsum.photos/seed/${i+20}/100/100`} alt="Medic" fill className="object-cover" />
+                </div>
+              ))}
+            </div>
+            <p className="text-[7px] font-bold text-accent uppercase flex items-center gap-1">
+              <span className="w-1 h-1 bg-accent rounded-full animate-pulse"></span>
+              مسعفون نشطون الآن
+            </p>
           </div>
         </section>
 
