@@ -253,18 +253,18 @@ export default function AuthPage() {
             </div>
 
             <div className="flex items-start space-x-2 space-x-reverse py-1">
+              <label 
+                htmlFor="terms" 
+                className="text-[9px] font-bold text-slate-500 leading-relaxed cursor-pointer flex-1"
+              >
+                أوافق على شروط الخدمة وسياسة الخصوصية الخاصة بالمسعف الذكي ومعايير التعامل الطبي الطارئ في حضرموت.
+              </label>
               <Checkbox 
                 id="terms" 
                 checked={acceptTerms} 
                 onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
                 className="mt-0.5 border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <label 
-                htmlFor="terms" 
-                className="text-[9px] font-bold text-slate-500 leading-relaxed cursor-pointer"
-              >
-                أوافق على شروط الخدمة وسياسة الخصوصية الخاصة بالمسعف الذكي ومعايير التعامل الطبي الطارئ في حضرموت.
-              </label>
             </div>
 
             <Button type="submit" className="w-full h-10 text-[11px] font-bold bg-primary rounded-[10px] shadow-md shadow-primary/10 mt-1 active-scale" disabled={isLoading}>
