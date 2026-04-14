@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Bell, 
   Map as MapIcon, 
+  MapPin,
   Users, 
   Settings, 
   AlertCircle,
@@ -30,7 +31,7 @@ import {
   Truck,
   Loader2
 } from "lucide-react";
-import { useFirestore, useCollection, useMemoFirebase, useUser, signOutUser, useAuth } from "@/firebase";
+import { useFirestore, useCollection, useMemoFirebase, useUser, signOutUser, useAuth, initiateAnonymousSignIn } from "@/firebase";
 
 export default function ResponderDashboard() {
   const router = useRouter();
