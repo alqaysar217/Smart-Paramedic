@@ -23,7 +23,7 @@ export default function RootLayout({
       </head>
       <body className="font-cairo antialiased bg-background text-foreground overflow-x-hidden">
         <FirebaseClientProvider>
-          <main className="min-h-screen relative max-w-md mx-auto bg-white border-x border-gray-100 shadow-sm">
+          <main className="min-h-screen relative bg-white border-x border-gray-100 shadow-sm">
             {children}
           </main>
           <Toaster />

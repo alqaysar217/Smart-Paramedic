@@ -23,7 +23,7 @@ export default function SplashPage() {
   const logo = PlaceHolderImages.find((img) => img.id === "medical-app-logo");
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white p-6 text-center">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white p-6 text-center max-w-md mx-auto border-x border-gray-50 shadow-sm">
       {/* الصورة النابضة في الأعلى */}
       <div className="relative mb-8">
         <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping scale-150 opacity-20"></div>
