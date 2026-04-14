@@ -30,20 +30,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { 
-  Bell, 
   Map as MapIcon, 
   MapPin,
-  Users, 
-  Settings, 
-  AlertCircle,
-  Check,
-  X,
-  Navigation,
-  Clock,
-  ShieldCheck,
-  User,
-  LayoutDashboard,
-  LogOut,
   Hospital,
   Activity,
   Maximize2,
@@ -54,178 +42,40 @@ import {
   Droplet,
   Pill,
   Phone,
-  Calendar,
-  ChevronLeft,
-  Trash2,
-  Eye,
+  X,
+  Navigation,
   History,
+  LayoutDashboard,
+  LogOut,
   PanelRightClose,
-  PanelRight
+  PanelRight,
+  Eye,
+  Trash2,
+  AlertCircle,
+  ShieldCheck
 } from "lucide-react";
 import { useAuth, useUser, signOutUser } from "@/firebase";
 import { cn } from "@/lib/utils";
 
 const ACTIVE_REPORTS = [
-  {
-    id: "REP-001",
-    reporterName: "منى باحسين",
-    type: "إغماء مفاجئ",
-    category: "حرجة جداً",
-    location: "المكلا - حي فوة - المساكن",
-    medicalProfile: {
-      age: 21,
-      gender: "أنثى",
-      bloodType: "O+",
-      chronicDiseases: ["هبوط سكر"],
-      medications: ["فيتامينات"],
-      allergies: ["البنسلين"],
-      phone: "0533112233"
-    }
-  },
-  {
-    id: "REP-002",
-    reporterName: "نجد مسيعان",
-    type: "أزمة تنفسية",
-    category: "متوسطة",
-    location: "المكلا - الديس - شارع الغويزي",
-    medicalProfile: {
-      age: 20,
-      gender: "أنثى",
-      bloodType: "A-",
-      chronicDiseases: ["الربو"],
-      medications: ["بخاخ فنتولين"],
-      allergies: ["الغبار"],
-      phone: "0544223344"
-    }
-  },
-  {
-    id: "REP-003",
-    reporterName: "نور العمودي",
-    type: "نزيف حاد",
-    category: "حرجة",
-    location: "المكلا - روكب",
-    medicalProfile: {
-      age: 22,
-      gender: "أنثى",
-      bloodType: "B+",
-      chronicDiseases: ["لا يوجد"],
-      medications: ["لا يوجد"],
-      allergies: ["لا يوجد"],
-      phone: "0555334455"
-    }
-  },
-  {
-    id: "REP-004",
-    reporterName: "رغد بلعفير",
-    type: "تشنجات",
-    category: "حرجة",
-    location: "المكلا - بويش",
-    medicalProfile: {
-      age: 19,
-      gender: "أنثى",
-      bloodType: "AB+",
-      chronicDiseases: ["صرع"],
-      medications: ["إيبانوتين"],
-      allergies: ["لا يوجد"],
-      phone: "0566445566"
-    }
-  },
-  {
-    id: "REP-005",
-    reporterName: "خلود بن ثابت",
-    type: "حادث سير",
-    category: "متوسطة",
-    location: "المكلا - شارع الستين",
-    medicalProfile: {
-      age: 23,
-      gender: "أنثى",
-      bloodType: "O-",
-      chronicDiseases: ["لا يوجد"],
-      medications: ["لا يوجد"],
-      allergies: ["لا يوجد"],
-      phone: "0577556677"
-    }
-  },
-  {
-    id: "REP-006",
-    reporterName: "عائشة مرعي",
-    type: "ألم في الصدر",
-    category: "حرجة جداً",
-    location: "المكلا - الشرج - المرتفع",
-    medicalProfile: {
-      age: 21,
-      gender: "أنثى",
-      bloodType: "A+",
-      chronicDiseases: ["اشتباه صمام"],
-      medications: ["أسبرين"],
-      allergies: ["لا يوجد"],
-      phone: "0588667788"
-    }
-  },
-  {
-    id: "REP-007",
-    reporterName: "نور باعباد",
-    type: "هبوط حاد",
-    category: "متوسطة",
-    location: "المكلا - جول مسحة",
-    medicalProfile: {
-      age: 22,
-      gender: "أنثى",
-      bloodType: "O+",
-      chronicDiseases: ["لا يوجد"],
-      medications: ["لا يوجد"],
-      allergies: ["المأكولات البحرية"],
-      phone: "0599778899"
-    }
-  },
-  {
-    id: "REP-008",
-    reporterName: "منية باكرمان",
-    type: "كسر مضاعف",
-    category: "حرجة",
-    location: "المكلا - امبيخة",
-    medicalProfile: {
-      age: 20,
-      gender: "أنثى",
-      bloodType: "B-",
-      chronicDiseases: ["لا يوجد"],
-      medications: ["لا يوجد"],
-      allergies: ["البراسيتامول"],
-      phone: "0500112233"
-    }
-  },
-  {
-    id: "REP-009",
-    reporterName: "هديل المنهالي",
-    type: "صدمة حرارية",
-    category: "بسيطة",
-    location: "المكلا - بروم",
-    medicalProfile: {
-      age: 19,
-      gender: "أنثى",
-      bloodType: "AB-",
-      chronicDiseases: ["لا يوجد"],
-      medications: ["لا يوجد"],
-      allergies: ["لا يوجد"],
-      phone: "0511223344"
-    }
-  },
-  {
-    id: "REP-010",
-    reporterName: "ماريا الحيقي",
-    type: "تسمم غذائي",
-    category: "متوسطة",
-    location: "المكلا - غيل باوزير",
-    medicalProfile: {
-      age: 22,
-      gender: "أنثى",
-      bloodType: "A-",
-      chronicDiseases: ["لا يوجد"],
-      medications: ["لا يوجد"],
-      allergies: ["اللاكتوز"],
-      phone: "0522334455"
-    }
-  }
+  { id: "REP-001", reporterName: "عصبان ةنسيب", type: "إغماء مفاجئ", location: "المكلا - فوة - المساكن", medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["هبوط سكر"], medications: ["فيتامينات"], allergies: ["البنسلين"], phone: "0533112233" } },
+  { id: "REP-002", reporterName: "منى باحسين", type: "أزمة تنفسية", location: "المكلا - الديس - شارع الغويزي", medicalProfile: { age: 20, gender: "أنثى", bloodType: "A-", chronicDiseases: ["الربو"], medications: ["فنتولين"], allergies: ["الغبار"], phone: "0544223344" } },
+  { id: "REP-003", reporterName: "نجد مسيعان", type: "نزيف حاد", location: "المكلا - روكب", medicalProfile: { age: 22, gender: "أنثى", bloodType: "B+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0555334455" } },
+  { id: "REP-004", reporterName: "نور العمودي", type: "تشنجات", location: "المكلا - بويش", medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB+", chronicDiseases: ["صرع"], medications: ["إيبانوتين"], allergies: ["لا يوجد"], phone: "0566445566" } },
+  { id: "REP-005", reporterName: "رغد بلعفير", type: "حادث سير", location: "المكلا - شارع الستين", medicalProfile: { age: 23, gender: "أنثى", bloodType: "O-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0577556677" } },
+  { id: "REP-006", reporterName: "خلود بن ثابت", type: "ألم في الصدر", location: "المكلا - الشرج", medicalProfile: { age: 21, gender: "أنثى", bloodType: "A+", chronicDiseases: ["اشتباه صمام"], medications: ["أسبرين"], allergies: ["لا يوجد"], phone: "0588667788" } },
+  { id: "REP-007", reporterName: "عائشة مرعي", type: "هبوط حاد", location: "المكلا - جول مسحة", medicalProfile: { age: 22, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["مأكولات بحرية"], phone: "0599778899" } },
+  { id: "REP-008", reporterName: "نور باعباد", type: "كسر مضاعف", location: "المكلا - امبيخة", medicalProfile: { age: 20, gender: "أنثى", bloodType: "B-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["براسيتامول"], phone: "0500112233" } },
+  { id: "REP-009", reporterName: "منية باكرمان", type: "صدمة حرارية", location: "المكلا - بروم", medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0511223344" } },
+  { id: "REP-010", reporterName: "هديل المنهالي", type: "تسمم غذائي", location: "المكلا - غيل باوزير", medicalProfile: { age: 22, gender: "أنثى", bloodType: "A-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لاكتوز"], phone: "0522334455" } },
+  { id: "REP-011", reporterName: "ماريا الحيقي", type: "اختناق", location: "المكلا - الديس", medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0533445566" } },
+];
+
+const ARCHIVED_REPORTS = [
+  { id: "HIST-001", reporterName: "أمل بن عيفان", type: "حالة إغماء", date: "2024/05/10", location: "المكلا - فوة" },
+  { id: "HIST-002", reporterName: "سارة العمودي", type: "جرح سطحي", date: "2024/05/09", location: "المكلا - الشرج" },
+  { id: "HIST-003", reporterName: "فاطمة باوزير", type: "اشتباه كسر", date: "2024/05/08", location: "المكلا - روكب" },
+  { id: "HIST-004", reporterName: "مريم الصباري", type: "صعوبة تنفس", date: "2024/05/07", location: "المكلا - بويش" },
 ];
 
 const AMBULANCE_UNITS = [
@@ -393,13 +243,7 @@ export default function ResponderDashboard() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-[12px] font-bold text-slate-700">{report.type}</span>
-                              <Badge className={cn(
-                                "text-white border-none text-[8px] font-bold h-4 px-1 w-fit",
-                                report.category === 'حرجة جداً' ? 'bg-rose-600' : 'bg-orange-500'
-                              )}>{report.category}</Badge>
-                            </div>
+                            <span className="text-[12px] font-bold text-slate-700">{report.type}</span>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-1.5">
@@ -561,26 +405,35 @@ export default function ResponderDashboard() {
 
             {activeTab === 'history' && (
                <div className="space-y-4 animate-in fade-in duration-500">
-                  <h2 className="text-[22px] font-bold text-slate-900">أرشيف البلاغات المؤرشفة</h2>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-[22px] font-bold text-slate-900">أرشيف البلاغات المؤرشفة</h2>
+                    <Badge variant="outline" className="text-slate-400 border-slate-200">إجمالي الأرشيف: {ARCHIVED_REPORTS.length}</Badge>
+                  </div>
                   <Card className="border-none shadow-soft bg-white rounded-[15px] overflow-hidden">
                     <Table className="font-cairo">
                         <TableHeader className="bg-slate-50/50">
                           <TableRow className="border-slate-100">
                             <TableHead className="text-right text-[11px] font-black text-slate-400">رقم البلاغ</TableHead>
                             <TableHead className="text-right text-[11px] font-black text-slate-400">المستخدم</TableHead>
-                            <TableHead className="text-right text-[11px] font-black text-slate-400">تاريخ الإغلاق</TableHead>
+                            <TableHead className="text-right text-[11px] font-black text-slate-400">نوع الحالة</TableHead>
+                            <TableHead className="text-right text-[11px] font-black text-slate-400">التاريخ</TableHead>
                             <TableHead className="text-center text-[11px] font-black text-slate-400">التفاصيل</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          <TableRow className="border-slate-50">
-                            <TableCell className="font-bold text-slate-600">REP-HIST-01</TableCell>
-                            <TableCell className="font-bold text-[12px]">عصبان ةنسيب</TableCell>
-                            <TableCell className="text-[11px] text-slate-400">أمس، 10:30 م</TableCell>
-                            <TableCell className="text-center">
-                              <Button variant="ghost" size="sm" className="h-8 px-3 text-[10px] font-bold">عرض السجل</Button>
-                            </TableCell>
-                          </TableRow>
+                          {ARCHIVED_REPORTS.map((report) => (
+                            <TableRow key={report.id} className="border-slate-50">
+                              <TableCell className="font-bold text-slate-600">{report.id}</TableCell>
+                              <TableCell className="font-bold text-[12px]">{report.reporterName}</TableCell>
+                              <TableCell className="text-[12px] text-slate-500">{report.type}</TableCell>
+                              <TableCell className="text-[11px] text-slate-400">{report.date}</TableCell>
+                              <TableCell className="text-center">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-primary">
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
                         </TableBody>
                     </Table>
                   </Card>
@@ -593,4 +446,3 @@ export default function ResponderDashboard() {
     </div>
   );
 }
-
