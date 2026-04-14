@@ -14,7 +14,8 @@ import {
   Activity,
   ShieldCheck,
   Clock,
-  Navigation
+  Navigation,
+  X
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -68,16 +69,38 @@ function ReportContent() {
     };
   }, [db, user, incidentType]);
 
+  const handleGoBack = () => {
+    router.push('/dashboard');
+  };
+
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-cairo" dir="rtl">
-      {status !== 'success' && (
-        <header className="sticky top-0 z-50 bg-white border-b border-slate-100 px-4 h-14 flex items-center gap-3 shadow-soft">
-          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-[10px] bg-slate-50 h-9 w-9 active-scale">
-            <ChevronRight className="w-4 h-4 text-slate-600" />
+      {/* Header - Always visible to allow back/close */}
+      <header className="sticky top-0 z-50 bg-white border-b border-slate-100 px-4 h-14 flex items-center justify-between shadow-soft">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleGoBack} 
+            className="rounded-[10px] bg-slate-50 h-9 w-9 active-scale border border-slate-100"
+          >
+            {status === 'success' ? (
+              <X className="w-4 h-4 text-slate-600" />
+            ) : (
+              <ChevronRight className="w-4 h-4 text-slate-600" />
+            )}
           </Button>
-          <h1 className="text-[13px] font-bold text-slate-800">إرسال بلاغ نجدة</h1>
-        </header>
-      )}
+          <h1 className="text-[13px] font-bold text-slate-800">
+            {status === 'success' ? "تفاصيل الاستجابة" : "إرسال بلاغ نجدة"}
+          </h1>
+        </div>
+        {status === 'success' && (
+          <div className="flex items-center gap-1.5 px-2 py-1 bg-accent/5 rounded-full border border-accent/10">
+            <div className="w-1 h-1 bg-accent rounded-full animate-pulse"></div>
+            <span className="text-[8px] font-bold text-accent uppercase tracking-tighter">نشط الآن</span>
+          </div>
+        )}
+      </header>
 
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
         {status !== 'success' ? (
@@ -119,7 +142,7 @@ function ReportContent() {
                 <div className="space-y-1">
                   <p className="text-[10px] font-bold text-orange-800">تعليمات فورية:</p>
                   <p className="text-[10px] text-orange-700/80 leading-relaxed font-bold">
-                    حافظ على هدوئك، المساعدة في الطريق إليك عبر أقرب وحدة إسعاف.
+                    حافظ على هدوئك، المساعدة في الطريق إليك عبر أقرب وحدة إسعاف في حضرموت.
                   </p>
                 </div>
               </div>
@@ -133,7 +156,7 @@ function ReportContent() {
             </div>
             
             <div className="space-y-1">
-              <h2 className="text-xl font-bold text-slate-900">تم استلام البلاغ!</h2>
+              <h2 className="text-lg font-bold text-slate-900">تم استلام البلاغ!</h2>
               <p className="text-[11px] text-slate-400 font-bold">بدأت الوحدة التحرك من مستشفى ابن سينا</p>
             </div>
 
@@ -141,7 +164,7 @@ function ReportContent() {
               <div className="bg-slate-50 p-3 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></div>
-                  <span className="text-[10px] font-bold text-slate-600">البلاغ نشط</span>
+                  <span className="text-[10px] font-bold text-slate-600">البلاغ قيد المتابعة</span>
                 </div>
                 <span className="text-[9px] font-bold text-slate-300">ID: #H-8821</span>
               </div>
@@ -149,7 +172,7 @@ function ReportContent() {
                 <div className="flex justify-between items-center pb-3 border-b border-slate-50">
                   <div className="flex items-center gap-2">
                     <Navigation className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-[11px] text-slate-500 font-bold">المسافة:</span>
+                    <span className="text-[11px] text-slate-500 font-bold">المسافة الحالية:</span>
                   </div>
                   <span className="text-[13px] font-bold text-slate-800">2.4 كم</span>
                 </div>
@@ -159,7 +182,7 @@ function ReportContent() {
                     <span className="text-[11px] text-slate-500 font-bold">وصول مقدر:</span>
                   </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-lg font-bold text-primary">6</span>
+                    <span className="text-xl font-bold text-primary">6</span>
                     <span className="text-[9px] font-bold text-primary opacity-70">دقائق</span>
                   </div>
                 </div>
@@ -178,17 +201,17 @@ function ReportContent() {
                 <Button 
                   variant="outline" 
                   onClick={() => router.push("/instructions")} 
-                  className="h-11 rounded-[10px] border-slate-100 text-[11px] font-bold gap-2 text-slate-600 bg-white active-scale"
+                  className="h-11 rounded-[10px] border-slate-100 text-[11px] font-bold gap-2 text-slate-600 bg-white active-scale shadow-sm"
                 >
                   <Activity className="w-3.5 h-3.5" />
-                  إرشادات
+                  إرشادات أولية
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="h-11 rounded-[10px] border-accent/20 text-accent hover:bg-accent/5 text-[11px] font-bold gap-2 active-scale bg-accent/5"
+                  className="h-11 rounded-[10px] border-accent/20 text-accent hover:bg-accent/5 text-[11px] font-bold gap-2 active-scale bg-accent/5 shadow-sm"
                 >
                   <PhoneCall className="w-3.5 h-3.5" />
-                  اتصال
+                  اتصال سريع
                 </Button>
               </div>
             </div>
