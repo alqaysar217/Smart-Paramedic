@@ -7,22 +7,22 @@ import {
   signOut,
 } from 'firebase/auth';
 
-/** Initiate anonymous sign-in (non-blocking). */
-export function initiateAnonymousSignIn(authInstance: Auth): void {
-  signInAnonymously(authInstance);
+/** Initiate anonymous sign-in. Returns the promise for UI handling. */
+export function initiateAnonymousSignIn(authInstance: Auth) {
+  return signInAnonymously(authInstance);
 }
 
-/** Initiate email/password sign-up (non-blocking). */
-export function initiateEmailSignUp(authInstance: Auth, email: string, password: string): void {
-  createUserWithEmailAndPassword(authInstance, email, password);
+/** Initiate email/password sign-up. Returns the promise for UI handling. */
+export function initiateEmailSignUp(authInstance: Auth, email: string, password: string) {
+  return createUserWithEmailAndPassword(authInstance, email, password);
 }
 
-/** Initiate email/password sign-in (non-blocking). */
-export function initiateEmailSignIn(authInstance: Auth, email: string, password: string): void {
-  signInWithEmailAndPassword(authInstance, email, password);
+/** Initiate email/password sign-in. Returns the promise for UI handling. */
+export function initiateEmailSignIn(authInstance: Auth, email: string, password: string) {
+  return signInWithEmailAndPassword(authInstance, email, password);
 }
 
-/** Sign out the current user. */
-export function signOutUser(authInstance: Auth): void {
-  signOut(authInstance);
+/** Sign out the current user. Returns the promise for UI handling. */
+export function signOutUser(authInstance: Auth) {
+  return signOut(authInstance);
 }

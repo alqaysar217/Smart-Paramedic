@@ -8,10 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { ShieldCheck, Mail, Lock, Zap, Loader2 } from "lucide-react";
 import { useAuth, useUser, initiateEmailSignIn, initiateEmailSignUp, initiateAnonymousSignIn } from "@/firebase";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AuthPage() {
   const router = useRouter();
   const auth = useAuth();
+  const { toast } = useToast();
   const { user, isUserLoading } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -23,36 +25,77 @@ export default function AuthPage() {
     }
   }, [user, isUserLoading, router]);
 
+  const getErrorMessage = (code: string) => {
+    switch (code) {
+      case 'auth/email-already-in-use':
+        return "هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول بدلاً من ذلك.";
+      case 'auth/invalid-email':
+        return "البريد الإلكتروني الذي أدخلته غير صالح.";
+      case 'auth/weak-password':
+        return "كلمة المرور ضعيفة جداً. يرجى اختيار كلمة مرور أقوى.";
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+      case 'auth/invalid-credential':
+        return "خطأ في البريد الإلكتروني أو كلمة المرور.";
+      default:
+        return "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقاً.";
+    }
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    initiateEmailSignIn(auth, email, password);
+    initiateEmailSignIn(auth, email, password)
+      .catch((error: any) => {
+        setIsLoading(false);
+        toast({
+          variant: "destructive",
+          title: "فشل تسجيل الدخول",
+          description: getErrorMessage(error.code),
+        });
+      });
   };
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    initiateEmailSignUp(auth, email, password);
+    initiateEmailSignUp(auth, email, password)
+      .catch((error: any) => {
+        setIsLoading(false);
+        toast({
+          variant: "destructive",
+          title: "فشل إنشاء الحساب",
+          description: getErrorMessage(error.code),
+        });
+      });
   };
 
   const handleGuestLogin = () => {
     setIsLoading(true);
-    initiateAnonymousSignIn(auth);
+    initiateAnonymousSignIn(auth)
+      .catch((error: any) => {
+        setIsLoading(false);
+        toast({
+          variant: "destructive",
+          title: "فشل الدخول التجريبي",
+          description: "تعذر تسجيل الدخول كضيف حالياً.",
+        });
+      });
   };
 
   if (isUserLoading) return (
     <div className="min-h-screen flex items-center justify-center bg-white">
-      <Loader2 className="w-6 h-6 text-primary animate-spin" />
+      <Loader2 className="w-5 h-5 text-primary animate-spin" />
     </div>
   );
 
   return (
     <div className="min-h-screen bg-white px-6 flex flex-col justify-center py-10 max-w-md mx-auto font-cairo" dir="rtl">
       <div className="flex flex-col items-center mb-10">
-        <div className="w-14 h-14 bg-primary rounded-[10px] flex items-center justify-center shadow-xl shadow-primary/20 mb-4 transition-transform active:scale-95">
+        <div className="w-14 h-14 bg-primary rounded-[10px] flex items-center justify-center shadow-xl shadow-primary/20 mb-4 active-scale">
           <ShieldCheck className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-xl font-black text-slate-900 mb-1">المسعف الذكي</h1>
+        <h1 className="text-xl font-bold text-slate-900 mb-1">المسعف الذكي</h1>
         <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">منصة الإنقاذ الأولى في حضرموت</p>
       </div>
 
@@ -71,7 +114,7 @@ export default function AuthPage() {
                 <Input 
                   type="email" 
                   placeholder="name@example.com" 
-                  className="pl-9 pr-4 h-12 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm focus-visible:ring-primary" 
+                  className="pl-9 pr-4 h-11 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm focus-visible:ring-primary" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required 
@@ -84,7 +127,7 @@ export default function AuthPage() {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                 <Input 
                   type="password" 
-                  className="pl-9 pr-4 h-12 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm focus-visible:ring-primary" 
+                  className="pl-9 pr-4 h-11 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm focus-visible:ring-primary" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required 
@@ -92,7 +135,7 @@ export default function AuthPage() {
               </div>
             </div>
             
-            <Button type="submit" className="w-full h-12 text-xs font-bold bg-primary rounded-[10px] shadow-lg shadow-primary/20 mt-2 active-scale" disabled={isLoading}>
+            <Button type="submit" className="w-full h-11 text-xs font-bold bg-primary rounded-[10px] shadow-lg shadow-primary/20 mt-2 active-scale" disabled={isLoading}>
               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "دخول آمن للمنصة"}
             </Button>
           </form>
@@ -105,7 +148,7 @@ export default function AuthPage() {
           <Button 
             variant="outline" 
             onClick={handleGuestLogin}
-            className="w-full h-12 text-[10px] font-bold border-slate-100 rounded-[10px] text-slate-500 gap-2 active-scale bg-white hover:bg-slate-50"
+            className="w-full h-11 text-[10px] font-bold border-slate-100 rounded-[10px] text-slate-500 gap-2 active-scale bg-white hover:bg-slate-50"
             disabled={isLoading}
           >
             <Zap className="w-3.5 h-3.5 text-amber-500" />
@@ -119,7 +162,7 @@ export default function AuthPage() {
               <Label className="text-[10px] font-bold text-slate-500 mr-1">البريد الإلكتروني</Label>
               <Input 
                 type="email" 
-                className="h-12 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm" 
+                className="h-11 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm focus-visible:ring-primary" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
@@ -129,13 +172,13 @@ export default function AuthPage() {
               <Label className="text-[10px] font-bold text-slate-500 mr-1">كلمة المرور</Label>
               <Input 
                 type="password" 
-                className="h-12 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm" 
+                className="h-11 rounded-[10px] bg-slate-50 border-none text-[12px] text-right shadow-sm focus-visible:ring-primary" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required 
               />
             </div>
-            <Button type="submit" className="w-full h-12 text-xs font-bold bg-primary rounded-[10px] shadow-lg shadow-primary/20 mt-2 active-scale" disabled={isLoading}>
+            <Button type="submit" className="w-full h-11 text-xs font-bold bg-primary rounded-[10px] shadow-lg shadow-primary/20 mt-2 active-scale" disabled={isLoading}>
               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "إنشاء حساب جديد"}
             </Button>
           </form>
