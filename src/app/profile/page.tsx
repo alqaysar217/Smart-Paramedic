@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -163,7 +162,7 @@ export default function ProfilePage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label className="text-[11px] font-bold text-slate-500 mr-1">الجنس</Label>
-                <Select value={formData.gender} onValueChange={(v) => setFormData(p => ({ ...p, gender: v }))}>
+                <Select dir="rtl" value={formData.gender} onValueChange={(v) => setFormData(p => ({ ...p, gender: v }))}>
                   <SelectTrigger className="h-11 rounded-xl bg-slate-50 border-none shadow-inner-soft">
                     <SelectValue placeholder="اختر" />
                   </SelectTrigger>
@@ -189,7 +188,7 @@ export default function ProfilePage() {
               <Label className="text-[11px] font-bold text-slate-500 mr-1 flex items-center gap-1.5">
                 <Droplet className="w-3.5 h-3.5 text-primary" /> فصيلة الدم
               </Label>
-              <Select value={formData.bloodType} onValueChange={(v) => setFormData(p => ({ ...p, bloodType: v }))}>
+              <Select dir="rtl" value={formData.bloodType} onValueChange={(v) => setFormData(p => ({ ...p, bloodType: v }))}>
                 <SelectTrigger className="h-12 rounded-xl bg-primary/5 border-primary/10 text-primary font-black">
                   <SelectValue placeholder="اختر الفصيلة" />
                 </SelectTrigger>
