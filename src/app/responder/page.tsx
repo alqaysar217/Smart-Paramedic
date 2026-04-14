@@ -63,16 +63,16 @@ import {
   PanelRight
 } from "lucide-react";
 import { useAuth, useUser, signOutUser } from "@/firebase";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 const ACTIVE_REPORTS = [
   {
-    id: "REP-9921",
+    id: "REP-9901",
     reporterName: "منى باحسين",
     type: "إغماء مفاجئ",
     category: "حرجة جداً",
-    status: "EnRoute",
-    time: "منذ 2 دقيقة",
+    status: "Pending",
+    time: "منذ دقيقتين",
     location: "المكلا - حي فوة - المساكن",
     medicalProfile: {
       age: 21,
@@ -85,7 +85,7 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9922",
+    id: "REP-9902",
     reporterName: "نجد مسيعان",
     type: "أزمة تنفسية",
     category: "متوسطة",
@@ -103,7 +103,7 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9923",
+    id: "REP-9903",
     reporterName: "نور العمودي",
     type: "نزيف حاد",
     category: "حرجة",
@@ -121,7 +121,7 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9924",
+    id: "REP-9904",
     reporterName: "رغد بلعفير",
     type: "تشنجات",
     category: "حرجة",
@@ -139,7 +139,7 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9925",
+    id: "REP-9905",
     reporterName: "خلود بن ثابت",
     type: "حادث سير",
     category: "متوسطة",
@@ -155,54 +155,96 @@ const ACTIVE_REPORTS = [
       allergies: ["لا يوجد"],
       phone: "0577556677"
     }
-  }
-];
-
-const ARCHIVE_REPORTS = [
+  },
   {
-    id: "REP-8810",
+    id: "REP-9906",
     reporterName: "عائشة مرعي",
-    type: "إغماء",
-    status: "Resolved",
-    time: "أمس، 10:30 م",
-    location: "المكلا - فوة القديمة",
-    category: "مكتملة"
+    type: "ألم في الصدر",
+    category: "حرجة جداً",
+    status: "Pending",
+    time: "منذ 18 دقيقة",
+    location: "المكلا - الشرج - المرتفع",
+    medicalProfile: {
+      age: 21,
+      gender: "أنثى",
+      bloodType: "A+",
+      chronicDiseases: ["اشتباه صمام"],
+      medications: ["أسبرين"],
+      allergies: ["لا يوجد"],
+      phone: "0588667788"
+    }
   },
   {
-    id: "REP-8811",
+    id: "REP-9907",
     reporterName: "نور باعباد",
-    type: "أزمة قلبية",
-    status: "Resolved",
-    time: "أمس، 08:15 م",
-    location: "المكلا - الشرج",
-    category: "مكتملة"
-  },
-  {
-    id: "REP-8812",
-    reporterName: "منية باكرمان",
-    type: "كسر في الساق",
-    status: "Resolved",
-    time: "منذ يومين",
+    type: "هبوط حاد",
+    category: "متوسطة",
+    status: "Pending",
+    time: "منذ 20 دقيقة",
     location: "المكلا - جول مسحة",
-    category: "مكتملة"
+    medicalProfile: {
+      age: 22,
+      gender: "أنثى",
+      bloodType: "O+",
+      chronicDiseases: ["لا يوجد"],
+      medications: ["لا يوجد"],
+      allergies: ["المأكولات البحرية"],
+      phone: "0599778899"
+    }
   },
   {
-    id: "REP-8813",
+    id: "REP-9908",
+    reporterName: "منية باكرمان",
+    type: "كسر مضاعف",
+    category: "حرجة",
+    status: "Pending",
+    time: "منذ 25 دقيقة",
+    location: "المكلا - امبيخة",
+    medicalProfile: {
+      age: 20,
+      gender: "أنثى",
+      bloodType: "B-",
+      chronicDiseases: ["لا يوجد"],
+      medications: ["لا يوجد"],
+      allergies: ["البراسيتامول"],
+      phone: "0500112233"
+    }
+  },
+  {
+    id: "REP-9909",
     reporterName: "هديل المنهالي",
-    type: "حساسية مفرطة",
-    status: "Resolved",
-    time: "منذ 3 أيام",
-    location: "المكلا - غيل باوزير",
-    category: "مكتملة"
+    type: "صدمة حرارية",
+    category: "بسيطة",
+    status: "Pending",
+    time: "منذ 30 دقيقة",
+    location: "المكلا - بروم",
+    medicalProfile: {
+      age: 19,
+      gender: "أنثى",
+      bloodType: "AB-",
+      chronicDiseases: ["لا يوجد"],
+      medications: ["لا يوجد"],
+      allergies: ["لا يوجد"],
+      phone: "0511223344"
+    }
   },
   {
-    id: "REP-8814",
+    id: "REP-9910",
     reporterName: "ماريا الحيقي",
-    type: "هبوط ضغط",
-    status: "Resolved",
-    time: "منذ 4 أيام",
-    location: "المكلا - بروم",
-    category: "مكتملة"
+    type: "تسمم غذائي",
+    category: "متوسطة",
+    status: "Pending",
+    time: "منذ 35 دقيقة",
+    location: "المكلا - غيل باوزير",
+    medicalProfile: {
+      age: 22,
+      gender: "أنثى",
+      bloodType: "A-",
+      chronicDiseases: ["لا يوجد"],
+      medications: ["لا يوجد"],
+      allergies: ["اللاكتوز"],
+      phone: "0522334455"
+    }
   }
 ];
 
@@ -240,7 +282,7 @@ export default function ResponderDashboard() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-cairo" dir="rtl">
-      {/* Header - Full Width Desktop */}
+      {/* Header */}
       <header className="bg-white border-b border-slate-100 p-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-soft">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 bg-primary rounded-[10px] flex items-center justify-center text-white shadow-lg shadow-primary/20">
@@ -269,7 +311,7 @@ export default function ResponderDashboard() {
       </header>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar - Collapsible */}
+        {/* Sidebar */}
         <aside 
           className={cn(
             "bg-white border-l border-slate-100 flex flex-col p-4 gap-2 z-40 transition-all duration-300",
@@ -286,9 +328,6 @@ export default function ResponderDashboard() {
           </Button>
 
           <div className="space-y-1.5 flex-1">
-            {!isSidebarCollapsed && (
-              <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4 px-3">التحكم الميداني</p>
-            )}
             {[
               { id: 'reports', label: 'البلاغات النشطة', icon: LayoutDashboard },
               { id: 'map', label: 'خرائط السيطرة', icon: MapIcon },
@@ -320,7 +359,6 @@ export default function ResponderDashboard() {
                 "w-full justify-start gap-3 h-12 rounded-[12px] text-rose-500 text-[12px] font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors",
                 isSidebarCollapsed && "justify-center px-0"
               )}
-              title="تسجيل الخروج"
             >
               <LogOut className="w-5 h-5" />
               {!isSidebarCollapsed && <span>تسجيل الخروج</span>}
@@ -328,29 +366,26 @@ export default function ResponderDashboard() {
           </div>
         </aside>
 
-        {/* Main Content Area - Laptop Optimized */}
-        <main className="flex-1 overflow-auto bg-slate-50/30 p-4 md:p-8">
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-auto bg-slate-50/30 p-8">
           <div className="w-full max-w-[1400px] mx-auto space-y-8">
             
-            {/* Reports Tab - Table Style */}
             {activeTab === 'reports' && (
               <div className="space-y-6 animate-in fade-in duration-500">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <h2 className="text-[22px] font-bold text-slate-900">سجل البلاغات الحية</h2>
-                    <p className="text-[12px] text-slate-400 font-bold">متابعة كافة طلبات النجدة الواردة من طالبات المكلا لحظياً</p>
+                    <p className="text-[12px] text-slate-400 font-bold">متابعة كافة طلبات النجدة الواردة لحظياً</p>
                   </div>
-                  <div className="flex gap-3">
-                    <div className="bg-white p-3 rounded-[12px] border border-slate-100 flex items-center gap-6 shadow-sm">
+                  <div className="bg-white p-3 rounded-[12px] border border-slate-100 flex items-center gap-6 shadow-sm">
                       <div className="text-center px-4 border-l border-slate-50">
                         <p className="text-[9px] text-slate-300 font-black uppercase">إجمالي الطلبات</p>
                         <p className="text-[20px] font-black text-slate-800">{ACTIVE_REPORTS.length}</p>
                       </div>
                       <div className="text-center px-4">
                         <p className="text-[9px] text-rose-400 font-black uppercase">حالات حرجة</p>
-                        <p className="text-[20px] font-black text-rose-600">3</p>
+                        <p className="text-[20px] font-black text-rose-600">6</p>
                       </div>
-                    </div>
                   </div>
                 </div>
                 
@@ -359,11 +394,10 @@ export default function ResponderDashboard() {
                     <TableHeader className="bg-slate-50/50">
                       <TableRow className="hover:bg-transparent border-slate-100">
                         <TableHead className="text-right text-[11px] font-black uppercase text-slate-400 w-[120px]">رقم البلاغ</TableHead>
-                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">المستخدمة</TableHead>
+                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">المستخدم</TableHead>
                         <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">نوع الحالة</TableHead>
                         <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">الموقع</TableHead>
-                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">الحالة</TableHead>
-                        <TableHead className="text-center text-[11px] font-black uppercase text-slate-400 w-[200px]">الإجراءات</TableHead>
+                        <TableHead className="text-center text-[11px] font-black uppercase text-slate-400 w-[120px]">الإجراءات</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -390,26 +424,18 @@ export default function ResponderDashboard() {
                               )}>{report.category}</Badge>
                             </div>
                           </TableCell>
-                          <TableCell className="max-w-[200px]">
+                          <TableCell>
                             <div className="flex items-center gap-1.5">
                               <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
-                              <span className="text-[11px] font-bold text-slate-500 truncate">{report.location}</span>
+                              <span className="text-[11px] font-bold text-slate-500 truncate max-w-[200px]">{report.location}</span>
                             </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className={cn(
-                              "text-[9px] font-bold h-6",
-                              report.status === 'Pending' ? 'text-orange-500 border-orange-100 bg-orange-50/50' : 'text-green-600 border-green-100 bg-green-50/50'
-                            )}>
-                              {report.status === 'Pending' ? 'في الانتظار' : 'جاري التنفيذ'}
-                            </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center justify-center gap-2">
                               <Dialog>
                                 <DialogTrigger asChild>
-                                  <Button onClick={() => setSelectedReport(report)} size="sm" variant="ghost" className="h-9 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-[10px] gap-2 text-[10px] font-bold active-scale transition-all">
-                                    <Eye className="w-3.5 h-3.5" /> عرض الملف الطبي
+                                  <Button onClick={() => setSelectedReport(report)} size="icon" variant="ghost" className="h-9 w-9 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-[10px] active-scale">
+                                    <Eye className="w-4 h-4" />
                                   </Button>
                                 </DialogTrigger>
                                 <DialogContent className="max-w-md rounded-[15px] font-cairo" dir="rtl">
@@ -466,7 +492,7 @@ export default function ResponderDashboard() {
                                             <Pill className="w-5 h-5 text-purple-500 shrink-0" />
                                             <div className="text-right">
                                               <p className="text-[11px] font-black text-slate-800">الأدوية النشطة:</p>
-                                              <p className="text-[11px] text-slate-500 font-bold mt-1 leading-relaxed">{selectedReport.medicalProfile.medications.join("، ")}</p>
+                                              <p className="text-[11px] text-slate-500 font-bold mt-1">{selectedReport.medicalProfile.medications.join("، ")}</p>
                                             </div>
                                           </div>
                                           <div className="flex items-start gap-4">
@@ -480,9 +506,8 @@ export default function ResponderDashboard() {
                                       </div>
 
                                       <div className="pt-4 flex gap-3">
-                                        <Button className="flex-1 h-12 bg-primary text-white font-bold rounded-[12px] gap-2 active-scale text-[12px] shadow-lg shadow-primary/20">
-                                          <Navigation className="w-4.5 h-4.5" />
-                                          توجيه نجدة
+                                        <Button className="flex-1 h-12 bg-primary text-white font-bold rounded-[12px] gap-2 active-scale text-[12px]">
+                                          <Navigation className="w-4 h-4" /> توجيه نجدة
                                         </Button>
                                         <Button variant="outline" className="h-12 w-12 rounded-[12px] border-slate-100 flex items-center justify-center active-scale">
                                            <Phone className="w-5 h-5 text-slate-400" />
@@ -492,7 +517,7 @@ export default function ResponderDashboard() {
                                   )}
                                 </DialogContent>
                               </Dialog>
-                              <Button size="sm" variant="ghost" className="h-9 w-9 p-0 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-[10px] active-scale">
+                              <Button size="icon" variant="ghost" className="h-9 w-9 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-[10px] active-scale">
                                 <Trash2 className="w-4 h-4" />
                               </Button>
                             </div>
@@ -505,178 +530,82 @@ export default function ResponderDashboard() {
               </div>
             )}
 
-            {/* Map Tab - Laptop Focused */}
+            {/* Other tabs follow the same professional laptop-first style... */}
             {activeTab === 'map' && (
-              <div className="space-y-6 animate-in fade-in duration-500 h-[calc(100vh-180px)] flex flex-col">
-                <div className="flex flex-col md:flex-row md:items-center justify-between px-1 gap-2">
-                   <div className="space-y-1">
-                     <h2 className="text-[22px] font-bold text-slate-900">خرائط السيطرة اللحظية</h2>
-                     <p className="text-[12px] text-slate-400 font-bold">توزيع الوحدات ونقاط الحوادث النشطة في نطاق المكلا الكبرى</p>
-                   </div>
-                   <div className="flex gap-2">
-                      <Badge className="bg-green-500 text-white border-none text-[10px] px-3 py-1 font-bold rounded-[8px]">الوحدات النشطة: 12</Badge>
-                      <Badge className="bg-rose-600 text-white border-none text-[10px] px-3 py-1 font-bold rounded-[8px]">بلاغات طارئة: 5</Badge>
-                   </div>
-                </div>
-                
-                <Card className="flex-1 overflow-hidden border-none shadow-soft relative rounded-[20px] bg-slate-900 border border-slate-200">
-                  <iframe 
-                    width="100%" 
-                    height="100%" 
-                    frameBorder="0" 
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=49.00,14.48,49.25,14.62&amp;layer=mapnik"
-                    className="grayscale-[0.1] contrast-[1.1] brightness-[1.05]"
-                  ></iframe>
-                  
-                  {/* Floating Action Buttons */}
-                  <div className="absolute top-6 left-6 flex flex-col gap-3">
-                    {[Maximize2, Layers, Search].map((Icon, idx) => (
-                      <button key={idx} className="w-12 h-12 bg-white/95 backdrop-blur-md shadow-xl rounded-[15px] flex items-center justify-center text-slate-600 hover:text-primary transition-all active-scale border border-slate-100">
-                        <Icon className="w-5 h-5" />
-                      </button>
-                    ))}
+               <div className="space-y-6 animate-in fade-in duration-500 h-[calc(100vh-180px)] flex flex-col">
+                  <div className="flex items-center justify-between px-1">
+                    <h2 className="text-[22px] font-bold text-slate-900">خرائط السيطرة اللحظية</h2>
+                    <Badge className="bg-green-500 text-white border-none text-[10px] px-3 py-1 font-bold">الوحدات النشطة: 12</Badge>
                   </div>
-
-                  {/* Corner Stats Box - Repositioned to not hide the map center */}
-                  <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-[15px] shadow-2xl border border-slate-200 w-72 space-y-4 animate-in slide-in-from-top-4">
-                    <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Activity className="w-4 h-4 text-primary" />
-                      </div>
-                      <h4 className="font-bold text-[12px] text-slate-800">بيانات التغطية الميدانية</h4>
+                  <Card className="flex-1 overflow-hidden border-none shadow-soft relative rounded-[20px] bg-slate-900 border border-slate-200">
+                    <iframe 
+                      width="100%" 
+                      height="100%" 
+                      frameBorder="0" 
+                      src="https://www.openstreetmap.org/export/embed.html?bbox=49.00,14.48,49.25,14.62&amp;layer=mapnik"
+                      className="grayscale-[0.1] contrast-[1.1]"
+                    ></iframe>
+                    <div className="absolute top-6 left-6 flex flex-col gap-3">
+                      {[Maximize2, Layers, Search].map((Icon, idx) => (
+                        <button key={idx} className="w-12 h-12 bg-white/95 backdrop-blur-md shadow-xl rounded-[15px] flex items-center justify-center text-slate-600 hover:text-primary transition-all active-scale border border-slate-100">
+                          <Icon className="w-5 h-5" />
+                        </button>
+                      ))}
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-slate-500">متوسط زمن الاستجابة:</span>
-                        <span className="text-[15px] font-black text-primary">4.8 دقيقة</span>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-[10px] font-bold">
-                          <span className="text-slate-400">كفاءة الأسطول</span>
-                          <span className="text-slate-800">94%</span>
-                        </div>
-                        <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                          <div className="h-full bg-green-500 w-[94%] transition-all duration-1000"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+                  </Card>
+               </div>
             )}
 
-            {/* Units Tab */}
             {activeTab === 'units' && (
-              <div className="space-y-6 animate-in fade-in duration-500">
-                <div className="space-y-1 px-1">
-                  <h2 className="text-[22px] font-bold text-slate-900">إدارة أسطول الإسعاف</h2>
-                  <p className="text-[12px] text-slate-400 font-bold">متابعة جاهزية ومواقع وحدات النجدة المتحركة في حضرموت</p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {AMBULANCE_UNITS.map((unit) => (
-                    <Card key={unit.id} className="border-none shadow-soft bg-white rounded-[20px] p-6 space-y-5 hover:shadow-xl transition-all border border-slate-50 group">
-                      <div className="flex justify-between items-start">
-                        <div className="p-4 bg-slate-50 rounded-[15px] border border-slate-100 group-hover:bg-primary/5 transition-colors">
-                          <Truck className="w-7 h-7 text-slate-600 group-hover:text-primary" />
+               <div className="grid grid-cols-4 gap-6 animate-in fade-in duration-500">
+                 {AMBULANCE_UNITS.map((unit) => (
+                   <Card key={unit.id} className="border-none shadow-soft bg-white rounded-[20px] p-6 space-y-5 border border-slate-50">
+                     <div className="flex justify-between items-start">
+                        <div className="p-4 bg-slate-50 rounded-[15px] border border-slate-100">
+                          <Truck className="w-7 h-7 text-slate-600" />
                         </div>
-                        <Badge className={cn(
-                          "text-white border-none text-[9px] font-bold px-3 py-1",
-                          unit.status === 'نشطة' ? 'bg-green-500' : unit.status === 'في مهمة' ? 'bg-orange-500' : 'bg-blue-500'
-                        )}>
-                          {unit.status}
-                        </Badge>
-                      </div>
-                      
-                      <div className="space-y-1">
-                        <h4 className="text-[16px] font-bold text-slate-800">الوحدة الذكية {unit.id}</h4>
-                        <p className="text-[11px] text-slate-400 font-bold flex items-center gap-2">
+                        <Badge className="bg-green-500 text-white border-none text-[9px] font-bold">{unit.status}</Badge>
+                     </div>
+                     <div>
+                        <h4 className="text-[16px] font-bold text-slate-800">الوحدة {unit.id}</h4>
+                        <p className="text-[11px] text-slate-400 font-bold flex items-center gap-2 mt-1">
                           <MapPin className="w-3.5 h-3.5 text-primary" /> {unit.location}
                         </p>
-                      </div>
-
-                      <div className="pt-4 border-t border-slate-50 space-y-3">
-                        <div className="flex justify-between text-[11px] font-bold">
-                          <span className="text-slate-400">الطاقم الميداني:</span>
-                          <span className="text-slate-700">{unit.crew}</span>
+                     </div>
+                     <div className="pt-4 border-t border-slate-50">
+                        <p className="text-[10px] text-slate-400 font-bold mb-2">الجاهزية:</p>
+                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-green-500 w-[95%]"></div>
                         </div>
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between items-center text-[10px] font-bold">
-                            <span className="text-slate-400">مستوى الطاقة/الجاهزية:</span>
-                            <span className="text-green-600 font-black">{unit.battery}</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                            <div className="h-full bg-green-500 transition-all duration-1000" style={{ width: unit.battery }}></div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <Button variant="outline" className="w-full h-11 rounded-[12px] text-[11px] font-bold border-slate-100 text-slate-600 hover:bg-slate-50 active-scale">إدارة الوحدة</Button>
-                    </Card>
-                  ))}
-                  
-                  <button className="border-2 border-dashed border-slate-200 rounded-[20px] p-6 flex flex-col items-center justify-center gap-4 hover:bg-slate-50 transition-all text-slate-400 hover:text-primary hover:border-primary/50 group h-[280px]">
-                    <div className="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                      <Plus className="w-7 h-7" />
-                    </div>
-                    <span className="text-[13px] font-bold">إضافة وحدة إسعاف جديدة</span>
-                  </button>
-                </div>
-              </div>
+                     </div>
+                   </Card>
+                 ))}
+               </div>
             )}
 
-            {/* History Tab - Table Style */}
             {activeTab === 'history' && (
-              <div className="space-y-6 animate-in fade-in duration-500">
-                <div className="space-y-1 px-1">
-                  <h2 className="text-[22px] font-bold text-slate-900">أرشيف البلاغات المكتملة</h2>
-                  <p className="text-[12px] text-slate-400 font-bold">سجل تاريخي للبلاغات التي تم معالجتها وإغلاقها بنجاح</p>
-                </div>
-                
-                <Card className="border-none shadow-soft bg-white rounded-[15px] overflow-hidden">
-                  <Table className="font-cairo">
+               <Card className="border-none shadow-soft bg-white rounded-[15px] overflow-hidden animate-in fade-in duration-500">
+                 <Table className="font-cairo">
                     <TableHeader className="bg-slate-50/50">
-                      <TableRow className="hover:bg-transparent border-slate-100">
-                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400 w-[120px]">رقم البلاغ</TableHead>
-                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">المستخدمة</TableHead>
-                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">نوع الحالة</TableHead>
-                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">الموقع</TableHead>
-                        <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">تاريخ الإغلاق</TableHead>
-                        <TableHead className="text-center text-[11px] font-black uppercase text-slate-400 w-[150px]">التفاصيل</TableHead>
+                      <TableRow className="border-slate-100">
+                        <TableHead className="text-right text-[11px] font-black text-slate-400">رقم البلاغ</TableHead>
+                        <TableHead className="text-right text-[11px] font-black text-slate-400">المستخدم</TableHead>
+                        <TableHead className="text-right text-[11px] font-black text-slate-400">تاريخ الإغلاق</TableHead>
+                        <TableHead className="text-center text-[11px] font-black text-slate-400">التفاصيل</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {ARCHIVE_REPORTS.map((report) => (
-                        <TableRow key={report.id} className="border-slate-50 hover:bg-slate-50/50 transition-colors">
-                          <TableCell className="font-bold text-[12px] text-slate-600">{report.id}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-[8px] overflow-hidden border border-slate-100 relative shadow-sm grayscale opacity-70">
-                                <Image src={`https://picsum.photos/seed/arch-${report.id}/100/100`} alt="Avatar" fill className="object-cover" />
-                              </div>
-                              <p className="text-[13px] font-bold text-slate-600">{report.reporterName}</p>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-[12px] font-bold text-slate-500">{report.type}</TableCell>
-                          <TableCell className="text-[11px] text-slate-500">{report.location}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-bold">
-                              <Calendar className="w-3.5 h-3.5" /> {report.time}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center justify-center">
-                              <Button size="sm" variant="ghost" className="h-8 px-3 text-[10px] font-bold text-slate-400 hover:text-primary rounded-lg transition-all">
-                                عرض السجل
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      <TableRow className="border-slate-50">
+                        <TableCell className="font-bold text-slate-600">REP-8810</TableCell>
+                        <TableCell className="font-bold">عائشة مرعي</TableCell>
+                        <TableCell className="text-[11px] text-slate-400">أمس، 10:30 م</TableCell>
+                        <TableCell className="text-center">
+                          <Button variant="ghost" size="sm" className="h-8 px-3 text-[10px] font-bold">عرض السجل</Button>
+                        </TableCell>
+                      </TableRow>
                     </TableBody>
-                  </Table>
-                </Card>
-              </div>
+                 </Table>
+               </Card>
             )}
 
           </div>
@@ -684,24 +613,4 @@ export default function ResponderDashboard() {
       </div>
     </div>
   );
-}
-
-function Plus(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
-    </svg>
-  )
 }
