@@ -16,7 +16,8 @@ import {
   Compass,
   Maximize2,
   Layers,
-  Info
+  Info,
+  Car
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -25,7 +26,7 @@ export default function TrackingPage() {
 
   return (
     <div className="relative h-screen w-full bg-slate-50 flex flex-col font-cairo overflow-hidden" dir="rtl">
-      {/* الخريطة الحقيقية ملء الشاشة تماماً */}
+      {/* الخريطة الحقيقية ملء الشاشة */}
       <div className="absolute inset-0 z-0 h-full w-full">
         <iframe 
           width="100%" 
@@ -34,12 +35,54 @@ export default function TrackingPage() {
           scrolling="no" 
           marginHeight={0} 
           marginWidth={0} 
-          src="https://www.openstreetmap.org/export/embed.html?bbox=49.11,14.53,49.14,14.55&amp;layer=mapnik&amp;marker=14.542,49.125"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=49.08,14.50,49.16,14.58&amp;layer=mapnik"
           className="w-full h-full grayscale-[0.1] contrast-[1.1] brightness-[0.95]"
           style={{ border: 0, height: '100%', width: '100%' }}
         ></iframe>
-        {/* طبقة ناعمة فوق الخريطة لتحسين القراءة */}
-        <div className="absolute inset-0 pointer-events-none bg-primary/5"></div>
+        
+        {/* طبقة المسار (Route) المتحرك - SVG Overlay */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+          <defs>
+            <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="hsl(var(--primary))" />
+              <stop offset="100%" stopColor="#3b82f6" />
+            </linearGradient>
+          </defs>
+          <path 
+            d="M 750 250 Q 500 400 250 550" 
+            fill="none" 
+            stroke="url(#routeGradient)" 
+            strokeWidth="5" 
+            strokeDasharray="10, 15" 
+            className="animate-[route-flow_2s_linear_infinite]"
+          />
+        </svg>
+
+        {/* مؤشر موقع سيارة الإسعاف (مستشفى البرج) */}
+        <div className="absolute top-[25%] right-[25%] -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+          <div className="relative flex flex-col items-center">
+            <div className="absolute -inset-8 bg-primary/20 rounded-full animate-ping opacity-40"></div>
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-2xl flex items-center justify-center border-[3px] border-primary relative z-10 rotate-12 transition-transform hover:scale-110">
+              <Car className="w-6 h-6 text-primary" />
+            </div>
+            <div className="mt-2 bg-slate-900/90 backdrop-blur text-white px-3 py-1 rounded-full text-[8px] font-black shadow-xl whitespace-nowrap">
+              موقع مستشفى البرج
+            </div>
+          </div>
+        </div>
+
+        {/* مؤشر موقعك الحالي (حي فوة) */}
+        <div className="absolute bottom-[35%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+          <div className="relative flex flex-col items-center">
+            <div className="absolute -inset-6 bg-blue-500/20 rounded-full animate-pulse opacity-40"></div>
+            <div className="w-10 h-10 bg-blue-500 rounded-full shadow-2xl flex items-center justify-center border-[3px] border-white relative z-10">
+              <MapPin className="w-5 h-5 text-white" />
+            </div>
+            <div className="mt-2 bg-white/90 backdrop-blur text-slate-800 px-3 py-1 rounded-full text-[8px] font-black shadow-xl whitespace-nowrap border border-slate-100">
+              موقعك الحالي
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* الرأس (Header Overlay) */}
@@ -52,7 +95,7 @@ export default function TrackingPage() {
             <h1 className="font-black text-xs text-slate-800">تتبع المسعف المباشر</h1>
             <p className="text-[9px] text-accent font-black flex items-center gap-1.5 justify-end">
               <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
-              مستشفى ابن سينا - الوحدة 42
+              قادم من: مستشفى البرج - الوحدة 14
             </p>
           </div>
           <Button size="icon" className="h-10 w-10 bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-lg shadow-primary/20 active-scale">
@@ -71,19 +114,6 @@ export default function TrackingPage() {
         </button>
       </div>
 
-      {/* مؤشر الإسعاف الحي في منتصف الخريطة */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
-        <div className="relative">
-          <div className="absolute -inset-12 bg-primary/20 rounded-full animate-ping opacity-40"></div>
-          <div className="w-14 h-14 bg-white rounded-3xl shadow-2xl flex items-center justify-center border-[4px] border-primary relative z-10 rotate-12">
-            <Activity className="w-7 h-7 text-primary" />
-          </div>
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-1.5 rounded-full text-[9px] font-black shadow-2xl whitespace-nowrap">
-            السرعة: 85 كم/س
-          </div>
-        </div>
-      </div>
-
       {/* الجزء السفلي (Bottom Overlay) */}
       <div className="absolute bottom-0 left-0 right-0 z-30">
         <div className="px-5 relative z-40 translate-y-8">
@@ -98,7 +128,7 @@ export default function TrackingPage() {
                 </div>
               </div>
               <div className="flex-1 text-right">
-                <h3 className="font-black text-[15px] text-slate-800">د. خالد العمودي</h3>
+                <h3 className="font-black text-[15px] text-slate-800">د. خالد سعيد العمودي</h3>
                 <p className="text-[10px] text-slate-400 font-bold">جراحة وطوارئ - مستشفى المكلا</p>
                 <div className="flex items-center gap-1 mt-1 justify-end">
                   {[1,2,3,4,5].map(i => <div key={i} className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>)}
@@ -147,6 +177,13 @@ export default function TrackingPage() {
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        @keyframes route-flow {
+          from { stroke-dashoffset: 100; }
+          to { stroke-dashoffset: 0; }
+        }
+      `}</style>
     </div>
   );
 }
