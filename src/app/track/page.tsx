@@ -20,7 +20,6 @@ export default function TrackingPage() {
   const router = useRouter();
 
   // إحداثيات المكلا (موقع البلاغ) - دبوس واحد واضح وبسيط
-  // تم استخدام إحداثيات مركزية في المكلا لضمان ظهور الخريطة بشكل صحيح
   const mapUrl = "https://www.openstreetmap.org/export/embed.html?bbox=49.10,14.52,49.15,14.56&layer=mapnik&marker=14.54,49.12";
 
   return (
@@ -43,14 +42,14 @@ export default function TrackingPage() {
       {/* الرأس الطافي (Floating Header) */}
       <div className="absolute top-6 left-4 right-4 z-30">
         <div className="p-3 bg-white/90 backdrop-blur-md border border-white/40 shadow-xl rounded-2xl flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl bg-slate-50 h-10 w-10 active-scale">
+          <Button variant="ghost" size="icon" onClick={() => router.push('/dashboard')} className="rounded-xl bg-slate-50 h-10 w-10 active-scale">
             <ChevronRight className="w-5 h-5 text-slate-600" />
           </Button>
           <div className="flex-1 text-right">
-            <h1 className="font-black text-xs text-slate-800 leading-none">موقع الاستجابة الطارئة</h1>
+            <h1 className="font-black text-xs text-slate-800 leading-none">تتبع المسعف المباشر</h1>
             <p className="text-[9px] text-primary font-black flex items-center gap-1 justify-end mt-1.5">
               <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-              مستشفى البرج - وحدة الطوارئ
+              مستشفى ابن سينا - الوحدة 42
             </p>
           </div>
           <div className="h-8 w-px bg-slate-100 mx-1"></div>
@@ -85,15 +84,14 @@ export default function TrackingPage() {
                 </div>
               </div>
               <div className="flex-1 text-right">
-                <h3 className="font-black text-sm text-slate-800">د. خالد العمودي</h3>
-                <p className="text-[10px] text-slate-400 font-bold">وحدة العناية المركزة - المكلا</p>
+                <h3 className="font-black text-sm text-slate-800">د. خالد سعيد العمودي</h3>
+                <p className="text-[10px] text-slate-400 font-bold">جراحة وطوارئ - مستشفى المكلا</p>
                 <div className="flex items-center gap-1 mt-1.5 justify-end">
-                  {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-1 bg-yellow-400 rounded-full"></div>)}
-                  <span className="text-[9px] text-slate-400 mr-2 font-black">4.9 تقييم</span>
+                  <span className="text-[9px] text-slate-400 mr-2 font-black">4.9 / 5.0</span>
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center p-3 bg-primary/5 rounded-2xl min-w-[70px] border border-primary/10">
-                <span className="text-2xl font-black text-primary leading-none tracking-tighter">5</span>
+                <span className="text-2xl font-black text-primary leading-none tracking-tighter">4</span>
                 <span className="text-[9px] text-primary font-black uppercase mt-1">دقائق</span>
               </div>
             </div>
@@ -110,7 +108,7 @@ export default function TrackingPage() {
                 <MapPin className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1 space-y-1 text-right">
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">موقع البلاغ المثبت</p>
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">الموقع المستهدف</p>
                 <p className="text-[13px] font-black text-slate-800">المكلا، حي فوة، شارع الستين</p>
               </div>
             </div>
@@ -123,7 +121,7 @@ export default function TrackingPage() {
             </Button>
             <Button className="flex-[2] h-15 rounded-2xl font-black bg-slate-900 hover:bg-slate-800 text-white shadow-2xl shadow-slate-900/20 gap-2 text-[11px] active-scale">
               <MessageCircle className="w-4 h-4" />
-              تواصل مع الوحدة
+              مراسلة الطبيب
             </Button>
           </div>
         </div>
