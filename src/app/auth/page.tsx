@@ -38,8 +38,11 @@ export default function AuthPage() {
   const [acceptTerms, setAcceptTerms] = useState(false);
 
   useEffect(() => {
+    // If user is already logged in, we check if they are coming from a specific intent
+    // But generally we send them to dashboard.
     if (user && !isUserLoading) {
-      router.push("/dashboard");
+      // Basic check: if we are on auth page and user is logged in, send them to dashboard
+      // unless we just performed a responder login
     }
   }, [user, isUserLoading, router]);
 
@@ -64,6 +67,9 @@ export default function AuthPage() {
     e.preventDefault();
     setIsLoading(true);
     initiateEmailSignIn(auth, email, password)
+      .then(() => {
+        router.push("/dashboard");
+      })
       .catch((error: any) => {
         setIsLoading(false);
         toast({
@@ -104,6 +110,7 @@ export default function AuthPage() {
           homeLongitude: 49.1167,
           createdAt: new Date().toISOString(),
         }, { merge: true });
+        router.push("/dashboard");
       })
       .catch((error: any) => {
         setIsLoading(false);
@@ -118,6 +125,9 @@ export default function AuthPage() {
   const handleGuestLogin = () => {
     setIsLoading(true);
     initiateAnonymousSignIn(auth)
+      .then(() => {
+        router.push("/dashboard");
+      })
       .catch((error: any) => {
         setIsLoading(false);
         toast({
@@ -126,6 +136,27 @@ export default function AuthPage() {
           description: "تعذر تسجيل الدخول كضيف حالياً.",
         });
       });
+  };
+
+  const handleResponderLogin = () => {
+    setIsLoading(true);
+    // Ensure user is signed in (anonymously if needed) to bypass the responder page redirect
+    if (!user) {
+      initiateAnonymousSignIn(auth)
+        .then(() => {
+          router.push("/responder");
+        })
+        .catch((error: any) => {
+          setIsLoading(false);
+          toast({
+            variant: "destructive",
+            title: "فشل الدخول للمسعفين",
+            description: "حدث خطأ أثناء تهيئة الدخول السريع للطواقم.",
+          });
+        });
+    } else {
+      router.push("/responder");
+    }
   };
 
   if (isUserLoading) return (
@@ -252,7 +283,7 @@ export default function AuthPage() {
               />
             </div>
 
-            <div className="flex items-start gap-2 py-1 ltr:flex-row-reverse rtl:flex-row">
+            <div className="flex items-center gap-2 py-1 flex-row-reverse">
               <label 
                 htmlFor="terms" 
                 className="text-[9px] font-bold text-slate-500 leading-relaxed cursor-pointer flex-1 text-right"
@@ -280,10 +311,11 @@ export default function AuthPage() {
 
       <div className="mt-8 text-center animate-in fade-in duration-1000">
         <button 
-          onClick={() => router.push('/responder')}
-          className="text-[10px] font-bold text-slate-400 hover:text-primary transition-colors flex items-center justify-center gap-1.5 mx-auto active-scale"
+          onClick={handleResponderLogin}
+          disabled={isLoading}
+          className="text-[10px] font-bold text-slate-400 hover:text-primary transition-colors flex items-center justify-center gap-1.5 mx-auto active-scale disabled:opacity-50"
         >
-          <Hospital className="w-3.5 h-3.5" />
+          {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Hospital className="w-3.5 h-3.5" />}
           دخول الطواقم الطبية والمسعفين
         </button>
       </div>
