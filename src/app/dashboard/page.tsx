@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import BottomNav from "@/components/navigation/BottomNav";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from "@/firebase";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -47,22 +48,33 @@ export default function DashboardPage() {
     { id: "other", label: "أخرى", icon: AlertCircle, color: "text-slate-500 bg-slate-50" },
   ];
 
+  const logo = PlaceHolderImages.find((img) => img.id === "medical-app-logo");
+
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-cairo" dir="rtl">
-      {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-50 px-5 h-14 flex items-center justify-between shadow-sm">
-        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9 active-scale">
-          <Menu className="w-4 h-4 text-slate-600" />
-        </Button>
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center shadow-sm shadow-primary/20">
-            <ShieldCheck className="w-4 h-4 text-white" />
+      {/* Header Updated per user request */}
+      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-soft">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 relative">
+            {logo && (
+              <Image 
+                src={logo.imageUrl} 
+                alt="المسعف الذكي" 
+                fill 
+                className="rounded-xl object-cover border border-slate-50 shadow-sm"
+                data-ai-hint={logo.imageHint}
+              />
+            )}
           </div>
-          <span className="font-black text-xs tracking-tight text-slate-800 uppercase">Smart Medic</span>
+          <div className="flex flex-col text-right">
+            <h1 className="text-sm font-black text-slate-900 leading-none">المسعف الذكي</h1>
+            <p className="text-[9px] text-slate-400 font-bold mt-1 tracking-tight">Smart Medic</p>
+          </div>
         </div>
-        <Button variant="ghost" size="icon" className="rounded-xl bg-slate-50 h-9 w-9 relative active-scale">
-          <Bell className="w-4 h-4 text-slate-600" />
-          <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-primary rounded-full ring-2 ring-white"></span>
+        
+        <Button variant="ghost" size="icon" className="rounded-2xl bg-slate-50 h-11 w-11 relative active-scale border border-slate-50">
+          <Bell className="w-5 h-5 text-slate-600" />
+          <span className="absolute top-3 right-3 w-2 h-2 bg-primary rounded-full ring-2 ring-white"></span>
         </Button>
       </header>
 
