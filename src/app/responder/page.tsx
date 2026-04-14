@@ -63,34 +63,30 @@ import {
   PanelRight
 } from "lucide-react";
 import { useAuth, useUser, signOutUser } from "@/firebase";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 const ACTIVE_REPORTS = [
   {
-    id: "REP-9901",
+    id: "REP-001",
     reporterName: "منى باحسين",
     type: "إغماء مفاجئ",
     category: "حرجة جداً",
-    status: "Pending",
-    time: "منذ دقيقتين",
     location: "المكلا - حي فوة - المساكن",
     medicalProfile: {
       age: 21,
       gender: "أنثى",
       bloodType: "O+",
-      chronicDiseases: ["هبوط سكر", "أنيميا"],
+      chronicDiseases: ["هبوط سكر"],
       medications: ["فيتامينات"],
       allergies: ["البنسلين"],
       phone: "0533112233"
     }
   },
   {
-    id: "REP-9902",
+    id: "REP-002",
     reporterName: "نجد مسيعان",
     type: "أزمة تنفسية",
     category: "متوسطة",
-    status: "Pending",
-    time: "منذ 5 دقائق",
     location: "المكلا - الديس - شارع الغويزي",
     medicalProfile: {
       age: 20,
@@ -103,12 +99,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9903",
+    id: "REP-003",
     reporterName: "نور العمودي",
     type: "نزيف حاد",
     category: "حرجة",
-    status: "Dispatched",
-    time: "منذ 8 دقائق",
     location: "المكلا - روكب",
     medicalProfile: {
       age: 22,
@@ -121,12 +115,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9904",
+    id: "REP-004",
     reporterName: "رغد بلعفير",
     type: "تشنجات",
     category: "حرجة",
-    status: "Pending",
-    time: "منذ 12 دقيقة",
     location: "المكلا - بويش",
     medicalProfile: {
       age: 19,
@@ -139,12 +131,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9905",
+    id: "REP-005",
     reporterName: "خلود بن ثابت",
     type: "حادث سير",
     category: "متوسطة",
-    status: "EnRoute",
-    time: "منذ 15 دقيقة",
     location: "المكلا - شارع الستين",
     medicalProfile: {
       age: 23,
@@ -157,12 +147,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9906",
+    id: "REP-006",
     reporterName: "عائشة مرعي",
     type: "ألم في الصدر",
     category: "حرجة جداً",
-    status: "Pending",
-    time: "منذ 18 دقيقة",
     location: "المكلا - الشرج - المرتفع",
     medicalProfile: {
       age: 21,
@@ -175,12 +163,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9907",
+    id: "REP-007",
     reporterName: "نور باعباد",
     type: "هبوط حاد",
     category: "متوسطة",
-    status: "Pending",
-    time: "منذ 20 دقيقة",
     location: "المكلا - جول مسحة",
     medicalProfile: {
       age: 22,
@@ -193,12 +179,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9908",
+    id: "REP-008",
     reporterName: "منية باكرمان",
     type: "كسر مضاعف",
     category: "حرجة",
-    status: "Pending",
-    time: "منذ 25 دقيقة",
     location: "المكلا - امبيخة",
     medicalProfile: {
       age: 20,
@@ -211,12 +195,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9909",
+    id: "REP-009",
     reporterName: "هديل المنهالي",
     type: "صدمة حرارية",
     category: "بسيطة",
-    status: "Pending",
-    time: "منذ 30 دقيقة",
     location: "المكلا - بروم",
     medicalProfile: {
       age: 19,
@@ -229,12 +211,10 @@ const ACTIVE_REPORTS = [
     }
   },
   {
-    id: "REP-9910",
+    id: "REP-010",
     reporterName: "ماريا الحيقي",
     type: "تسمم غذائي",
     category: "متوسطة",
-    status: "Pending",
-    time: "منذ 35 دقيقة",
     location: "المكلا - غيل باوزير",
     medicalProfile: {
       age: 22,
@@ -397,7 +377,7 @@ export default function ResponderDashboard() {
                         <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">المستخدم</TableHead>
                         <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">نوع الحالة</TableHead>
                         <TableHead className="text-right text-[11px] font-black uppercase text-slate-400">الموقع</TableHead>
-                        <TableHead className="text-center text-[11px] font-black uppercase text-slate-400 w-[120px]">الإجراءات</TableHead>
+                        <TableHead className="text-center text-[11px] font-black uppercase text-slate-400 w-[100px]">الإجراءات</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -406,20 +386,17 @@ export default function ResponderDashboard() {
                           <TableCell className="font-bold text-[12px] text-slate-600">{report.id}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-[12px] overflow-hidden border border-slate-100 relative shadow-sm">
+                              <div className="w-8 h-8 rounded-[10px] overflow-hidden border border-slate-100 relative shadow-sm">
                                 <Image src={`https://picsum.photos/seed/${report.id}/100/100`} alt="Avatar" fill className="object-cover" />
                               </div>
-                              <div>
-                                <p className="text-[13px] font-bold text-slate-800">{report.reporterName}</p>
-                                <p className="text-[10px] text-slate-400 font-bold">{report.medicalProfile.phone}</p>
-                              </div>
+                              <p className="text-[13px] font-bold text-slate-800">{report.reporterName}</p>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-col gap-0.5">
                               <span className="text-[12px] font-bold text-slate-700">{report.type}</span>
                               <Badge className={cn(
-                                "text-white border-none text-[8px] font-bold h-5 w-fit",
+                                "text-white border-none text-[8px] font-bold h-4 px-1 w-fit",
                                 report.category === 'حرجة جداً' ? 'bg-rose-600' : 'bg-orange-500'
                               )}>{report.category}</Badge>
                             </div>
@@ -427,14 +404,14 @@ export default function ResponderDashboard() {
                           <TableCell>
                             <div className="flex items-center gap-1.5">
                               <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
-                              <span className="text-[11px] font-bold text-slate-500 truncate max-w-[200px]">{report.location}</span>
+                              <span className="text-[11px] font-bold text-slate-500 truncate max-w-[180px]">{report.location}</span>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center justify-center gap-2">
+                            <div className="flex items-center justify-center gap-1">
                               <Dialog>
                                 <DialogTrigger asChild>
-                                  <Button onClick={() => setSelectedReport(report)} size="icon" variant="ghost" className="h-9 w-9 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-[10px] active-scale">
+                                  <Button onClick={() => setSelectedReport(report)} size="icon" variant="ghost" className="h-8 w-8 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg">
                                     <Eye className="w-4 h-4" />
                                   </Button>
                                 </DialogTrigger>
@@ -517,7 +494,7 @@ export default function ResponderDashboard() {
                                   )}
                                 </DialogContent>
                               </Dialog>
-                              <Button size="icon" variant="ghost" className="h-9 w-9 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-[10px] active-scale">
+                              <Button size="icon" variant="ghost" className="h-8 w-8 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-lg">
                                 <Trash2 className="w-4 h-4" />
                               </Button>
                             </div>
@@ -530,7 +507,6 @@ export default function ResponderDashboard() {
               </div>
             )}
 
-            {/* Other tabs follow the same professional laptop-first style... */}
             {activeTab === 'map' && (
                <div className="space-y-6 animate-in fade-in duration-500 h-[calc(100vh-180px)] flex flex-col">
                   <div className="flex items-center justify-between px-1">
@@ -584,28 +560,31 @@ export default function ResponderDashboard() {
             )}
 
             {activeTab === 'history' && (
-               <Card className="border-none shadow-soft bg-white rounded-[15px] overflow-hidden animate-in fade-in duration-500">
-                 <Table className="font-cairo">
-                    <TableHeader className="bg-slate-50/50">
-                      <TableRow className="border-slate-100">
-                        <TableHead className="text-right text-[11px] font-black text-slate-400">رقم البلاغ</TableHead>
-                        <TableHead className="text-right text-[11px] font-black text-slate-400">المستخدم</TableHead>
-                        <TableHead className="text-right text-[11px] font-black text-slate-400">تاريخ الإغلاق</TableHead>
-                        <TableHead className="text-center text-[11px] font-black text-slate-400">التفاصيل</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow className="border-slate-50">
-                        <TableCell className="font-bold text-slate-600">REP-8810</TableCell>
-                        <TableCell className="font-bold">عائشة مرعي</TableCell>
-                        <TableCell className="text-[11px] text-slate-400">أمس، 10:30 م</TableCell>
-                        <TableCell className="text-center">
-                          <Button variant="ghost" size="sm" className="h-8 px-3 text-[10px] font-bold">عرض السجل</Button>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                 </Table>
-               </Card>
+               <div className="space-y-4 animate-in fade-in duration-500">
+                  <h2 className="text-[22px] font-bold text-slate-900">أرشيف البلاغات المؤرشفة</h2>
+                  <Card className="border-none shadow-soft bg-white rounded-[15px] overflow-hidden">
+                    <Table className="font-cairo">
+                        <TableHeader className="bg-slate-50/50">
+                          <TableRow className="border-slate-100">
+                            <TableHead className="text-right text-[11px] font-black text-slate-400">رقم البلاغ</TableHead>
+                            <TableHead className="text-right text-[11px] font-black text-slate-400">المستخدم</TableHead>
+                            <TableHead className="text-right text-[11px] font-black text-slate-400">تاريخ الإغلاق</TableHead>
+                            <TableHead className="text-center text-[11px] font-black text-slate-400">التفاصيل</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          <TableRow className="border-slate-50">
+                            <TableCell className="font-bold text-slate-600">REP-HIST-01</TableCell>
+                            <TableCell className="font-bold text-[12px]">عصبان ةنسيب</TableCell>
+                            <TableCell className="text-[11px] text-slate-400">أمس، 10:30 م</TableCell>
+                            <TableCell className="text-center">
+                              <Button variant="ghost" size="sm" className="h-8 px-3 text-[10px] font-bold">عرض السجل</Button>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                    </Table>
+                  </Card>
+               </div>
             )}
 
           </div>
@@ -614,3 +593,4 @@ export default function ResponderDashboard() {
     </div>
   );
 }
+
