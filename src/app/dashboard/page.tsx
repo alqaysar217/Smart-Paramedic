@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -48,7 +49,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-24 font-cairo" dir="rtl">
-      <header className="sticky top-0 z-50 bg-white border-b border-slate-100 px-4 h-14 flex items-center justify-between shadow-soft">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 h-14 flex items-center justify-between shadow-soft">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 relative rounded-[10px] overflow-hidden border border-slate-100">
             <Image 
@@ -73,7 +74,7 @@ export default function DashboardPage() {
       </header>
 
       <main className="px-4 pt-4 space-y-6">
-        <section className="flex justify-between items-center">
+        <section className="flex justify-between items-center px-1">
           <div>
             <p className="text-[9px] font-bold text-slate-400 mb-0.5 uppercase tracking-wider">مرحباً بك مجدداً</p>
             <h1 className="text-md font-bold text-slate-900 leading-tight">
@@ -89,7 +90,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        <section className="space-y-2">
+        <section className="space-y-3">
           <h2 className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1.5 px-1">
             <MapPin className="w-3 h-3 text-primary" /> خريطة المكلا الحية
           </h2>
@@ -107,7 +108,7 @@ export default function DashboardPage() {
             <div className="absolute bottom-3 left-3 right-3">
               <div className="bg-white/95 backdrop-blur p-2.5 rounded-[10px] shadow-lg flex items-center justify-between border border-white/20">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-slate-50 rounded-lg flex items-center justify-center">
+                  <div className="w-7 h-7 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
                     <Search className="w-3 h-3 text-slate-400" />
                   </div>
                   <div className="text-right">
@@ -125,18 +126,25 @@ export default function DashboardPage() {
           </Card>
         </section>
 
-        <section className="flex flex-col items-center justify-center py-2">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping scale-110 opacity-30"></div>
+        {/* SOS BUTTON IMPROVEMENT */}
+        <section className="flex flex-col items-center justify-center py-4">
+          <div className="relative group">
+            {/* Background ripples for urgency */}
+            <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping opacity-20 scale-125"></div>
+            <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping [animation-delay:-1s] opacity-20 scale-150"></div>
+            
             <button 
               onClick={() => router.push('/report?type=urgent')}
-              className="relative z-10 w-28 h-28 bg-primary rounded-full flex flex-col items-center justify-center text-white shadow-xl active-scale emergency-pulse border-[4px] border-white"
+              className="relative z-10 w-32 h-32 bg-primary rounded-full flex flex-col items-center justify-center text-white shadow-xl shadow-primary/30 active-scale emergency-pulse border-[5px] border-white/95"
             >
-              <AlertCircle className="w-7 h-7 mb-1" />
-              <span className="text-sm font-bold tracking-tight">طلب نجدة</span>
-              <span className="text-[7px] opacity-70 font-bold uppercase tracking-widest">SOS</span>
+              <div className="p-2 bg-white/10 rounded-full mb-1">
+                <AlertCircle className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-[13px] font-black tracking-tight leading-none">طلب نجدة</span>
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] mt-1.5 opacity-80">Urgent SOS</span>
             </button>
           </div>
+          <p className="mt-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest px-6 text-center leading-relaxed">اضغط في حالات الطوارئ القصوى فقط</p>
         </section>
 
         <section className="space-y-3">
