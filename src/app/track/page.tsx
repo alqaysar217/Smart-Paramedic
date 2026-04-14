@@ -71,7 +71,7 @@ export default function TrackingPage() {
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-12 h-12 rounded-[10px] overflow-hidden border border-slate-100 shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/dr-khaled/200/200" alt="Medic" fill className="object-cover" />
+                  <Image src="/1.png" alt="Medic" fill className="object-cover" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 bg-accent text-white p-0.5 rounded-md border-2 border-white shadow-sm">
                   <ShieldCheck className="w-3 h-3" />

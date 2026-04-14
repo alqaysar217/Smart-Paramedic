@@ -36,7 +36,6 @@ export default function DashboardPage() {
 
   const { data: profile, isLoading: isProfileLoading } = useDoc(userProfileRef);
 
-  // منطق الإجبار: إذا كانت فصيلة الدم "غير محددة"، فهذا يعني أن المستخدم جديد ولم يكمل ملفه
   useEffect(() => {
     if (!isProfileLoading && profile && profile.bloodType === "غير محدد") {
       router.push("/profile?reason=incomplete");
@@ -96,11 +95,15 @@ export default function DashboardPage() {
           </div>
           <div className="flex flex-col items-end gap-1">
             <div className="flex -space-x-1.5 rtl:space-x-reverse">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src={`https://picsum.photos/seed/${i+20}/100/100`} alt="Medic" fill className="object-cover" />
+                <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
+                  <Image src="https://picsum.photos/seed/123/100/100" alt="Medic" fill className="object-cover" />
                 </div>
-              ))}
+                <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
+                  <Image src="https://picsum.photos/seed/456/100/100" alt="Medic" fill className="object-cover" />
+                </div>
+                <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
+                  <Image src="https://picsum.photos/seed/789/100/100" alt="Medic" fill className="object-cover" />
+                </div>
             </div>
             <p className="text-[7px] font-bold text-accent uppercase flex items-center gap-1">
               <span className="w-1 h-1 bg-accent rounded-full animate-pulse"></span>
