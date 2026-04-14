@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { doc } from "firebase/firestore";
@@ -18,7 +18,7 @@ import {
   Navigation,
   MapPin,
   Search,
-  Maximize2
+  Loader2
 } from "lucide-react";
 import BottomNav from "@/components/navigation/BottomNav";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from "@/firebase";
@@ -34,7 +34,14 @@ export default function DashboardPage() {
     return doc(db, "users", user.uid);
   }, [db, user]);
 
-  const { data: profile } = useDoc(userProfileRef);
+  const { data: profile, isLoading: isProfileLoading } = useDoc(userProfileRef);
+
+  // منطق الإجبار: إذا كانت فصيلة الدم "غير محددة"، فهذا يعني أن المستخدم جديد ولم يكمل ملفه
+  useEffect(() => {
+    if (!isProfileLoading && profile && profile.bloodType === "غير محدد") {
+      router.push("/profile?reason=incomplete");
+    }
+  }, [profile, isProfileLoading, router]);
 
   const quickActions = [
     { id: "accident", label: "حادث سير", icon: Car, color: "text-orange-500 bg-orange-50" },
@@ -46,6 +53,12 @@ export default function DashboardPage() {
   ];
 
   const logo = PlaceHolderImages.find((img) => img.id === "medical-app-logo");
+
+  if (isProfileLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <Loader2 className="w-5 h-5 text-primary animate-spin" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-24 font-cairo" dir="rtl">
@@ -132,10 +145,8 @@ export default function DashboardPage() {
           </Card>
         </section>
 
-        {/* SOS BUTTON IMPROVEMENT */}
         <section className="flex flex-col items-center justify-center py-4">
           <div className="relative group">
-            {/* Background ripples for urgency */}
             <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping opacity-20 scale-125"></div>
             <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping [animation-delay:-1s] opacity-20 scale-150"></div>
             

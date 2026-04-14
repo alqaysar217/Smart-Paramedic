@@ -1,11 +1,11 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { doc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -19,8 +19,6 @@ import {
 import { 
   Droplet, 
   User, 
-  Calendar, 
-  MapPin, 
   Activity, 
   Pill, 
   AlertTriangle, 
@@ -29,16 +27,18 @@ import {
   Briefcase,
   LocateFixed,
   Save,
-  CheckCircle2,
   Info,
-  Map as MapIcon
+  AlertCircle
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from "@/firebase";
 import BottomNav from "@/components/navigation/BottomNav";
 
-export default function ProfilePage() {
+function ProfileContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isMandatory = searchParams.get('reason') === 'incomplete';
+  
   const { user } = useUser();
   const db = useFirestore();
   
@@ -66,13 +66,13 @@ export default function ProfilePage() {
   useEffect(() => {
     if (profile) {
       setFormData({
-        gender: profile.gender || "",
-        age: profile.age?.toString() || "",
-        bloodType: profile.bloodType || "",
+        gender: profile.gender !== "غير محدد" ? profile.gender : "",
+        age: profile.age !== 0 ? profile.age?.toString() : "",
+        bloodType: profile.bloodType !== "غير محدد" ? profile.bloodType : "",
         chronicDiseases: profile.chronicDiseases?.join(", ") || "",
         medications: profile.medications?.join(", ") || "",
         allergies: profile.allergies?.join(", ") || "",
-        homeAddress: profile.homeAddress || "",
+        homeAddress: profile.homeAddress !== "المكلا، حضرموت" ? profile.homeAddress : "",
         workAddress: profile.workAddress || "",
       });
     }
@@ -81,9 +81,19 @@ export default function ProfilePage() {
   const handleSave = () => {
     if (!userProfileRef || !user) return;
 
+    // التحقق من البيانات الأساسية
+    if (!formData.bloodType || !formData.age || !formData.gender) {
+      toast({
+        variant: "destructive",
+        title: "بيانات ناقصة",
+        description: "يرجى تحديد الجنس، العمر، وفصيلة الدم للمتابعة.",
+      });
+      return;
+    }
+
     const profileData = {
       id: user.uid,
-      fullName: user.displayName || "مستخدم جديد",
+      fullName: profile?.fullName || user.displayName || "مستخدم جديد",
       phoneNumber: profile?.phoneNumber || "05xxxxxxxx",
       email: user.email,
       gender: formData.gender,
@@ -92,7 +102,7 @@ export default function ProfilePage() {
       chronicDiseases: formData.chronicDiseases.split(",").map(s => s.trim()).filter(s => s),
       medications: formData.medications.split(",").map(s => s.trim()).filter(s => s),
       allergies: formData.allergies.split(",").map(s => s.trim()).filter(s => s),
-      homeAddress: formData.homeAddress,
+      homeAddress: formData.homeAddress || "المكلا، حضرموت",
       homeLatitude: 14.5333,
       homeLongitude: 49.1167,
     };
@@ -124,8 +134,8 @@ export default function ProfilePage() {
   };
 
   if (isProfileLoading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 
@@ -138,12 +148,26 @@ export default function ProfilePage() {
           </div>
           <h1 className="text-[13px] font-bold text-slate-800">الملف الطبي الرقمي</h1>
         </div>
-        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-[10px] h-9 w-9 bg-slate-50">
-          <ChevronRight className="w-4 h-4 text-slate-400" />
-        </Button>
+        {!isMandatory && (
+          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-[10px] h-9 w-9 bg-slate-50">
+            <ChevronRight className="w-4 h-4 text-slate-400" />
+          </Button>
+        )}
       </header>
 
       <main className="px-4 pt-4 space-y-4">
+        {isMandatory && (
+          <Card className="bg-amber-50 border-amber-100 shadow-none rounded-[10px] p-4 flex gap-3 animate-in fade-in slide-in-from-top-2 duration-500">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+            <div className="space-y-1 text-right">
+              <p className="text-[11px] font-bold text-amber-900">خطوة أخيرة هامة!</p>
+              <p className="text-[10px] text-amber-800 leading-relaxed font-bold">
+                يرجى إكمال بياناتك الطبية أدناه. هذه المعلومات هي مفتاح إنقاذ حياتك في حالات الطوارئ القصوى.
+              </p>
+            </div>
+          </Card>
+        )}
+
         <div className="bg-blue-50/50 p-3 rounded-[10px] border border-blue-100 flex gap-3 items-start">
           <Info className="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" />
           <p className="text-[10px] text-blue-700 leading-normal font-bold">
@@ -270,10 +294,6 @@ export default function ProfilePage() {
                   className="w-full h-full grayscale-[0.2] contrast-[1.1] brightness-[0.98]"
                   style={{ border: 0 }}
                 ></iframe>
-                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full text-[7px] font-bold text-primary shadow-sm flex items-center gap-1 border border-white/20">
-                  <div className="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
-                  الموقع مثبت بدقة
-                </div>
               </div>
             )}
 
@@ -296,11 +316,19 @@ export default function ProfilePage() {
           className="w-full h-12 text-[12px] font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 rounded-[10px] gap-2 active-scale mb-2"
         >
           <Save className="w-4 h-4" />
-          حفظ التعديلات في السحابة
+          حفظ وتفعيل الملف الطبي
         </Button>
       </main>
       
-      <BottomNav activeTab="profile" />
+      {!isMandatory && <BottomNav activeTab="profile" />}
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-white"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>
+      <ProfileContent />
+    </Suspense>
   );
 }
