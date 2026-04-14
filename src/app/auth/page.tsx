@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ShieldCheck, Mail, Lock, Zap, Loader2, User, Phone } from "lucide-react";
+import { ShieldCheck, Mail, Lock, Zap, Loader2, User, Phone, Hospital } from "lucide-react";
 import { 
   useAuth, 
   useUser, 
@@ -277,6 +277,16 @@ export default function AuthPage() {
           </form>
         </TabsContent>
       </Tabs>
+
+      <div className="mt-8 text-center animate-in fade-in duration-1000">
+        <button 
+          onClick={() => router.push('/responder')}
+          className="text-[10px] font-bold text-slate-400 hover:text-primary transition-colors flex items-center justify-center gap-1.5 mx-auto active-scale"
+        >
+          <Hospital className="w-3.5 h-3.5" />
+          دخول الطواقم الطبية والمسعفين
+        </button>
+      </div>
     </div>
   );
 }
