@@ -4,25 +4,25 @@
     {
       "id": "medical-app-logo",
       "description": "Smart Medic App Logo",
-      "imageUrl": "https://picsum.photos/seed/med-logo-88/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1583324113626-70df0f43aaad?w=200&h=200&fit=crop",
       "imageHint": "medical cross"
     },
     {
       "id": "map-placeholder",
       "description": "Realistic satellite map of Mukalla city",
-      "imageUrl": "https://picsum.photos/seed/mukalla-map-dark/800/600",
+      "imageUrl": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=600&fit=crop",
       "imageHint": "satellite map"
     },
     {
       "id": "ambulance-tracking",
       "description": "Dynamic GPS tracking map with route",
-      "imageUrl": "https://picsum.photos/seed/gps-navigation/800/1200",
+      "imageUrl": "https://images.unsplash.com/photo-1587744350414-b42790933560?w=800&h=1200&fit=crop",
       "imageHint": "city navigation"
     },
     {
       "id": "user-avatar",
       "description": "User profile picture",
-      "imageUrl": "https://picsum.photos/seed/user-portrait/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop",
       "imageHint": "person portrait"
     }
   ]

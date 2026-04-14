@@ -1,3 +1,10 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "medical-app-logo",
+      "description": "Smart Medic App Logo",
+      "imageUrl": "https://images.unsplash.com/photo-1583324113626-70df0f43aaad?w=200&h=200&fit=crop",
+      "imageHint": "medical cross"
+    }
+  ]
 }

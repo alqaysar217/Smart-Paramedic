@@ -51,23 +51,17 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-cairo" dir="rtl">
-      {/* Header with Real Image Logo and Full-Page Notification Access */}
+      {/* Header with Real Image Logo */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-soft">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 relative bg-primary/5 rounded-xl border border-primary/10 overflow-hidden shadow-sm">
-            {logo ? (
-              <Image 
-                src={logo.imageUrl} 
-                alt="المسعف الذكي" 
-                fill 
-                className="object-cover"
-                data-ai-hint={logo.imageHint}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-primary text-white">
-                <Activity className="w-6 h-6" />
-              </div>
-            )}
+            <Image 
+              src={logo?.imageUrl || "https://images.unsplash.com/photo-1583324113626-70df0f43aaad?w=200&h=200&fit=crop"} 
+              alt="المسعف الذكي" 
+              fill 
+              className="object-cover"
+              data-ai-hint="medical cross"
+            />
           </div>
           <div className="flex flex-col text-right">
             <h1 className="text-sm font-black text-slate-900 leading-none">المسعف الذكي</h1>
