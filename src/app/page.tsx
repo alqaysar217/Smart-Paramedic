@@ -27,14 +27,14 @@ export default function SplashPage() {
       {/* الصورة النابضة في الأعلى */}
       <div className="relative mb-6">
         <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping scale-125 opacity-10"></div>
-        <div className="relative w-28 h-28 animate-pulse">
+        <div className="relative w-24 h-24 animate-pulse">
           {logo && (
             <Image
               src={logo.imageUrl}
               alt="المسعف الذكي"
-              width={112}
-              height={112}
-              className="rounded-[24px] shadow-xl border-2 border-primary/5"
+              width={96}
+              height={96}
+              className="rounded-[20px] shadow-xl border-2 border-primary/5"
               data-ai-hint={logo.imageHint}
             />
           )}
@@ -42,25 +42,25 @@ export default function SplashPage() {
       </div>
 
       {/* اسم التطبيق والفقرة */}
-      <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <h1 className="text-[20px] font-black text-slate-900 tracking-tight leading-none">
+      <div className="space-y-2.5 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <h1 className="text-[20px] font-black text-primary tracking-tight leading-none">
           المسعف الذكي
         </h1>
-        <div className="h-0.5 w-8 bg-primary mx-auto rounded-full opacity-30"></div>
-        <p className="text-[11px] text-slate-400 font-bold max-w-[200px] mx-auto leading-relaxed uppercase tracking-wider">
+        <div className="h-0.5 w-6 bg-primary mx-auto rounded-full opacity-30"></div>
+        <p className="text-[10px] text-slate-400 font-bold max-w-[180px] mx-auto leading-relaxed uppercase tracking-wider">
           نحن هنا لإنقاذ الأرواح في كل لحظة
         </p>
       </div>
       
       {/* مؤشر التحميل السفلي */}
-      <div className="absolute bottom-16 flex gap-1.5 items-center">
-        <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce [animation-delay:-0.3s]"></div>
-        <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce [animation-delay:-0.15s]"></div>
-        <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce"></div>
+      <div className="absolute bottom-16 flex gap-1 items-center">
+        <div className="w-1 h-1 rounded-full bg-primary/40 animate-bounce [animation-delay:-0.3s]"></div>
+        <div className="w-1 h-1 rounded-full bg-primary/40 animate-bounce [animation-delay:-0.15s]"></div>
+        <div className="w-1 h-1 rounded-full bg-primary/40 animate-bounce"></div>
       </div>
       
       <div className="absolute bottom-8">
-        <p className="text-[8px] font-black text-slate-300 uppercase tracking-[0.3em]">Hadhramaut Emergency System</p>
+        <p className="text-[7px] font-black text-slate-300 uppercase tracking-[0.2em]">Hadhramaut Emergency System</p>
       </div>
     </div>
   );
