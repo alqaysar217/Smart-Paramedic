@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ export default function AuthPage() {
   const { toast } = useToast();
   const { user, isUserLoading } = useUser();
   const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   
   // Form State
   const [email, setEmail] = useState("");
@@ -89,7 +90,6 @@ export default function AuthPage() {
     initiateEmailSignUp(auth, email, password)
       .then((userCredential) => {
         const newUser = userCredential.user;
-        // Create initial profile in Firestore
         const userRef = doc(db, "users", newUser.uid);
         setDocumentNonBlocking(userRef, {
           id: newUser.uid,
@@ -252,17 +252,21 @@ export default function AuthPage() {
               />
             </div>
 
-            <div className="flex items-start space-x-2 space-x-reverse py-1">
+            <div className="flex items-start gap-2 py-1 ltr:flex-row-reverse rtl:flex-row">
               <label 
                 htmlFor="terms" 
-                className="text-[9px] font-bold text-slate-500 leading-relaxed cursor-pointer flex-1"
+                className="text-[9px] font-bold text-slate-500 leading-relaxed cursor-pointer flex-1 text-right"
               >
                 أوافق على شروط الخدمة وسياسة الخصوصية الخاصة بالمسعف الذكي ومعايير التعامل الطبي الطارئ في حضرموت.
               </label>
               <Checkbox 
                 id="terms" 
                 checked={acceptTerms} 
-                onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+                onCheckedChange={(checked) => {
+                  startTransition(() => {
+                    setAcceptTerms(!!checked);
+                  });
+                }}
                 className="mt-0.5 border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
             </div>
