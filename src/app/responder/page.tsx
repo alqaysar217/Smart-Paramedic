@@ -134,7 +134,7 @@ export default function ResponderDashboard() {
                 <p className="text-[9px] text-slate-400 font-bold">النوبة المسائية</p>
              </div>
              <div className="w-10 h-10 rounded-[10px] overflow-hidden border-2 border-slate-100 relative shadow-sm">
-                <Image src="https://picsum.photos/seed/admin-hq/200/200" alt="Admin" fill className="object-cover" />
+                <Image src="https://picsum.photos/seed/admin1/200/200" alt="Admin" fill className="object-cover" />
              </div>
           </div>
         </div>
@@ -286,7 +286,7 @@ export default function ResponderDashboard() {
                                           <p className="text-[12px] font-bold text-slate-800">{selectedReport.medicalProfile.age} سنة - {selectedReport.medicalProfile.gender}</p>
                                         </div>
                                         <div className="bg-rose-50 p-4 rounded-[12px] border border-rose-100">
-                                          <p className="text-[10px] text-rose-400 font-bold uppercase mb-1">فصيلة الدم</p>
+                                          <p className="text-[10px] text-rose-400 font-black uppercase mb-1">فصيلة الدم</p>
                                           <p className="text-[14px] font-black text-rose-700 flex items-center gap-1.5">
                                             <Droplet className="w-4 h-4" /> {selectedReport.medicalProfile.bloodType}
                                           </p>

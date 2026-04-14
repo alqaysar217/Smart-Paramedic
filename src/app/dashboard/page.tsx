@@ -96,13 +96,13 @@ export default function DashboardPage() {
           <div className="flex flex-col items-end gap-1">
             <div className="flex -space-x-1.5 rtl:space-x-reverse">
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/123/100/100" alt="Medic" fill className="object-cover" />
+                  <Image src="https://picsum.photos/seed/medic1/100/100" alt="Medic 1" fill className="object-cover" />
                 </div>
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/456/100/100" alt="Medic" fill className="object-cover" />
+                  <Image src="https://picsum.photos/seed/medic2/100/100" alt="Medic 2" fill className="object-cover" />
                 </div>
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/789/100/100" alt="Medic" fill className="object-cover" />
+                  <Image src="https://picsum.photos/seed/medic3/100/100" alt="Medic 3" fill className="object-cover" />
                 </div>
             </div>
             <p className="text-[7px] font-bold text-accent uppercase flex items-center gap-1">
