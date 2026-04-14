@@ -174,92 +174,86 @@ export default function InstructionsPage() {
   const currentData = selectedId ? FIRST_AID_DATA[selectedId as keyof typeof FIRST_AID_DATA] : null;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-28 font-cairo" dir="rtl">
+    <div className="min-h-screen bg-[#F8FAFC] pb-24 font-cairo" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-soft">
+      <header className="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 h-14 flex items-center justify-between shadow-soft">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <Activity className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 bg-primary rounded-[10px] flex items-center justify-center">
+            <Activity className="w-4 h-4 text-white" />
           </div>
-          <h1 className="text-sm font-black text-slate-800">موسوعة الإسعافات</h1>
+          <h1 className="text-[13px] font-bold text-slate-800">موسوعة الإسعافات</h1>
         </div>
-        <ClipboardList className="text-slate-400 w-5 h-5" />
+        <ClipboardList className="text-slate-400 w-4 h-4" />
       </header>
 
-      <main className="px-5 pt-6">
+      <main className="px-4 pt-4">
         {!selectedId ? (
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-[2rem] shadow-soft border border-slate-50 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
-              <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 relative z-10">الدليل الطبي التفاعلي</h2>
-              <p className="text-[12px] text-slate-600 font-bold leading-relaxed relative z-10">اختر الحالة لبدء خطوات الإنقاذ فوراً. تم مراجعة هذه المعلومات وفق المعايير الطبية الدولية.</p>
+          <div className="space-y-4">
+            <div className="bg-white p-5 rounded-[10px] shadow-soft border border-slate-50">
+              <h2 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">الدليل الطبي</h2>
+              <p className="text-[11px] text-slate-600 font-bold leading-relaxed">اختر الحالة لبدء خطوات الإنقاذ فوراً وفق المعايير الطبية الدولية.</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {emergencyTypes.map((type) => (
                 <button
                   key={type.id}
                   onClick={() => setSelectedId(type.id)}
-                  className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-soft flex flex-col items-center text-center transition-all hover:border-primary/20 active:scale-95 group"
+                  className="bg-white p-4 rounded-[10px] border border-slate-100 shadow-soft flex flex-col items-center text-center transition-all active-scale group"
                 >
-                  <div className={`p-4 rounded-2xl mb-3 transition-transform group-hover:scale-110 ${type.color}`}>
-                    <type.icon className="w-7 h-7" />
+                  <div className={`p-3 rounded-lg mb-2 ${type.color}`}>
+                    <type.icon className="w-5 h-5" />
                   </div>
-                  <span className="font-bold text-slate-700 text-[11px] leading-tight">{type.label}</span>
+                  <span className="font-bold text-slate-700 text-[10px] leading-tight">{type.label}</span>
                 </button>
               ))}
             </div>
 
-            <Card className="bg-blue-600 border-none shadow-lg shadow-blue-200 rounded-[2rem] p-6 text-white">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-white/20 rounded-2xl">
-                  <PlayCircle className="w-6 h-6" />
+            <Card className="bg-blue-600 border-none shadow-md rounded-[10px] p-5 text-white">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <PlayCircle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-black text-sm">التدريب الافتراضي</h4>
-                  <p className="text-[10px] opacity-80 font-bold">تعلم الإسعاف عبر محاكاة الواقع</p>
+                  <h4 className="font-bold text-[12px]">التدريب الافتراضي</h4>
+                  <p className="text-[9px] opacity-80 font-bold">تعلم الإسعاف عبر محاكاة الواقع</p>
                 </div>
               </div>
             </Card>
           </div>
         ) : (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-400">
+          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <Button 
               variant="ghost" 
               onClick={() => setSelectedId(null)} 
-              className="gap-2 text-slate-400 font-bold p-0 h-auto hover:bg-transparent text-[11px]"
+              className="gap-2 text-slate-400 font-bold p-0 h-auto hover:bg-transparent text-[10px]"
             >
               <ChevronRight className="w-4 h-4" />
               العودة لقائمة الحالات
             </Button>
 
-            <Card className="border-none shadow-soft rounded-[2.5rem] overflow-hidden bg-white">
-              <CardHeader className="bg-slate-900 p-8 text-white text-right relative">
-                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                   <div className="absolute top-4 left-4 w-20 h-20 border-4 border-white rounded-full"></div>
-                </div>
-                <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">دليل الإنقاذ الفوري</p>
-                <CardTitle className="text-xl font-black">{currentData?.title}</CardTitle>
+            <Card className="border-none shadow-soft rounded-[10px] overflow-hidden bg-white">
+              <CardHeader className="bg-slate-900 p-6 text-white text-right">
+                <p className="text-[8px] font-bold text-primary uppercase tracking-widest mb-1">دليل الإنقاذ الفوري</p>
+                <CardTitle className="text-md font-bold">{currentData?.title}</CardTitle>
               </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <div className="space-y-5">
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-4">
                   {currentData?.steps.map((step, idx) => (
-                    <div key={idx} className="flex gap-4 items-start group">
-                      <div className="w-9 h-9 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center shrink-0 font-black text-xs border border-slate-100 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-colors">
+                    <div key={idx} className="flex gap-3 items-start">
+                      <div className="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 flex items-center justify-center shrink-0 font-bold text-[10px] border border-slate-100">
                         {idx + 1}
                       </div>
-                      <p className="text-[13px] text-slate-600 leading-relaxed font-bold pt-1.5">{step}</p>
+                      <p className="text-[12px] text-slate-600 leading-relaxed font-bold pt-1">{step}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="p-5 bg-rose-50 rounded-3xl border border-rose-100 flex items-start gap-4">
-                  <div className="p-2 bg-rose-500 rounded-xl mt-1">
-                    <AlertCircle className="w-4 h-4 text-white shrink-0" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-black text-rose-800 uppercase tracking-tighter">تنبيه طبي حرج</p>
-                    <p className="text-[11px] text-rose-700/80 leading-relaxed font-bold">
+                <div className="p-4 bg-rose-50 rounded-[10px] border border-rose-100 flex items-start gap-3">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                  <div className="space-y-0.5">
+                    <p className="text-[10px] font-bold text-rose-800 uppercase tracking-tighter">تنبيه حرج</p>
+                    <p className="text-[10px] text-rose-700/80 leading-relaxed font-bold">
                       {currentData?.disclaimer}
                     </p>
                   </div>
@@ -268,17 +262,17 @@ export default function InstructionsPage() {
             </Card>
 
             <div className="grid grid-cols-1 gap-3">
-              <Button className="w-full h-16 bg-primary hover:bg-primary/90 text-white text-sm font-black rounded-2xl shadow-xl shadow-primary/20 gap-3 active-scale">
-                <Volume2 className="w-5 h-5" />
-                تفعيل المساعد الصوتي الذكي
+              <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white text-[12px] font-bold rounded-[10px] shadow-lg gap-2 active-scale">
+                <Volume2 className="w-4 h-4" />
+                تفعيل المساعد الصوتي
               </Button>
-              <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" className="h-14 rounded-2xl border-slate-100 text-slate-500 font-bold text-[11px] gap-2 active-scale">
-                  <Share2 className="w-4 h-4" />
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" className="h-11 rounded-[10px] border-slate-100 text-slate-500 font-bold text-[10px] gap-2 active-scale">
+                  <Share2 className="w-3.5 h-3.5" />
                   مشاركة
                 </Button>
-                <Button variant="outline" className="h-14 rounded-2xl border-slate-100 text-slate-500 font-bold text-[11px] gap-2 active-scale">
-                  <PlayCircle className="w-4 h-4" />
+                <Button variant="outline" className="h-11 rounded-[10px] border-slate-100 text-slate-500 font-bold text-[10px] gap-2 active-scale">
+                  <PlayCircle className="w-3.5 h-3.5" />
                   فيديو توضيحي
                 </Button>
               </div>
