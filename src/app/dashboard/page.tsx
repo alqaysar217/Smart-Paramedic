@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -96,13 +95,13 @@ export default function DashboardPage() {
           <div className="flex flex-col items-end gap-1">
             <div className="flex -space-x-1.5 rtl:space-x-reverse">
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/m1/100/100" alt="Medic 1" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1559839734-2b71f1536783?w=100&h=100&fit=crop" alt="Medic 1" fill className="object-cover" />
                 </div>
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/m2/100/100" alt="Medic 2" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop" alt="Medic 2" fill className="object-cover" />
                 </div>
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm relative">
-                  <Image src="https://picsum.photos/seed/m3/100/100" alt="Medic 3" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=100&h=100&fit=crop" alt="Medic 3" fill className="object-cover" />
                 </div>
             </div>
             <p className="text-[7px] font-bold text-accent uppercase flex items-center gap-1">
@@ -196,4 +195,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

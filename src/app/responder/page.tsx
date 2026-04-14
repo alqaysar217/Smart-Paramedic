@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -56,110 +55,30 @@ import {
 import { useAuth, useUser, signOutUser } from "@/firebase";
 import { cn } from "@/lib/utils";
 
-// بيانات الطالبات مع روابط صور فريدة لكل واحدة
 const ACTIVE_REPORTS = [
-  { 
-    id: "REP-001", 
-    reporterName: "عصبان ةنسيب", 
-    avatarUrl: "https://picsum.photos/seed/asban/100/100",
-    type: "إغماء مفاجئ", 
-    location: "المكلا - فوة - المساكن", 
-    medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["هبوط سكر"], medications: ["فيتامينات"], allergies: ["البنسلين"], phone: "0533112233" } 
-  },
-  { 
-    id: "REP-002", 
-    reporterName: "منى باحسين", 
-    avatarUrl: "https://picsum.photos/seed/muna/100/100",
-    type: "أزمة تنفسية", 
-    location: "المكلا - الديس - شارع الغويزي", 
-    medicalProfile: { age: 20, gender: "أنثى", bloodType: "A-", chronicDiseases: ["الربو"], medications: ["فنتولين"], allergies: ["الغبار"], phone: "0544223344" } 
-  },
-  { 
-    id: "REP-003", 
-    reporterName: "نجد مسيعان", 
-    avatarUrl: "https://picsum.photos/seed/najd/100/100",
-    type: "نزيف حاد", 
-    location: "المكلا - روكب", 
-    medicalProfile: { age: 22, gender: "أنثى", bloodType: "B+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0555334455" } 
-  },
-  { 
-    id: "REP-004", 
-    reporterName: "نور العمودي", 
-    avatarUrl: "https://picsum.photos/seed/nour1/100/100",
-    type: "تشنجات", 
-    location: "المكلا - بويش", 
-    medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB+", chronicDiseases: ["صرع"], medications: ["إيبانوتين"], allergies: ["لا يوجد"], phone: "0566445566" } 
-  },
-  { 
-    id: "REP-005", 
-    reporterName: "رغد بلعفير", 
-    avatarUrl: "https://picsum.photos/seed/raghad/100/100",
-    type: "حادث سير", 
-    location: "المكلا - شارع الستين", 
-    medicalProfile: { age: 23, gender: "أنثى", bloodType: "O-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0577556677" } 
-  },
-  { 
-    id: "REP-006", 
-    reporterName: "خلود بن ثابت", 
-    avatarUrl: "https://picsum.photos/seed/kholoud/100/100",
-    type: "ألم في الصدر", 
-    location: "المكلا - الشرج", 
-    medicalProfile: { age: 21, gender: "أنثى", bloodType: "A+", chronicDiseases: ["اشتباه صمام"], medications: ["أسبرين"], allergies: ["لا يوجد"], phone: "0588667788" } 
-  },
-  { 
-    id: "REP-007", 
-    reporterName: "عائشة مرعي", 
-    avatarUrl: "https://picsum.photos/seed/asha/100/100",
-    type: "هبوط حاد", 
-    location: "المكلا - جول مسحة", 
-    medicalProfile: { age: 22, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["مأكولات بحرية"], phone: "0599778899" } 
-  },
-  { 
-    id: "REP-008", 
-    reporterName: "نور باعباد", 
-    avatarUrl: "https://picsum.photos/seed/nour2/100/100",
-    type: "كسر مضاف", 
-    location: "المكلا - امبيخة", 
-    medicalProfile: { age: 20, gender: "أنثى", bloodType: "B-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["براسيتامول"], phone: "0500112233" } 
-  },
-  { 
-    id: "REP-009", 
-    reporterName: "منية باكرمان", 
-    avatarUrl: "https://picsum.photos/seed/monya/100/100",
-    type: "صدمة حرارية", 
-    location: "المكلا - بروم", 
-    medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0511223344" } 
-  },
-  { 
-    id: "REP-010", 
-    reporterName: "هديل المنهالي", 
-    avatarUrl: "https://picsum.photos/seed/hadeel/100/100",
-    type: "تسمم غذائي", 
-    location: "المكلا - غيل باوزير", 
-    medicalProfile: { age: 22, gender: "أنثى", bloodType: "A-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لاكتوز"], phone: "0522334455" } 
-  },
-  { 
-    id: "REP-011", 
-    reporterName: "ماريا الحيقي", 
-    avatarUrl: "https://picsum.photos/seed/maria/100/100",
-    type: "اختناق", 
-    location: "المكلا - الديس", 
-    medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0533445566" } 
-  },
+  { id: "REP-001", reporterName: "عصبان ةنسيب", avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", type: "إغماء مفاجئ", location: "المكلا - فوة - المساكن", medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["هبوط سكر"], medications: ["فيتامينات"], allergies: ["البنسلين"], phone: "0533112233" } },
+  { id: "REP-002", reporterName: "منى باحسين", avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", type: "أزمة تنفسية", location: "المكلا - الديس - شارع الغويزي", medicalProfile: { age: 20, gender: "أنثى", bloodType: "A-", chronicDiseases: ["الربو"], medications: ["فنتولين"], allergies: ["الغبار"], phone: "0544223344" } },
+  { id: "REP-003", reporterName: "نجد مسيعان", avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", type: "نزيف حاد", location: "المكلا - روكب", medicalProfile: { age: 22, gender: "أنثى", bloodType: "B+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0555334455" } },
+  { id: "REP-004", reporterName: "نور العمودي", avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop", type: "تشنجات", location: "المكلا - بويش", medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB+", chronicDiseases: ["صرع"], medications: ["إيبانوتين"], allergies: ["لا يوجد"], phone: "0566445566" } },
+  { id: "REP-005", reporterName: "رغد بلعفير", avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop", type: "حادث سير", location: "المكلا - شارع الستين", medicalProfile: { age: 23, gender: "أنثى", bloodType: "O-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0577556677" } },
+  { id: "REP-006", reporterName: "خلود بن ثابت", avatarUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop", type: "ألم في الصدر", location: "المكلا - الشرج", medicalProfile: { age: 21, gender: "أنثى", bloodType: "A+", chronicDiseases: ["اشتباه صمام"], medications: ["أسبرين"], allergies: ["لا يوجد"], phone: "0588667788" } },
+  { id: "REP-007", reporterName: "عائشة مرعي", avatarUrl: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=100&h=100&fit=crop", type: "هبوط حاد", location: "المكلا - جول مسحة", medicalProfile: { age: 22, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["مأكولات بحرية"], phone: "0599778899" } },
+  { id: "REP-008", reporterName: "نور باعباد", avatarUrl: "https://images.unsplash.com/photo-1548142813-c348350df52b?w=100&h=100&fit=crop", type: "كسر مضاعف", location: "المكلا - امبيخة", medicalProfile: { age: 20, gender: "أنثى", bloodType: "B-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["براسيتامول"], phone: "0500112233" } },
+  { id: "REP-009", reporterName: "منية باكرمان", avatarUrl: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=100&h=100&fit=crop", type: "صدمة حرارية", location: "المكلا - بروم", medicalProfile: { age: 19, gender: "أنثى", bloodType: "AB-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0511223344" } },
+  { id: "REP-010", reporterName: "هديل المنهالي", avatarUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&h=100&fit=crop", type: "تسمم غذائي", location: "المكلا - غيل باوزير", medicalProfile: { age: 22, gender: "أنثى", bloodType: "A-", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لاكتوز"], phone: "0522334455" } },
+  { id: "REP-011", reporterName: "ماريا الحيقي", avatarUrl: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=100&h=100&fit=crop", type: "اختناق", location: "المكلا - الديس", medicalProfile: { age: 21, gender: "أنثى", bloodType: "O+", chronicDiseases: ["لا يوجد"], medications: ["لا يوجد"], allergies: ["لا يوجد"], phone: "0533445566" } },
 ];
 
 const ARCHIVED_REPORTS = [
   { id: "HIST-001", reporterName: "أمل بن عيفان", type: "حالة إغماء", date: "2024/05/10", location: "المكلا - فوة" },
   { id: "HIST-002", reporterName: "سارة العمودي", type: "جرح سطحي", date: "2024/05/09", location: "المكلا - الشرج" },
   { id: "HIST-003", reporterName: "فاطمة باوزير", type: "اشتباه كسر", date: "2024/05/08", location: "المكلا - روكب" },
-  { id: "HIST-004", reporterName: "مريم الصباري", type: "صعوبة تنفس", date: "2024/05/07", location: "المكلا - بويش" },
 ];
 
 const AMBULANCE_UNITS = [
   { id: "AMB-01", status: "نشطة", location: "خور المكلا", crew: "د. خالد / م. محمد", battery: "95%" },
   { id: "AMB-02", status: "في مهمة", location: "الديس", crew: "د. سالم / م. فهد", battery: "80%" },
   { id: "AMB-03", status: "متاحة", location: "مستشفى ابن سينا", crew: "د. هاني / م. أحمد", battery: "100%" },
-  { id: "AMB-04", status: "نشطة", location: "فوة الطويلة", crew: "د. أحمد / م. علي", battery: "88%" },
 ];
 
 export default function ResponderDashboard() {
@@ -189,7 +108,6 @@ export default function ResponderDashboard() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-cairo" dir="rtl">
-      {/* Header */}
       <header className="bg-white border-b border-slate-100 p-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-soft">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 bg-primary rounded-[10px] flex items-center justify-center text-white shadow-lg shadow-primary/20">
@@ -211,14 +129,13 @@ export default function ResponderDashboard() {
                 <p className="text-[9px] text-slate-400 font-bold">النوبة المسائية</p>
              </div>
              <div className="w-10 h-10 rounded-[10px] overflow-hidden border-2 border-slate-100 relative shadow-sm">
-                <Image src="https://picsum.photos/seed/admin-hq/200/200" alt="Admin" fill className="object-cover" />
+                <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="Admin" fill className="object-cover" />
              </div>
           </div>
         </div>
       </header>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
         <aside 
           className={cn(
             "bg-white border-l border-slate-100 flex flex-col p-4 gap-2 z-40 transition-all duration-300",
@@ -273,7 +190,6 @@ export default function ResponderDashboard() {
           </div>
         </aside>
 
-        {/* Main Content Area */}
         <main className="flex-1 overflow-auto bg-slate-50/30 p-8">
           <div className="w-full max-w-[1400px] mx-auto space-y-8">
             
@@ -283,16 +199,6 @@ export default function ResponderDashboard() {
                   <div className="space-y-1 text-right">
                     <h2 className="text-[22px] font-bold text-slate-900">سجل البلاغات الحية</h2>
                     <p className="text-[12px] text-slate-400 font-bold">متابعة كافة طلبات النجدة الواردة لحظياً</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-[12px] border border-slate-100 flex items-center gap-6 shadow-sm">
-                      <div className="text-center px-4 border-l border-slate-50">
-                        <p className="text-[9px] text-slate-300 font-black uppercase">إجمالي الطلبات</p>
-                        <p className="text-[20px] font-black text-slate-800">{ACTIVE_REPORTS.length}</p>
-                      </div>
-                      <div className="text-center px-4">
-                        <p className="text-[9px] text-rose-400 font-black uppercase">حالات حرجة</p>
-                        <p className="text-[20px] font-black text-rose-600">6</p>
-                      </div>
                   </div>
                 </div>
                 
@@ -442,19 +348,12 @@ export default function ResponderDashboard() {
                       src="https://www.openstreetmap.org/export/embed.html?bbox=49.00,14.48,49.25,14.62&amp;layer=mapnik"
                       className="grayscale-[0.1] contrast-[1.1]"
                     ></iframe>
-                    <div className="absolute top-6 left-6 flex flex-col gap-3">
-                      {[Maximize2, Layers, Search].map((Icon, idx) => (
-                        <button key={idx} className="w-12 h-12 bg-white/95 backdrop-blur-md shadow-xl rounded-[15px] flex items-center justify-center text-slate-600 hover:text-primary transition-all active-scale border border-slate-100">
-                          <Icon className="w-5 h-5" />
-                        </button>
-                      ))}
-                    </div>
                   </Card>
                </div>
             )}
 
             {activeTab === 'units' && (
-               <div className="grid grid-cols-4 gap-6 animate-in fade-in duration-500">
+               <div className="grid grid-cols-3 gap-6 animate-in fade-in duration-500">
                  {AMBULANCE_UNITS.map((unit) => (
                    <Card key={unit.id} className="border-none shadow-soft bg-white rounded-[20px] p-6 space-y-5 border border-slate-50">
                      <div className="flex justify-between items-start">
@@ -469,12 +368,6 @@ export default function ResponderDashboard() {
                            {unit.location} <MapPin className="w-3.5 h-3.5 text-primary" />
                         </p>
                      </div>
-                     <div className="pt-4 border-t border-slate-50 text-right">
-                        <p className="text-[10px] text-slate-400 font-bold mb-2">الجاهزية:</p>
-                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-green-500 w-[95%]"></div>
-                        </div>
-                     </div>
                    </Card>
                  ))}
                </div>
@@ -484,7 +377,6 @@ export default function ResponderDashboard() {
                <div className="space-y-4 animate-in fade-in duration-500">
                   <div className="flex items-center justify-between">
                     <h2 className="text-[22px] font-bold text-slate-900">أرشيف البلاغات المؤرشفة</h2>
-                    <Badge variant="outline" className="text-slate-400 border-slate-200">إجمالي الأرشيف: {ARCHIVED_REPORTS.length}</Badge>
                   </div>
                   <Card className="border-none shadow-soft bg-white rounded-[15px] overflow-hidden">
                     <Table className="font-cairo">
@@ -494,7 +386,6 @@ export default function ResponderDashboard() {
                             <TableHead className="text-right text-[11px] font-black text-slate-400">المستخدم</TableHead>
                             <TableHead className="text-right text-[11px] font-black text-slate-400">نوع الحالة</TableHead>
                             <TableHead className="text-right text-[11px] font-black text-slate-400">التاريخ</TableHead>
-                            <TableHead className="text-center text-[11px] font-black text-slate-400">التفاصيل</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -504,11 +395,6 @@ export default function ResponderDashboard() {
                               <TableCell className="font-bold text-[12px]">{report.reporterName}</TableCell>
                               <TableCell className="text-[12px] text-slate-500">{report.type}</TableCell>
                               <TableCell className="text-[11px] text-slate-400">{report.date}</TableCell>
-                              <TableCell className="text-center">
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-primary">
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                              </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -523,4 +409,3 @@ export default function ResponderDashboard() {
     </div>
   );
 }
-

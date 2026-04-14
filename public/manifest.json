@@ -1,0 +1,21 @@
+{
+  "name": "المسعف الذكي - حضرموت",
+  "short_name": "المسعف",
+  "description": "منصة الإنقاذ الطارئ والخدمات الطبية في حضرموت",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ef4444",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1583324113626-70df0f43aaad?w=192&h=192&fit=crop",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1583324113626-70df0f43aaad?w=512&h=512&fit=crop",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
