@@ -6,12 +6,24 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 export const metadata: Metadata = {
   title: 'المسعف الذكي - Smart Medic',
   description: 'تطبيق الإسعاف الذكي للخدمات الطبية الطارئة في حضرموت',
-  manifest: '/manifest.json',
+  manifest: '/web-app-manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'المسعف الذكي',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png' },
+    ],
+    other: [
+      { rel: 'logo', url: '/logo.png' }
+    ]
+  }
 };
 
 export const viewport: Viewport = {
@@ -34,6 +46,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="font-cairo antialiased bg-background text-foreground overflow-x-hidden">
         <FirebaseClientProvider>
